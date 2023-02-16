@@ -1,3 +1,6 @@
+from pandas import DataFrame
+
+from utils.response import getModuleFromID
 from utils.seed import seedDbFeedback, getModuleFeedback, seedModuleModel
 from utils.helper import convertReviewsFromDbToDf
 
@@ -19,7 +22,12 @@ def getReviews(userID):
     # print(df.groupby('moduleID')['rating'].sum().sort_values(ascending=False).head())
 
     # get highest rated modules
-    print(df.groupby('moduleID')['rating'].sum().sort_values(ascending=False).head())
+    top_mods: DataFrame = df.groupby('moduleID')['rating'].sum().sort_values(ascending=False)
+
+    # run response for each row of the highest rated modules
+    print(top_mods)
+    res_top_mods = top_mods.reset_index()
+    res_top_mods.apply(lambda row: getModuleFromID(row), axis=1)
 
 
 def getUserProfile():
