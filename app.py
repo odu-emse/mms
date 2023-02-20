@@ -1,15 +1,52 @@
+import enum
+
 from pandas import DataFrame
+from requests import post
+import asyncio
+from prisma import Prisma
 
 from utils.response import getModuleFromID
-from utils.seed import seedDbFeedback, getModuleFeedback, seedModuleModel
+from utils.seed import seedDbFeedback, getModuleFeedback, seedModuleModel, seedUserDB, \
+    seedPlanOfStudyDB, Seeder, Skipper
 from utils.helper import convertReviewsFromDbToDf
 
 
-def main():
+async def main() -> None:
     print('Starting application...')
+
+    # await seedUserDB()
+    # seedModuleModel()
+    # await seedPlanOfStudyDB()
+    # await seedEnrollmentDB()
+
+    await Seeder(
+        skip=Skipper.user
+    ).seedAll()
+
+
     # seedModuleModel()
     # seedDbFeedback()
-    getReviews(userID="63da9e40020a625cc55f64c5")
+    testConnection()
+    # getReviews(userID="63da9e40020a625cc55f64c5")
+
+
+def testConnection():
+    print('Testing connection...')
+    # test connection to API
+    post('http://localhost:4000/graphql', {}, {
+        'query': """query{
+              module(input:{
+                id: "%s"
+              }){
+                id
+                moduleName
+                moduleNumber
+              }
+        }""" % '63da9e40020a625cc55f64c5'
+    })
+    # test connection to DB
+    # test connection to Redis
+    # test connection to ElasticSearch
 
 
 def getReviews(userID):
@@ -42,4 +79,4 @@ def getUserProfile():
 
 
 if __name__ == '__main__':
-    main()
+    asyncio.run(main())
