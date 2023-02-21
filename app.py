@@ -1,52 +1,33 @@
-import enum
-
 from pandas import DataFrame
-from requests import post
 import asyncio
 from prisma import Prisma
 
+from utils.db import testConnection
 from utils.response import getModuleFromID
-from utils.seed import seedDbFeedback, getModuleFeedback, seedModuleModel, seedUserDB, \
-    seedPlanOfStudyDB, Seeder, Skipper
+from utils.seed import getModuleFeedback, Seeder, Skipper
 from utils.helper import convertReviewsFromDbToDf
 
 
 async def main() -> None:
     print('Starting application...')
-
+    testConnection()
     # await seedUserDB()
     # seedModuleModel()
     # await seedPlanOfStudyDB()
     # await seedEnrollmentDB()
 
-    await Seeder(
-        skip=Skipper.user
-    ).seedAll()
+    db = Seeder(
+        skip=[Skipper.all],
+        cleanup=[Skipper.all]
+    )
 
+    await db.seedAll()
+    await db.cleanupAll()
 
+    exit(0)
     # seedModuleModel()
     # seedDbFeedback()
-    testConnection()
     # getReviews(userID="63da9e40020a625cc55f64c5")
-
-
-def testConnection():
-    print('Testing connection...')
-    # test connection to API
-    post('http://localhost:4000/graphql', {}, {
-        'query': """query{
-              module(input:{
-                id: "%s"
-              }){
-                id
-                moduleName
-                moduleNumber
-              }
-        }""" % '63da9e40020a625cc55f64c5'
-    })
-    # test connection to DB
-    # test connection to Redis
-    # test connection to ElasticSearch
 
 
 def getReviews(userID):
@@ -67,7 +48,7 @@ def getReviews(userID):
     res_top_mods.apply(lambda row: getModuleFromID(row), axis=1)
 
 
-def getUserProfile():
+async def getUserProfile(ID):
     print('Fetching user data...')
     # get user from ID
     #  find enrolled modules
@@ -76,6 +57,14 @@ def getUserProfile():
     #  get similarity matrix
     #  get recommendations
     #  return recommendations
+    prisma = Prisma()
+    await prisma.connect()
+    account = await prisma.user.find_unique(
+        where={
+            'id': ID
+        }
+    )
+    return account.dict()
 
 
 if __name__ == '__main__':
