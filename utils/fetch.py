@@ -14,14 +14,6 @@ class Fetcher:
         self.logger = logging.getLogger('__fetch__')
         logging.basicConfig(format='%(levelname)s:%(message)s', level=logging.INFO)
 
-    async def connect(self):
-        await self.prisma.connect()
-        self.logger.info('Connected to database')
-
-    async def disconnect(self):
-        await self.prisma.disconnect()
-        self.logger.info('Disconnected from database')
-
     def _createModuleMutation(self):
         self.response = """query{
                           module(input:{}){
@@ -53,7 +45,7 @@ class Fetcher:
         Gets all modules from the database and returns them as a list of dictionaries.
         :return: class<list> of class<dict> of type<Module>
         """
-        await self.connect()
+        await self.prisma.connect()
         self.modules = await self.prisma.module.find_many()
 
         mods = []
@@ -61,7 +53,7 @@ class Fetcher:
         for i in range(len(self.modules)):
             mods.append(self.modules[i].dict())
 
-        await self.disconnect()
+        await self.prisma.disconnect()
 
         return mods
 
@@ -85,14 +77,14 @@ class Fetcher:
         Gets all feedbacks from the database and returns them as a list of dictionaries.
         :return: class<list> of class<dict> of type<ModuleFeedback>
         """
-        await self.connect()
+        await self.prisma.connect()
         self.feedbacks = await self.prisma.modulefeedback.find_many()
 
         feedbacks = []
 
         for i in range(len(self.feedbacks)):
             feedbacks.append(self.feedbacks[i].dict())
-        await self.disconnect()
+        await self.prisma.disconnect()
         return feedbacks
 
     async def getModuleFeedback(self):

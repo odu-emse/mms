@@ -18,16 +18,17 @@ async def main() -> None:
 
     db = Seeder(
         skip=[Skipper.all],
-        cleanup=[Skipper.all]
+        cleanup=[Skipper.all],
+        iterations=100
     )
 
     await db.seedAll()
     await db.cleanupAll()
+    await getUserProfile(ID="63da9e40020a625cc55f64c5")
 
     exit(0)
     # seedModuleModel()
     # seedDbFeedback()
-    # getReviews(userID="63da9e40020a625cc55f64c5")
 
 
 def getReviews(userID):
@@ -64,7 +65,7 @@ async def getUserProfile(ID):
             'id': ID
         }
     )
-    return account.dict()
+    print(account)
 
 
 if __name__ == '__main__':
