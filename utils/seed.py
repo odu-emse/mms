@@ -1,9 +1,11 @@
 from enum import Enum
 import os
+from typing import Union
+
 from essential_generators import DocumentGenerator
 from numpy import random
 from prisma import Prisma
-from prisma.models import User, PlanOfStudy
+import logging
 from requests import post
 from utils.sdl import createMutationString, createModuleMutationString
 
@@ -58,28 +60,6 @@ async def seedPlanOfStudyDB():
             )
 
     print('Plan of study model seeded successfully!')
-
-
-# async def seedEnrollmentDB():
-#     print('Seeding enrollment model...')
-#     gen = DocumentGenerator()
-#     prisma = Prisma()
-#     await prisma.connect()
-#     iterations = 25
-#
-#     modules = await prisma.module.find_many()
-#
-#     for account in accounts:
-#         # create enrollment for each module 25 times
-#         for module in modules:
-#             # create enrollment for each module 25 times
-#             await prisma.moduleenrollment.create(
-#                 data={
-#                     "role": gen.word(),
-#                 }
-#             )
-#
-#     print('Enrollment model seeded successfully!')
 
 
 def seedDbFeedback():
@@ -174,10 +154,12 @@ class Seeder:
     database and the essential_generators library to create document templates.
     """
 
-    def __init__(self, skip: [Skipper] = None, cleanup: [Skipper] = None):
+    def __init__(self, skip: [Skipper] = None, cleanup: [Skipper] = None, iterations: int = 25):
         self.gen = DocumentGenerator()
+        self.gen.init_word_cache(5000)
+        self.gen.init_sentence_cache(5000)
         self.prisma = Prisma()
-        self.iterations = 25
+        self.iterations = iterations
         self.accounts = []
         self.modules = []
         self.enrollments = []
@@ -185,11 +167,19 @@ class Seeder:
         self.plans = []
         self.skip = skip
         self.cleanup = cleanup
+        self.logger = logging.getLogger('__seed__')
+        logging.basicConfig(format='%(levelname)s:%(message)s', level=logging.INFO)
 
     async def connect(self):
+        """
+        Connects to the database using prisma client.
+        """
         await self.prisma.connect()
 
     async def disconnect(self):
+        """
+        Disconnects from the database using prisma client.
+        """
         await self.prisma.disconnect()
 
     async def _getUserAccounts(self):
@@ -221,6 +211,10 @@ class Seeder:
         return mods
 
     async def _getEnrollments(self):
+        """
+        Gets all enrollments from the database and returns them as a list of dictionaries.
+        :return: class<list> of class<dict> of type<ModuleEnrollment>
+        """
         self.enrollments = await self.prisma.moduleenrollment.find_many()
 
         enrollments = []
@@ -231,6 +225,10 @@ class Seeder:
         return enrollments
 
     async def _getFeedbacks(self):
+        """
+        Gets all feedbacks from the database and returns them as a list of dictionaries.
+        :return: class<list> of class<dict> of type<ModuleFeedback>
+        """
         self.feedbacks = await self.prisma.modulefeedback.find_many()
 
         feedbacks = []
@@ -251,7 +249,11 @@ class Seeder:
         return plans
 
     async def _seedUserDB(self):
-        print('Seeding user model...')
+        """
+        Seeds the user model with dummy data as many times as described by the iterations' member.
+        :return: None
+        """
+        self.logger.info('Seeding user model...')
         accounts = []
 
         for i in range(self.iterations):
@@ -265,24 +267,28 @@ class Seeder:
         users = await self.prisma.user.create_many(data=accounts)
 
         self.accounts = accounts
-        print('User model seeded successfully with %d documents!' % users)
+        self.logger.info('User model seeded successfully with %d documents!' % users)
 
     async def _seedModuleDB(self):
-        print('Seeding module model...')
+        """
+        Seeds the module model with dummy data as many times as described by the iterations' member.
+        :return: None
+        """
+        self.logger.info('Seeding module model...')
         modules = []
 
         template = {
             'moduleName': {
-                'typemap': 'word',
+                'typemap': 'sentence',
                 'unique': True,
                 'tries': 100
             },
             'moduleNumber': {
-                'typemap': 'small_int',
+                'typemap': 'integer',
                 'unique': True,
                 'tries': 100
             },
-            'description': 'sentence',
+            'description': 'paragraph',
             'duration': 'small_int',
             'intro': 'sentence',
             'numSlides': 'small_int',
@@ -298,10 +304,14 @@ class Seeder:
         module_res = await self.prisma.module.create_many(data=docs)
 
         self.modules = modules
-        print('Module model seeded successfully with %d documents!' % module_res)
+        self.logger.info('Module model seeded successfully with %d documents!' % module_res)
 
     async def _seedPlanOfStudyDB(self):
-        print('Seeding plan of study model...')
+        """
+        Seeds the plan of study model with dummy data for each account already present in the DB.
+        :return:
+        """
+        self.logger.info('Seeding plan of study model...')
         plans = []
 
         for account in self.accounts:
@@ -312,10 +322,15 @@ class Seeder:
         plan_res = await self.prisma.planofstudy.create_many(data=plans)
 
         self.plans = plans
-        print('Plan of study model seeded successfully with %d documents!' % plan_res)
+        self.logger.info('Plan of study model seeded successfully with %d documents!' % plan_res)
 
     async def _seedEnrollmentDB(self):
-        print('Seeding enrollment model...')
+        """
+        Enroll each account in each module with a random role. The number of documents that will be created is equal
+        to the number of plan of studies multiplied by the number of modules.
+        :return: None
+        """
+        self.logger.info('Seeding enrollment model...')
         enrollments = []
 
         class EnrollmentRole(Enum):
@@ -334,10 +349,15 @@ class Seeder:
         enrollment_res = await self.prisma.moduleenrollment.create_many(data=enrollments)
 
         self.enrollments = enrollments
-        print('Enrollment model seeded successfully with %d documents!' % enrollment_res)
+        self.logger.info('Enrollment model seeded successfully with %d documents!' % enrollment_res)
 
     async def _seedFeedbackDB(self):
-        print('Seeding feedback model...')
+        """
+        Seed the feedback model with dummy data for each enrollment. The number of documents that will be created is
+        equal to the number of enrollments.
+        :return: None
+        """
+        self.logger.info('Seeding feedback model...')
         feedbacks = []
 
         # find the user's ID given a plan ID
@@ -353,101 +373,116 @@ class Seeder:
 
         feedback_res = await self.prisma.modulefeedback.create_many(data=feedbacks)
         self.feedbacks = feedbacks
-        print('Feedback model seeded successfully with %d documents!' % feedback_res)
+        self.logger.info('Feedback model seeded successfully with %d documents!' % feedback_res)
 
     async def seedAll(self):
+        """
+        Calls all the seeding methods in the correct order. If the skip member is set to Skipper.all, then all seeding
+        operations will be skipped. If the skip member is set to Skipper.<modelName>, then the <modelName> model seeding
+        will be skipped.
+        :return: None
+        """
         await self.connect()
-        print('Seeding operation started...')
-
+        self.logger.info('Seeding operation started...')
         if Skipper.all in self.skip:
-            print('Skipping all model seeding...')
+            self.logger.info('Skipping all model seeding...')
         else:
             if Skipper.user in self.skip:
-                print('Skipping user model seeding...')
+                self.logger.info('Skipping user model seeding...')
                 self.accounts = await self._getUserAccounts()
             else:
                 await self._seedUserDB()
 
             if Skipper.module in self.skip:
-                print('Skipping module model seeding...')
+                self.logger.info('Skipping module model seeding...')
                 self.modules = await self._getModules()
             else:
                 await self._seedModuleDB()
 
             if Skipper.plan in self.skip:
-                print('Skipping plan of study model seeding...')
+                self.logger.info('Skipping plan of study model seeding...')
                 self.plans = await self._getPlans()
             else:
                 await self._seedPlanOfStudyDB()
 
             if Skipper.enrollment in self.skip:
-                print('Skipping enrollment model seeding...')
+                self.logger.info('Skipping enrollment model seeding...')
                 self.enrollments = await self._getEnrollments()
             else:
                 await self._seedEnrollmentDB()
 
             if Skipper.feedback in self.skip:
-                print('Skipping feedback model seeding...')
+                self.logger.info('Skipping feedback model seeding...')
                 self.feedbacks = await self._getFeedbacks()
             else:
                 await self._seedFeedbackDB()
 
-            print('All models seeded successfully!')
-
+            self.logger.info('All models seeded successfully!')
         await self.disconnect()
 
     async def cleanupAll(self):
+        """
+        Calls all the cleanup methods in the correct order. If the cleanup member is set to Skipper.all, then all
+        cleanup operations will be skipped. If the cleanup member is set to Skipper.<modelName>, then the <modelName>
+        model cleanup will be skipped.
+        :return:
+        """
         await self.connect()
-        print('Cleanup operation started...')
+        self.logger.info('Cleanup operation started...')
 
         if Skipper.all in self.cleanup:
-            print('Skipping all model cleanup...')
+            self.logger.info('Skipping all model cleanup...')
             return
         else:
+            # Deleting all users
             if Skipper.user in self.cleanup:
-                print('Skipping user model cleanup...')
+                self.logger.info('Skipping user model cleanup...')
             else:
                 await self._cleanupUserDB()
 
-            if Skipper.module in self.cleanup:
-                print('Skipping module model cleanup...')
-            else:
-                await self._cleanupModuleDB()
-
-            if Skipper.feedback in self.cleanup:
-                print('Skipping feedback model cleanup...')
-            else:
-                await self._cleanupFeedbackDB()
-
+            # Deleting all plans of study
             if Skipper.plan in self.cleanup:
-                print('Skipping plan of study model cleanup...')
+                self.logger.info('Skipping plan of study model cleanup...')
             else:
                 await self._cleanupPlanOfStudyDB()
 
+            # Deleting all enrollments
             if Skipper.enrollment in self.cleanup:
-                print('Skipping enrollment model cleanup...')
+                self.logger.info('Skipping enrollment model cleanup...')
             else:
                 await self._cleanupEnrollmentDB()
 
-            print('All models cleaned up successfully!')
+            # Deleting all modules
+            if Skipper.module in self.cleanup:
+                self.logger.info('Skipping module model cleanup...')
+            else:
+                await self._cleanupModuleDB()
+
+            # Deleting all module feedback
+            if Skipper.feedback in self.cleanup:
+                self.logger.info('Skipping feedback model cleanup...')
+            else:
+                await self._cleanupFeedbackDB()
+
+            self.logger.info('All models cleaned up successfully!')
         await self.disconnect()
 
     async def _cleanupUserDB(self):
         count = await self.prisma.user.delete_many()
-        print('User model cleaned up successfully! (%d documents deleted)' % count)
+        self.logger.info('User model cleaned up successfully! (%d documents deleted)' % count)
 
     async def _cleanupModuleDB(self):
         count = await self.prisma.module.delete_many()
-        print('Module model cleaned up successfully! (%d documents deleted)' % count)
+        self.logger.info('Module model cleaned up successfully! (%d documents deleted)' % count)
 
     async def _cleanupFeedbackDB(self):
         count = await self.prisma.modulefeedback.delete_many()
-        print('Feedback model cleaned up successfully! (%d documents deleted)' % count)
+        self.logger.info('Feedback model cleaned up successfully! (%d documents deleted)' % count)
 
     async def _cleanupPlanOfStudyDB(self):
         count = await self.prisma.planofstudy.delete_many()
-        print('Plan of study model cleaned up successfully! (%d documents deleted)' % count)
+        self.logger.info('Plan of study model cleaned up successfully! (%d documents deleted)' % count)
 
     async def _cleanupEnrollmentDB(self):
         count = await self.prisma.moduleenrollment.delete_many()
-        print('Enrollment model cleaned up successfully! (%d documents deleted)' % count)
+        self.logger.info('Enrollment model cleaned up successfully! (%d documents deleted)' % count)
