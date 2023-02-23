@@ -28,6 +28,8 @@
 </summary>
 <pre><code class="python">from enum import Enum
 import os
+from typing import Union
+
 from essential_generators import DocumentGenerator
 from numpy import random
 from prisma import Prisma
@@ -86,28 +88,6 @@ async def seedPlanOfStudyDB():
             )
 
     print(&#39;Plan of study model seeded successfully!&#39;)
-
-
-# async def seedEnrollmentDB():
-#     print(&#39;Seeding enrollment model...&#39;)
-#     gen = DocumentGenerator()
-#     prisma = Prisma()
-#     await prisma.connect()
-#     iterations = 25
-#
-#     modules = await prisma.module.find_many()
-#
-#     for account in accounts:
-#         # create enrollment for each module 25 times
-#         for module in modules:
-#             # create enrollment for each module 25 times
-#             await prisma.moduleenrollment.create(
-#                 data={
-#                     &#34;role&#34;: gen.word(),
-#                 }
-#             )
-#
-#     print(&#39;Enrollment model seeded successfully!&#39;)
 
 
 def seedDbFeedback():
@@ -202,10 +182,12 @@ class Seeder:
     database and the essential_generators library to create document templates.
     &#34;&#34;&#34;
 
-    def __init__(self, skip: [Skipper] = None, cleanup: [Skipper] = None):
+    def __init__(self, skip: [Skipper] = None, cleanup: [Skipper] = None, iterations: int = 25):
         self.gen = DocumentGenerator()
+        self.gen.init_word_cache(5000)
+        self.gen.init_sentence_cache(5000)
         self.prisma = Prisma()
-        self.iterations = 25
+        self.iterations = iterations
         self.accounts = []
         self.modules = []
         self.enrollments = []
@@ -325,16 +307,16 @@ class Seeder:
 
         template = {
             &#39;moduleName&#39;: {
-                &#39;typemap&#39;: &#39;word&#39;,
+                &#39;typemap&#39;: &#39;sentence&#39;,
                 &#39;unique&#39;: True,
                 &#39;tries&#39;: 100
             },
             &#39;moduleNumber&#39;: {
-                &#39;typemap&#39;: &#39;small_int&#39;,
+                &#39;typemap&#39;: &#39;integer&#39;,
                 &#39;unique&#39;: True,
                 &#39;tries&#39;: 100
             },
-            &#39;description&#39;: &#39;sentence&#39;,
+            &#39;description&#39;: &#39;paragraph&#39;,
             &#39;duration&#39;: &#39;small_int&#39;,
             &#39;intro&#39;: &#39;sentence&#39;,
             &#39;numSlides&#39;: &#39;small_int&#39;,
@@ -480,30 +462,35 @@ class Seeder:
             self.logger.info(&#39;Skipping all model cleanup...&#39;)
             return
         else:
+            # Deleting all users
             if Skipper.user in self.cleanup:
                 self.logger.info(&#39;Skipping user model cleanup...&#39;)
             else:
                 await self._cleanupUserDB()
 
-            if Skipper.module in self.cleanup:
-                self.logger.info(&#39;Skipping module model cleanup...&#39;)
-            else:
-                await self._cleanupModuleDB()
-
-            if Skipper.feedback in self.cleanup:
-                self.logger.info(&#39;Skipping feedback model cleanup...&#39;)
-            else:
-                await self._cleanupFeedbackDB()
-
+            # Deleting all plans of study
             if Skipper.plan in self.cleanup:
                 self.logger.info(&#39;Skipping plan of study model cleanup...&#39;)
             else:
                 await self._cleanupPlanOfStudyDB()
 
+            # Deleting all enrollments
             if Skipper.enrollment in self.cleanup:
                 self.logger.info(&#39;Skipping enrollment model cleanup...&#39;)
             else:
                 await self._cleanupEnrollmentDB()
+
+            # Deleting all modules
+            if Skipper.module in self.cleanup:
+                self.logger.info(&#39;Skipping module model cleanup...&#39;)
+            else:
+                await self._cleanupModuleDB()
+
+            # Deleting all module feedback
+            if Skipper.feedback in self.cleanup:
+                self.logger.info(&#39;Skipping feedback model cleanup...&#39;)
+            else:
+                await self._cleanupFeedbackDB()
 
             self.logger.info(&#39;All models cleaned up successfully!&#39;)
         await self.disconnect()
@@ -726,7 +713,7 @@ class Seeder:
 <dl>
 <dt id="emse-mms.utils.seed.Seeder"><code class="flex name class">
 <span>class <span class="ident">Seeder</span></span>
-<span>(</span><span>skip: [<enum '<a title="emse-mms.utils.seed.Skipper" href="#emse-mms.utils.seed.Skipper">Skipper</a>'>] = None, cleanup: [<enum '<a title="emse-mms.utils.seed.Skipper" href="#emse-mms.utils.seed.Skipper">Skipper</a>'>] = None)</span>
+<span>(</span><span>skip: [<enum '<a title="emse-mms.utils.seed.Skipper" href="#emse-mms.utils.seed.Skipper">Skipper</a>'>] = None, cleanup: [<enum '<a title="emse-mms.utils.seed.Skipper" href="#emse-mms.utils.seed.Skipper">Skipper</a>'>] = None, iterations: int = 25)</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Seeder class for seeding the database with dummy data. Makes use of the prisma python client to connection to the
@@ -741,10 +728,12 @@ database and the essential_generators library to create document templates.</p><
     database and the essential_generators library to create document templates.
     &#34;&#34;&#34;
 
-    def __init__(self, skip: [Skipper] = None, cleanup: [Skipper] = None):
+    def __init__(self, skip: [Skipper] = None, cleanup: [Skipper] = None, iterations: int = 25):
         self.gen = DocumentGenerator()
+        self.gen.init_word_cache(5000)
+        self.gen.init_sentence_cache(5000)
         self.prisma = Prisma()
-        self.iterations = 25
+        self.iterations = iterations
         self.accounts = []
         self.modules = []
         self.enrollments = []
@@ -864,16 +853,16 @@ database and the essential_generators library to create document templates.</p><
 
         template = {
             &#39;moduleName&#39;: {
-                &#39;typemap&#39;: &#39;word&#39;,
+                &#39;typemap&#39;: &#39;sentence&#39;,
                 &#39;unique&#39;: True,
                 &#39;tries&#39;: 100
             },
             &#39;moduleNumber&#39;: {
-                &#39;typemap&#39;: &#39;small_int&#39;,
+                &#39;typemap&#39;: &#39;integer&#39;,
                 &#39;unique&#39;: True,
                 &#39;tries&#39;: 100
             },
-            &#39;description&#39;: &#39;sentence&#39;,
+            &#39;description&#39;: &#39;paragraph&#39;,
             &#39;duration&#39;: &#39;small_int&#39;,
             &#39;intro&#39;: &#39;sentence&#39;,
             &#39;numSlides&#39;: &#39;small_int&#39;,
@@ -1019,30 +1008,35 @@ database and the essential_generators library to create document templates.</p><
             self.logger.info(&#39;Skipping all model cleanup...&#39;)
             return
         else:
+            # Deleting all users
             if Skipper.user in self.cleanup:
                 self.logger.info(&#39;Skipping user model cleanup...&#39;)
             else:
                 await self._cleanupUserDB()
 
-            if Skipper.module in self.cleanup:
-                self.logger.info(&#39;Skipping module model cleanup...&#39;)
-            else:
-                await self._cleanupModuleDB()
-
-            if Skipper.feedback in self.cleanup:
-                self.logger.info(&#39;Skipping feedback model cleanup...&#39;)
-            else:
-                await self._cleanupFeedbackDB()
-
+            # Deleting all plans of study
             if Skipper.plan in self.cleanup:
                 self.logger.info(&#39;Skipping plan of study model cleanup...&#39;)
             else:
                 await self._cleanupPlanOfStudyDB()
 
+            # Deleting all enrollments
             if Skipper.enrollment in self.cleanup:
                 self.logger.info(&#39;Skipping enrollment model cleanup...&#39;)
             else:
                 await self._cleanupEnrollmentDB()
+
+            # Deleting all modules
+            if Skipper.module in self.cleanup:
+                self.logger.info(&#39;Skipping module model cleanup...&#39;)
+            else:
+                await self._cleanupModuleDB()
+
+            # Deleting all module feedback
+            if Skipper.feedback in self.cleanup:
+                self.logger.info(&#39;Skipping feedback model cleanup...&#39;)
+            else:
+                await self._cleanupFeedbackDB()
 
             self.logger.info(&#39;All models cleaned up successfully!&#39;)
         await self.disconnect()
@@ -1095,30 +1089,35 @@ model cleanup will be skipped.
         self.logger.info(&#39;Skipping all model cleanup...&#39;)
         return
     else:
+        # Deleting all users
         if Skipper.user in self.cleanup:
             self.logger.info(&#39;Skipping user model cleanup...&#39;)
         else:
             await self._cleanupUserDB()
 
-        if Skipper.module in self.cleanup:
-            self.logger.info(&#39;Skipping module model cleanup...&#39;)
-        else:
-            await self._cleanupModuleDB()
-
-        if Skipper.feedback in self.cleanup:
-            self.logger.info(&#39;Skipping feedback model cleanup...&#39;)
-        else:
-            await self._cleanupFeedbackDB()
-
+        # Deleting all plans of study
         if Skipper.plan in self.cleanup:
             self.logger.info(&#39;Skipping plan of study model cleanup...&#39;)
         else:
             await self._cleanupPlanOfStudyDB()
 
+        # Deleting all enrollments
         if Skipper.enrollment in self.cleanup:
             self.logger.info(&#39;Skipping enrollment model cleanup...&#39;)
         else:
             await self._cleanupEnrollmentDB()
+
+        # Deleting all modules
+        if Skipper.module in self.cleanup:
+            self.logger.info(&#39;Skipping module model cleanup...&#39;)
+        else:
+            await self._cleanupModuleDB()
+
+        # Deleting all module feedback
+        if Skipper.feedback in self.cleanup:
+            self.logger.info(&#39;Skipping feedback model cleanup...&#39;)
+        else:
+            await self._cleanupFeedbackDB()
 
         self.logger.info(&#39;All models cleaned up successfully!&#39;)
     await self.disconnect()</code></pre>

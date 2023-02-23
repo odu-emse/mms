@@ -1,0 +1,23 @@
+name: Build and Deploy Docs
+
+on:
+  push:
+    branches: [ 'dev', 'master', 'ALMP-**' ]
+
+jobs:
+  docs:
+    runs-on: ubuntu-latest
+    name: Create Docs
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-python@v4
+        with:
+          python-version: '3.9.13'
+          cache: 'pip' # caching pip dependencies
+      - run: pip install -r requirements.txt
+      - name: Generate docs
+        run: pdoc --html --output-dir docs --force .
+      - name: Deploy docs
+        uses: JamesIves/github-pages-deploy-action@v4
+        with:
+          folder: docs

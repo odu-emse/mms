@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
 <meta name="generator" content="pdoc 0.10.0" />
-<title>emse-mms.endpoints.recommend API documentation</title>
+<title>emse-mms.utils API documentation</title>
 <meta name="description" content="" />
 <link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/sanitize.min.css" integrity="sha256-PK9q560IAAa6WVRRh76LtCaI8pjTJ2z11v0miyNNjrs=" crossorigin>
 <link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/typography.min.css" integrity="sha256-7l/o7C8jubJiy74VsKTidCy1yBkRtiUGbVkYBylBqUg=" crossorigin>
@@ -19,46 +19,50 @@
 <main>
 <article id="content">
 <header>
-<h1 class="title">Module <code>emse-mms.endpoints.recommend</code></h1>
+<h1 class="title">Namespace <code>emse-mms.utils</code></h1>
 </header>
 <section id="section-intro">
-<details class="source">
-<summary>
-<span>Expand source code</span>
-</summary>
-<pre><code class="python">from typing import Union
-from fastapi import FastAPI
-
-app = FastAPI()
-
-
-@app.get(&#34;/recommend/&#34;)
-async def read_item(user_id: str):
-    return {&#34;user_id&#34;: user_id}</code></pre>
-</details>
 </section>
 <section>
-</section>
-<section>
-</section>
-<section>
-<h2 class="section-title" id="header-functions">Functions</h2>
+<h2 class="section-title" id="header-submodules">Sub-modules</h2>
 <dl>
-<dt id="emse-mms.endpoints.recommend.read_item"><code class="name flex">
-<span>async def <span class="ident">read_item</span></span>(<span>user_id: str)</span>
-</code></dt>
+<dt><code class="name"><a title="emse-mms.utils.db" href="db.html">emse-mms.utils.db</a></code></dt>
 <dd>
 <div class="desc"></div>
-<details class="source">
-<summary>
-<span>Expand source code</span>
-</summary>
-<pre><code class="python">@app.get(&#34;/recommend/&#34;)
-async def read_item(user_id: str):
-    return {&#34;user_id&#34;: user_id}</code></pre>
-</details>
+</dd>
+<dt><code class="name"><a title="emse-mms.utils.fetch" href="fetch.html">emse-mms.utils.fetch</a></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt><code class="name"><a title="emse-mms.utils.helper" href="helper.html">emse-mms.utils.helper</a></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt><code class="name"><a title="emse-mms.utils.recs" href="recs.html">emse-mms.utils.recs</a></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt><code class="name"><a title="emse-mms.utils.response" href="response.html">emse-mms.utils.response</a></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt><code class="name"><a title="emse-mms.utils.sdl" href="sdl.html">emse-mms.utils.sdl</a></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt><code class="name"><a title="emse-mms.utils.seed" href="seed.html">emse-mms.utils.seed</a></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt><code class="name"><a title="emse-mms.utils.similarity" href="similarity.html">emse-mms.utils.similarity</a></code></dt>
+<dd>
+<div class="desc"></div>
 </dd>
 </dl>
+</section>
+<section>
+</section>
+<section>
 </section>
 <section>
 </section>
@@ -71,12 +75,19 @@ async def read_item(user_id: str):
 <ul id="index">
 <li><h3>Super-module</h3>
 <ul>
-<li><code><a title="emse-mms.endpoints" href="index.html">emse-mms.endpoints</a></code></li>
+<li><code><a title="emse-mms" href="../index.html">emse-mms</a></code></li>
 </ul>
 </li>
-<li><h3><a href="#header-functions">Functions</a></h3>
-<ul class="">
-<li><code><a title="emse-mms.endpoints.recommend.read_item" href="#emse-mms.endpoints.recommend.read_item">read_item</a></code></li>
+<li><h3><a href="#header-submodules">Sub-modules</a></h3>
+<ul>
+<li><code><a title="emse-mms.utils.db" href="db.html">emse-mms.utils.db</a></code></li>
+<li><code><a title="emse-mms.utils.fetch" href="fetch.html">emse-mms.utils.fetch</a></code></li>
+<li><code><a title="emse-mms.utils.helper" href="helper.html">emse-mms.utils.helper</a></code></li>
+<li><code><a title="emse-mms.utils.recs" href="recs.html">emse-mms.utils.recs</a></code></li>
+<li><code><a title="emse-mms.utils.response" href="response.html">emse-mms.utils.response</a></code></li>
+<li><code><a title="emse-mms.utils.sdl" href="sdl.html">emse-mms.utils.sdl</a></code></li>
+<li><code><a title="emse-mms.utils.seed" href="seed.html">emse-mms.utils.seed</a></code></li>
+<li><code><a title="emse-mms.utils.similarity" href="similarity.html">emse-mms.utils.similarity</a></code></li>
 </ul>
 </li>
 </ul>
