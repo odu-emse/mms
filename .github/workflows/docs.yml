@@ -14,7 +14,14 @@ jobs:
         with:
           python-version: '3.9.13'
           cache: 'pip' # caching pip dependencies
-      - run: pip install -r requirements.txt
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+      - name: Set env variables
+        run: |
+          echo "DATABASE_URL=${{secrets.DATABASE_URL}}" > .env
+          echo "DIRECT_URL=${{secrets.DIRECT_URL}}" > .env
+      - name: Generate Prisma types
+        run: prisma generate
       - name: Generate docs
         run: pdoc --html --output-dir docs --force .
       - name: Deploy docs
