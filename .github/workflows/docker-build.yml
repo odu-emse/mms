@@ -1,0 +1,15 @@
+name: Build Docker image
+
+on:
+  push:
+      branches: [ 'ALMP-**' ]
+  pull_request:
+      branches: [ 'master', 'dev' ]
+
+jobs:
+  build:
+      runs-on: ubuntu-latest
+      steps:
+      - uses: actions/checkout@v3
+      - name: Build the Docker image
+        run: docker build . --file Dockerfile --tag dpapp001/emse-mms:${{ github.ref_name }}
