@@ -4,9 +4,9 @@ on:
 #  release:
 #    types: [ published ]
   push:
-      branches: [ master ]
+      branches: [ 'ALMP-**' ]
   pull_request:
-      branches: [ ALMP-* ]
+      branches: [ 'master', 'dev' ]
 
 jobs:
   build:
