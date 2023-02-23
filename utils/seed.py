@@ -7,116 +7,6 @@ from numpy import random
 from prisma import Prisma
 import logging
 from requests import post
-from utils.sdl import createMutationString, createModuleMutationString
-
-
-async def seedUserDB():
-    print('Seeding user model...')
-    prisma = Prisma()
-    await prisma.connect()
-    gen = DocumentGenerator()
-    iterations = 25
-    accounts = []
-
-    for i in range(iterations):
-        accounts.append({
-            'firstName': gen.name(),
-            'lastName': gen.name(),
-            'email': gen.email(),
-            'openID': str(gen.integer()),
-        })
-
-    users = await prisma.user.create_many(data=accounts)
-
-    print('User model seeded successfully with %d documents!' % users)
-    await prisma.disconnect()
-
-
-async def seedPlanOfStudyDB():
-    print('Seeding plan of study model...')
-    gen = DocumentGenerator()
-    prisma = Prisma()
-    await prisma.connect()
-
-    modules = await prisma.module.find_many()
-    accounts = await prisma.user.find_many()
-
-    for account in accounts:
-        for module in modules:
-            # create plan of study for each module 25 times
-            await prisma.planofstudy.create(
-                data={
-                    "modules": {
-                        "connect": {
-                            "id": module.get('id')
-                        }
-                    },
-                    "student": {
-                        "connect": {
-                            "id": account['id']
-                        }
-                    }
-                }
-            )
-
-    print('Plan of study model seeded successfully!')
-
-
-def seedDbFeedback():
-    print('Seeding feedback model...')
-    gen = DocumentGenerator()
-    iterations = 25
-    modules = getModules()['module']
-    for module in modules:
-        # create feedback for each module 25 times
-        for i in range(iterations):
-            res = post('http://%s/graphql' % os.environ.get("API_URL", "localhost:4000"),
-                       {},
-                       {'query': createMutationString(
-                           comment=gen.sentence(),
-                           rating=random.randint(1, 6),
-                           moduleID=module['id'],
-                       )
-                       })
-            print(res.json())
-
-    print('Feedback model seeded successfully!')
-
-
-def seedModuleModel():
-    print('Seeding module model...')
-    gen = DocumentGenerator()
-    iterations = 25
-    for i in range(iterations):
-        key_length = random.randint(1, 11)
-        res = post('http://%s/graphql' % os.environ.get("API_URL", "localhost:4000"),
-                   {},
-                   {'query': createModuleMutationString(
-                       moduleName=gen.word(),
-                       moduleNumber=random.randint(1, 1000),
-                       description=gen.sentence(),
-                       duration=random.randint(1, 100),
-                       intro=gen.sentence(),
-                       numSlides=random.randint(1, 100),
-                       keywords=[gen.word() for i in range(key_length)]
-                   )
-                   })
-        print(res.json())
-
-    print('Module model seeded successfully!')
-
-
-def getModules():
-    mods = post('http://%s/graphql' % os.environ.get("API_URL", "localhost:4000"), {}, {
-        'query': """query{
-          module(input:{}){
-            id
-            moduleName
-            moduleNumber
-          }
-        }"""
-    })
-    return mods.json()['data']
 
 
 def getModuleFeedback():
@@ -154,7 +44,7 @@ class Seeder:
     database and the essential_generators library to create document templates.
     """
 
-    def __init__(self, skip: [Skipper] = None, cleanup: [Skipper] = None, iterations: int = 25):
+    def __init__(self, skip: [Skipper] = None, cleanup: [Skipper] = None, iterations: int = 25, target: Union[str, None] = None):
         self.gen = DocumentGenerator()
         self.gen.init_word_cache(5000)
         self.gen.init_sentence_cache(5000)
@@ -167,6 +57,7 @@ class Seeder:
         self.plans = []
         self.skip = skip
         self.cleanup = cleanup
+        self.target = target
         self.logger = logging.getLogger('__seed__')
         logging.basicConfig(format='%(levelname)s:%(message)s', level=logging.INFO)
 
@@ -181,6 +72,20 @@ class Seeder:
         Disconnects from the database using prisma client.
         """
         await self.prisma.disconnect()
+
+    async def createTargetUser(self):
+        """
+        Creates a target user for testing purposes.
+        """
+        account = await self.prisma.user.create(data={
+                'firstName': 'Test User',
+                'lastName': 'Test User',
+                'email': '',
+                'openID': ''
+            })
+
+        self.logger.info('Created target user: %s' % account.id)
+        return account.id
 
     async def _getUserAccounts(self):
         """
