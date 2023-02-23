@@ -1,52 +1,25 @@
-from pandas import DataFrame
 import asyncio
 from prisma import Prisma
 
 from utils.db import testConnection
-from utils.response import getModuleFromID
-from utils.seed import getModuleFeedback, Seeder, Skipper
-from utils.helper import convertReviewsFromDbToDf
-
+from utils.seed import Seeder, Skipper
 
 async def main() -> None:
     print('Starting application...')
     testConnection()
-    # await seedUserDB()
-    # seedModuleModel()
-    # await seedPlanOfStudyDB()
-    # await seedEnrollmentDB()
 
     db = Seeder(
         skip=[Skipper.all],
         cleanup=[Skipper.all],
-        iterations=100
+        iterations=100,
     )
 
     await db.seedAll()
     await db.cleanupAll()
-    await getUserProfile(ID="63da9e40020a625cc55f64c5")
+    # targetID = await db.createTargetUser()
+    await getUserProfile(ID='63f7a3068b546b91eadb20a6')
 
     exit(0)
-    # seedModuleModel()
-    # seedDbFeedback()
-
-
-def getReviews(userID):
-    # read data
-    mod_data = getModuleFeedback()
-    df = convertReviewsFromDbToDf(mod_data['module'], userID)
-
-    # print(df)
-    # print(df.groupby(['userID', 'moduleID']).sum().sort_values('rating', ascending=False).head())
-    # print(df.groupby('moduleID')['rating'].sum().sort_values(ascending=False).head())
-
-    # get highest rated modules
-    top_mods: DataFrame = df.groupby('moduleID')['rating'].sum().sort_values(ascending=False)
-
-    # run response for each row of the highest rated modules
-    print(top_mods)
-    res_top_mods = top_mods.reset_index()
-    res_top_mods.apply(lambda row: getModuleFromID(row), axis=1)
 
 
 async def getUserProfile(ID):
