@@ -8,6 +8,8 @@ import random
 import pandas as pd
 from math import sqrt
 
+from pandas import DataFrame
+
 from prisma import Prisma
 
 
@@ -15,7 +17,7 @@ async def main(target: str):
     # rec = Recommender(target)
     # await rec.recommend()
     rec = Recs()
-    rec.run()
+    await rec.run()
 
 
 class Recommender:
@@ -94,79 +96,123 @@ class Recommender:
 
 class Recs:
     def __init__(self, target=None):
+        self.prisma = Prisma()
         if target is None:
             target = [
                 {
-                    'title': 'Breakfast Club, The',
+                    "id": "63f4ee98ece0495cbb312604",
+                    'title': 'orm,',
                     'rating': 5
                 },
                 {
-                    'title': 'Toy Story',
+                    'id': '63f4ee98ece0495cbb312608',
+                    'title': 'me',
                     'rating': 3.5
                 },
                 {
-                    'title': 'Jumanji',
+                    'id': '63f4ee98ece0495cbb3125f5',
+                    'title': '2017',
                     'rating': 2
                 },
                 {
-                    'title': 'Pulp Fiction',
+                    "id": "63f4ee98ece0495cbb3125f9",
+                    'title': 'Souppe',
                     'rating': 5
                 },
                 {
-                    'title': 'Akira',
+                    "id": "63f4ee98ece0495cbb3125fe",
+                    'title': 'Frams.',
                     'rating': 4.5
                 }
             ]
             self.inputMovies = pd.DataFrame(target)
+
         self.movies_df = pd.read_csv('input/movies.csv')
+        self.modules_df = None
         self.ratings_df = pd.read_csv('input/ratings.csv')
+        self.feedbacks_df = None
+
         self.userSubsetGroup = None
         self.pearsonCorrelationDict = dict()
         self.tempTopUsersRating = None
 
+    def sampleModules(self):
+        """
+            - get a random set of 10 modules
+            - create a ratings for each module
+            - return as a list of dicts with id, title and rating
+        """
+
     def cleanData(self):
-        # Using regular expressions to find a year stored between parentheses
-        # We specify the parentheses, so we don’t conflict with movies that have years in their titles
+        """
+        Removes all the columns that are not needed for the recommendation engine. This is done to reduce the size of
+        the dataset and reduce overall complexity in our data.
+        """
+        modules_df: DataFrame = self.modules_df.drop([
+            'description',
+            'duration',
+            'intro',
+            'numSlides',
+            'keywords',
+            'objectives',
+            'createdAt',
+            'updatedAt',
+            'members',
+            'assignments',
+            'parentModules',
+            'parentModuleIDs',
+            'subModules',
+            'subModuleIDs',
+            'collections',
+            'course',
+            'courseIDs',
+            'feedback',
+            'moduleName'
+        ], axis=1)
 
-        print(self.movies_df.head())
+        feedbacks_df: DataFrame = self.feedbacks_df.drop(['student', 'module'], axis=1)
 
-        self.movies_df['year'] = self.movies_df.title.str.extract('(\(\d\d\d\d\))', expand=False)
+        self.feedbacks_df = feedbacks_df
 
-        # Removing the parentheses
+        self.modules_df = modules_df
 
-        self.movies_df['year'] = self.movies_df.year.str.extract('(\d\d\d\d)', expand=False)
+        pd.options.display.max_columns = 60
 
-        # Removing the years from the ‘title’ column
+    async def __get_module_data(self):
+        await self.prisma.connect()
 
-        self.movies_df['title'] = self.movies_df.title.str.replace('(\(\d\d\d\d\))', '')
-        # Applying the strip function to get rid of any ending whitespace characters that may have appeared
+        modules = await self.prisma.module.find_many()
 
-        self.movies_df['title'] = self.movies_df['title'].apply(lambda x: x.strip())
+        modules = list(map(lambda x: x.dict(), modules))
 
-        print(self.movies_df.head())
+        self.modules_df = pd.DataFrame(modules)
 
-        self.movies_df = self.movies_df.drop('genres', 1)
+        await self.prisma.disconnect()
+
+    async def __get_feedback_data(self):
+        await self.prisma.connect()
+
+        feedbacks = await self.prisma.modulefeedback.find_many()
+
+        feedbacks = list(map(lambda x: x.dict(), feedbacks))
+
+        self.feedbacks_df = pd.DataFrame(feedbacks)
+
+        await self.prisma.disconnect()
 
     def handleUserInput(self):
-        inputID = self.movies_df[self.movies_df['title'].isin(self.inputMovies['title'].tolist())]
+        inputID = self.modules_df[self.modules_df['id'].isin(self.inputMovies['id'].tolist())]
 
         inputMovies = pd.merge(inputID, self.inputMovies)
 
-        inputMovies = inputMovies.drop('year', 1)
-
-        print(inputMovies)
         self.inputMovies = inputMovies
 
     def createSubset(self):
-        userSubset = self.ratings_df[self.ratings_df['movieId'].isin(self.inputMovies['movieId'].tolist())]
+        userSubset = self.feedbacks_df[self.feedbacks_df['moduleId'].isin(self.inputMovies['id'].tolist())]
 
-        userSubset.head()
-
-        userSubsetGroup = userSubset.groupby(['userId'])
+        userSubsetGroup = userSubset.groupby(['studentId'])
 
         userSubsetGroup = sorted(userSubsetGroup, key=lambda x: len(x[1]), reverse=True)
-
-        print(userSubsetGroup[0:3])
 
         self.userSubsetGroup = userSubsetGroup
 
@@ -174,14 +220,16 @@ class Recs:
         pearsonCorrelationDict = {}
 
         for name, group in self.userSubsetGroup:
-            group = group.sort_values(by='movieId')
+            group = group.sort_values(by='id')
 
-            inputMovies = self.inputMovies.sort_values(by='movieId')
+            inputMovies = self.inputMovies.sort_values(by='rating')
 
             nRatings = len(group)
 
-            temp_df = inputMovies[inputMovies['movieId'].isin(group['movieId'].tolist())]
+            temp_df = inputMovies[inputMovies['id'].isin(group['moduleId'].tolist())]
+
             tempRatingList = temp_df['rating'].tolist()
+
             tempGroupList = group['rating'].tolist()
 
             Sxx = sum([i ** 2 for i in tempRatingList]) - pow(sum(tempRatingList), 2) / float(nRatings)
@@ -194,62 +242,50 @@ class Recs:
             else:
                 pearsonCorrelationDict[name] = 0
 
-        print(pearsonCorrelationDict.items())
         self.pearsonCorrelationDict = pearsonCorrelationDict
 
     def topUser(self):
         pearsonDF = pd.DataFrame.from_dict(self.pearsonCorrelationDict, orient='index')
         pearsonDF.columns = ['similarityIndex']
-        pearsonDF['userId'] = pearsonDF.index
+        pearsonDF['studentId'] = pearsonDF.index
         pearsonDF.index = range(len(pearsonDF))
-
-        print(pearsonDF.head())
 
         topUsers = pearsonDF.sort_values(by='similarityIndex', ascending=False)[0:50]
 
         print(topUsers.head())
 
-        topUsersRating = topUsers.merge(self.ratings_df, left_on='userId', right_on='userId', how='inner')
-
-        print(topUsersRating.head())
+        topUsersRating = topUsers.merge(self.feedbacks_df, left_on='studentId', right_on='studentId', how='inner')
 
         topUsersRating['weightedRating'] = topUsersRating['similarityIndex'] * topUsersRating['rating']
 
-        print(topUsersRating.head())
-
-        tempTopUsersRating = topUsersRating.groupby('movieId').sum()[['similarityIndex', 'weightedRating']]
+        tempTopUsersRating = topUsersRating.groupby('moduleId').sum()[['similarityIndex', 'weightedRating']]
 
         tempTopUsersRating.columns = ['sum_similarityIndex', 'sum_weightedRating']
-
-        print(tempTopUsersRating.head())
 
         self.tempTopUsersRating = tempTopUsersRating
 
     def recommend(self):
         recommendation_df = pd.DataFrame()
 
-        recommendation_df['weighted average recommendation score'] = self.tempTopUsersRating['sum_weightedRating'] / \
-                                                                     self.tempTopUsersRating['sum_similarityIndex']
-        recommendation_df['movieId'] = self.tempTopUsersRating.index
+        recommendation_df['w-AVG score'] = self.tempTopUsersRating['sum_weightedRating'] / self.tempTopUsersRating['sum_similarityIndex']
+        recommendation_df['moduleId'] = self.tempTopUsersRating.index
 
-        print(recommendation_df.head())
-
-        recommendation_df = recommendation_df.sort_values(by='weighted average recommendation score', ascending=False)
+        recommendation_df = recommendation_df.sort_values(by='w-AVG score', ascending=False)
 
         print(recommendation_df.head(10))
 
-        movies_df = self.movies_df.loc[self.movies_df['movieId'].isin(recommendation_df.head(10)['movieId'].tolist())]
+        mods_df = self.modules_df.loc[self.modules_df['id'].isin(recommendation_df.head(20)['moduleId'].tolist())]
 
-        print(movies_df.head(10))
-
-        self.movies_df = movies_df
+        self.modules_df = mods_df
 
     def convertResultToJSON(self):
-        movies = self.movies_df
+        modules = self.modules_df
 
-        return movies.to_json(orient="records")
+        return modules.to_json(orient="records")
 
-    def run(self):
+    async def run(self):
+        await self.__get_module_data()
+        await self.__get_feedback_data()
         self.cleanData()
         self.handleUserInput()
         self.createSubset()
