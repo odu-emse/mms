@@ -1,6 +1,4 @@
 import asyncio
-from prisma import Prisma
-
 from utils.db import testConnection
 from utils.seed import Seeder, Skipper
 
