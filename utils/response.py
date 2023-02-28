@@ -11,7 +11,7 @@ def getModuleFromID(modules_df):
     # append to array in json file
 
     print('Getting module from ID: %s' % modules_df['moduleID'])
-    res = post('http://%s/graphql' % os.environ.get("API_URL", "localhost:4000"), {}, {
+    res = post('http://%s/graphql' % os.environ.get("API_URL", "client:4000"), {}, {
         'query': """query{
               module(input:{
                 id: "%s"
