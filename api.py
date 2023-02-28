@@ -1,6 +1,5 @@
 from fastapi import FastAPI
-
-from app import getUserProfile
+import json
 from recommend import Recommender, Recs
 
 app = FastAPI()
@@ -8,13 +7,9 @@ app = FastAPI()
 
 @app.get("/recommend/")
 async def read_item(userID: str):
-    # rec = Recommender(target=userID)
-    # await rec.recommend()
-    # account = await getUserProfile(userID)
-
     rec = Recs()
-    res = rec.run()
+    res = await rec.run()
 
-    print(res.json())
+    cleaned_data = json.loads(res)
 
-    return {"user": userID, "data": res}
+    return {"user": userID, "data": cleaned_data[0:50]}
