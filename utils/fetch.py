@@ -122,7 +122,7 @@ class Fetcher:
 
 
 async def main():
-    fetcher = Fetcher('http://localhost:4000/graphql')
+    fetcher = Fetcher('http://client:4000/graphql')
     await fetcher.getModules()
     # fetcher.convertObjectTOColumn('module', None)
     await fetcher.getModuleFeedback()

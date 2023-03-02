@@ -1,42 +1,26 @@
 version: "3.8"
 
 services:
-#  db:
-#    image: mongo:latest
-#    container_name: db
-#    environment:
-#      MONGO_INITDB_ROOT_USERNAME: root
-#      MONGO_INITDB_ROOT_PASSWORD: example
-#    ports:
-#      - "27017:27017"
-#      - '28017:28017'
-#    networks:
-#      - mmsNetwork
-#    command: >
-#      bash -c "mongod --replSet rs0 --bind_ip localhost,db"
-#
-#  mongo-express:
-#    depends_on:
-#      - db
-#    image: mongo-express
-#    ports:
-#      - "8081:8081"
-#    environment:
-#      ME_CONFIG_MONGODB_ADMINUSERNAME: root
-#      ME_CONFIG_MONGODB_ADMINPASSWORD: example
-#      ME_CONFIG_MONGODB_URL: mongodb://root:example@db:27017/
-#      ME_CONFIG_MONGODB_ENABLE_ADMIN: true
-#    networks:
-#      - mmsNetwork
-
   app:
-    depends_on:
-      - db
     container_name: app
     build:
       context: .
       dockerfile: Dockerfile
-
+    command: >
+      bash -c "prisma generate && python app.py"
+    networks:
+      - mmsNetwork
+  api:
+    container_name: api
+    build:
+        context: .
+        dockerfile: Dockerfile
+    ports:
+      - "8000:8000"
+    command: >
+      bash -c "prisma generate && python3 -m uvicorn api:app --reload --host 0.0.0.0"
+    networks:
+      - mmsNetwork
   client:
     depends_on:
       - redis
@@ -46,7 +30,6 @@ services:
       - .env
     ports:
       - "4000:4000"
-      - "5555:5555"
     command: > 
       bash -c "yarn && yarn generate && yarn dev"
     networks:

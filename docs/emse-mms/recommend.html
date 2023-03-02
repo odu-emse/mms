@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
 <meta name="generator" content="pdoc 0.10.0" />
-<title>emse-mms API documentation</title>
+<title>emse-mms.recommend API documentation</title>
 <meta name="description" content="" />
 <link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/sanitize.min.css" integrity="sha256-PK9q560IAAa6WVRRh76LtCaI8pjTJ2z11v0miyNNjrs=" crossorigin>
 <link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/typography.min.css" integrity="sha256-7l/o7C8jubJiy74VsKTidCy1yBkRtiUGbVkYBylBqUg=" crossorigin>
@@ -19,38 +19,117 @@
 <main>
 <article id="content">
 <header>
-<h1 class="title">Namespace <code>emse-mms</code></h1>
+<h1 class="title">Module <code>emse-mms.recommend</code></h1>
 </header>
 <section id="section-intro">
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python"># get a set of modules the user has reviewed
+# get the rating by the user for each module
+# multiply the rating by the weight of the module
+# divide the sum of the weighted ratings by the sum of the ratings
+import asyncio
+
+import pandas as pd
+
+from prisma import Prisma
+
+
+async def getRecsForUser(userID: str):
+    prism = Prisma()
+    await prism.connect()
+
+    # get a set of modules the user has reviewed
+    user_reviews = await prism.modulefeedback.find_many(where={&#39;student&#39;: {&#39;id&#39;: userID}})
+
+    reviews = list(map(lambda x: x.dict(), user_reviews))
+
+    # all the reviews by the user
+    df = pd.DataFrame(reviews)
+
+    all_reviews = await prism.modulefeedback.find_many()
+
+    all_reviews = list(map(lambda x: x.dict(), all_reviews))
+
+    df_all_reviews = pd.DataFrame(all_reviews)
+
+    # get the weighted average of the reviews per module
+    df[&#39;weighted_rating&#39;] = df[&#39;rating&#39;] * df_all_reviews[&#39;rating&#39;].mean()
+
+    df.drop(columns=[&#39;module&#39;, &#39;student&#39;], inplace=True)
+    print(df.info())
+    print(df.head())
+
+
+
+async def main():
+    await getRecsForUser(userID=&#39;63f3b1cb9422322eb675292f&#39;)
+    pass
+
+
+if __name__ == &#39;__main__&#39;:
+    asyncio.run(main())</code></pre>
+</details>
 </section>
 <section>
-<h2 class="section-title" id="header-submodules">Sub-modules</h2>
+</section>
+<section>
+</section>
+<section>
+<h2 class="section-title" id="header-functions">Functions</h2>
 <dl>
-<dt><code class="name"><a title="emse-mms.api" href="api.html">emse-mms.api</a></code></dt>
+<dt id="emse-mms.recommend.getRecsForUser"><code class="name flex">
+<span>async def <span class="ident">getRecsForUser</span></span>(<span>userID: str)</span>
+</code></dt>
 <dd>
 <div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">async def getRecsForUser(userID: str):
+    prism = Prisma()
+    await prism.connect()
+
+    # get a set of modules the user has reviewed
+    user_reviews = await prism.modulefeedback.find_many(where={&#39;student&#39;: {&#39;id&#39;: userID}})
+
+    reviews = list(map(lambda x: x.dict(), user_reviews))
+
+    # all the reviews by the user
+    df = pd.DataFrame(reviews)
+
+    all_reviews = await prism.modulefeedback.find_many()
+
+    all_reviews = list(map(lambda x: x.dict(), all_reviews))
+
+    df_all_reviews = pd.DataFrame(all_reviews)
+
+    # get the weighted average of the reviews per module
+    df[&#39;weighted_rating&#39;] = df[&#39;rating&#39;] * df_all_reviews[&#39;rating&#39;].mean()
+
+    df.drop(columns=[&#39;module&#39;, &#39;student&#39;], inplace=True)
+    print(df.info())
+    print(df.head())</code></pre>
+</details>
 </dd>
-<dt><code class="name"><a title="emse-mms.app" href="app.html">emse-mms.app</a></code></dt>
+<dt id="emse-mms.recommend.main"><code class="name flex">
+<span>async def <span class="ident">main</span></span>(<span>)</span>
+</code></dt>
 <dd>
 <div class="desc"></div>
-</dd>
-<dt><code class="name"><a title="emse-mms.db" href="db/index.html">emse-mms.db</a></code></dt>
-<dd>
-<div class="desc"></div>
-</dd>
-<dt><code class="name"><a title="emse-mms.endpoints" href="endpoints/index.html">emse-mms.endpoints</a></code></dt>
-<dd>
-<div class="desc"></div>
-</dd>
-<dt><code class="name"><a title="emse-mms.utils" href="utils/index.html">emse-mms.utils</a></code></dt>
-<dd>
-<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">async def main():
+    await getRecsForUser(userID=&#39;63f3b1cb9422322eb675292f&#39;)
+    pass</code></pre>
+</details>
 </dd>
 </dl>
-</section>
-<section>
-</section>
-<section>
 </section>
 <section>
 </section>
@@ -61,13 +140,15 @@
 <ul></ul>
 </div>
 <ul id="index">
-<li><h3><a href="#header-submodules">Sub-modules</a></h3>
+<li><h3>Super-module</h3>
 <ul>
-<li><code><a title="emse-mms.api" href="api.html">emse-mms.api</a></code></li>
-<li><code><a title="emse-mms.app" href="app.html">emse-mms.app</a></code></li>
-<li><code><a title="emse-mms.db" href="db/index.html">emse-mms.db</a></code></li>
-<li><code><a title="emse-mms.endpoints" href="endpoints/index.html">emse-mms.endpoints</a></code></li>
-<li><code><a title="emse-mms.utils" href="utils/index.html">emse-mms.utils</a></code></li>
+<li><code><a title="emse-mms" href="index.html">emse-mms</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-functions">Functions</a></h3>
+<ul class="">
+<li><code><a title="emse-mms.recommend.getRecsForUser" href="#emse-mms.recommend.getRecsForUser">getRecsForUser</a></code></li>
+<li><code><a title="emse-mms.recommend.main" href="#emse-mms.recommend.main">main</a></code></li>
 </ul>
 </li>
 </ul>

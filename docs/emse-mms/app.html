@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
 <meta name="generator" content="pdoc 0.10.0" />
-<title>emse-mms.utils API documentation</title>
+<title>emse-mms.app API documentation</title>
 <meta name="description" content="" />
 <link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/sanitize.min.css" integrity="sha256-PK9q560IAAa6WVRRh76LtCaI8pjTJ2z11v0miyNNjrs=" crossorigin>
 <link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/typography.min.css" integrity="sha256-7l/o7C8jubJiy74VsKTidCy1yBkRtiUGbVkYBylBqUg=" crossorigin>
@@ -19,46 +19,182 @@
 <main>
 <article id="content">
 <header>
-<h1 class="title">Namespace <code>emse-mms.utils</code></h1>
+<h1 class="title">Module <code>emse-mms.app</code></h1>
 </header>
 <section id="section-intro">
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">from pandas import DataFrame
+import asyncio
+from prisma import Prisma
+
+from utils.db import testConnection
+from utils.response import getModuleFromID
+from utils.seed import getModuleFeedback, Seeder, Skipper
+from utils.helper import convertReviewsFromDbToDf
+
+
+async def main() -&gt; None:
+    print(&#39;Starting application...&#39;)
+    testConnection()
+    # await seedUserDB()
+    # seedModuleModel()
+    # await seedPlanOfStudyDB()
+    # await seedEnrollmentDB()
+
+    db = Seeder(
+        skip=[Skipper.all],
+        cleanup=[Skipper.all],
+        iterations=100
+    )
+
+    await db.seedAll()
+    await db.cleanupAll()
+    await getUserProfile(ID=&#34;63da9e40020a625cc55f64c5&#34;)
+
+    exit(0)
+    # seedModuleModel()
+    # seedDbFeedback()
+
+
+def getReviews(userID):
+    # read data
+    mod_data = getModuleFeedback()
+    df = convertReviewsFromDbToDf(mod_data[&#39;module&#39;], userID)
+
+    # print(df)
+    # print(df.groupby([&#39;userID&#39;, &#39;moduleID&#39;]).sum().sort_values(&#39;rating&#39;, ascending=False).head())
+    # print(df.groupby(&#39;moduleID&#39;)[&#39;rating&#39;].sum().sort_values(ascending=False).head())
+
+    # get highest rated modules
+    top_mods: DataFrame = df.groupby(&#39;moduleID&#39;)[&#39;rating&#39;].sum().sort_values(ascending=False)
+
+    # run response for each row of the highest rated modules
+    print(top_mods)
+    res_top_mods = top_mods.reset_index()
+    res_top_mods.apply(lambda row: getModuleFromID(row), axis=1)
+
+
+async def getUserProfile(ID):
+    print(&#39;Fetching user data...&#39;)
+    # get user from ID
+    #  find enrolled modules
+    #  remove modules that already enrolled in
+    #  get feedback for each module
+    #  get similarity matrix
+    #  get recommendations
+    #  return recommendations
+    prisma = Prisma()
+    await prisma.connect()
+    account = await prisma.user.find_unique(
+        where={
+            &#39;id&#39;: ID
+        }
+    )
+    print(account)
+
+
+if __name__ == &#39;__main__&#39;:
+    asyncio.run(main())</code></pre>
+</details>
 </section>
 <section>
-<h2 class="section-title" id="header-submodules">Sub-modules</h2>
+</section>
+<section>
+</section>
+<section>
+<h2 class="section-title" id="header-functions">Functions</h2>
 <dl>
-<dt><code class="name"><a title="emse-mms.utils.db" href="db.html">emse-mms.utils.db</a></code></dt>
+<dt id="emse-mms.app.getReviews"><code class="name flex">
+<span>def <span class="ident">getReviews</span></span>(<span>userID)</span>
+</code></dt>
 <dd>
 <div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def getReviews(userID):
+    # read data
+    mod_data = getModuleFeedback()
+    df = convertReviewsFromDbToDf(mod_data[&#39;module&#39;], userID)
+
+    # print(df)
+    # print(df.groupby([&#39;userID&#39;, &#39;moduleID&#39;]).sum().sort_values(&#39;rating&#39;, ascending=False).head())
+    # print(df.groupby(&#39;moduleID&#39;)[&#39;rating&#39;].sum().sort_values(ascending=False).head())
+
+    # get highest rated modules
+    top_mods: DataFrame = df.groupby(&#39;moduleID&#39;)[&#39;rating&#39;].sum().sort_values(ascending=False)
+
+    # run response for each row of the highest rated modules
+    print(top_mods)
+    res_top_mods = top_mods.reset_index()
+    res_top_mods.apply(lambda row: getModuleFromID(row), axis=1)</code></pre>
+</details>
 </dd>
-<dt><code class="name"><a title="emse-mms.utils.helper" href="helper.html">emse-mms.utils.helper</a></code></dt>
+<dt id="emse-mms.app.getUserProfile"><code class="name flex">
+<span>async def <span class="ident">getUserProfile</span></span>(<span>ID)</span>
+</code></dt>
 <dd>
 <div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">async def getUserProfile(ID):
+    print(&#39;Fetching user data...&#39;)
+    # get user from ID
+    #  find enrolled modules
+    #  remove modules that already enrolled in
+    #  get feedback for each module
+    #  get similarity matrix
+    #  get recommendations
+    #  return recommendations
+    prisma = Prisma()
+    await prisma.connect()
+    account = await prisma.user.find_unique(
+        where={
+            &#39;id&#39;: ID
+        }
+    )
+    print(account)</code></pre>
+</details>
 </dd>
-<dt><code class="name"><a title="emse-mms.utils.recs" href="recs.html">emse-mms.utils.recs</a></code></dt>
+<dt id="emse-mms.app.main"><code class="name flex">
+<span>async def <span class="ident">main</span></span>(<span>) ‑> None</span>
+</code></dt>
 <dd>
 <div class="desc"></div>
-</dd>
-<dt><code class="name"><a title="emse-mms.utils.response" href="response.html">emse-mms.utils.response</a></code></dt>
-<dd>
-<div class="desc"></div>
-</dd>
-<dt><code class="name"><a title="emse-mms.utils.sdl" href="sdl.html">emse-mms.utils.sdl</a></code></dt>
-<dd>
-<div class="desc"></div>
-</dd>
-<dt><code class="name"><a title="emse-mms.utils.seed" href="seed.html">emse-mms.utils.seed</a></code></dt>
-<dd>
-<div class="desc"></div>
-</dd>
-<dt><code class="name"><a title="emse-mms.utils.similarity" href="similarity.html">emse-mms.utils.similarity</a></code></dt>
-<dd>
-<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">async def main() -&gt; None:
+    print(&#39;Starting application...&#39;)
+    testConnection()
+    # await seedUserDB()
+    # seedModuleModel()
+    # await seedPlanOfStudyDB()
+    # await seedEnrollmentDB()
+
+    db = Seeder(
+        skip=[Skipper.all],
+        cleanup=[Skipper.all],
+        iterations=100
+    )
+
+    await db.seedAll()
+    await db.cleanupAll()
+    await getUserProfile(ID=&#34;63da9e40020a625cc55f64c5&#34;)
+
+    exit(0)
+    # seedModuleModel()
+    # seedDbFeedback()</code></pre>
+</details>
 </dd>
 </dl>
-</section>
-<section>
-</section>
-<section>
 </section>
 <section>
 </section>
@@ -71,18 +207,14 @@
 <ul id="index">
 <li><h3>Super-module</h3>
 <ul>
-<li><code><a title="emse-mms" href="../index.html">emse-mms</a></code></li>
+<li><code><a title="emse-mms" href="index.html">emse-mms</a></code></li>
 </ul>
 </li>
-<li><h3><a href="#header-submodules">Sub-modules</a></h3>
-<ul>
-<li><code><a title="emse-mms.utils.db" href="db.html">emse-mms.utils.db</a></code></li>
-<li><code><a title="emse-mms.utils.helper" href="helper.html">emse-mms.utils.helper</a></code></li>
-<li><code><a title="emse-mms.utils.recs" href="recs.html">emse-mms.utils.recs</a></code></li>
-<li><code><a title="emse-mms.utils.response" href="response.html">emse-mms.utils.response</a></code></li>
-<li><code><a title="emse-mms.utils.sdl" href="sdl.html">emse-mms.utils.sdl</a></code></li>
-<li><code><a title="emse-mms.utils.seed" href="seed.html">emse-mms.utils.seed</a></code></li>
-<li><code><a title="emse-mms.utils.similarity" href="similarity.html">emse-mms.utils.similarity</a></code></li>
+<li><h3><a href="#header-functions">Functions</a></h3>
+<ul class="">
+<li><code><a title="emse-mms.app.getReviews" href="#emse-mms.app.getReviews">getReviews</a></code></li>
+<li><code><a title="emse-mms.app.getUserProfile" href="#emse-mms.app.getUserProfile">getUserProfile</a></code></li>
+<li><code><a title="emse-mms.app.main" href="#emse-mms.app.main">main</a></code></li>
 </ul>
 </li>
 </ul>

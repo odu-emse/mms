@@ -65,7 +65,7 @@ docker-compose up -d
 #### Get module recommendations for a user
 
 ```http
-  GET /recommend/${userID}
+GET /recommend/${userID}
 ```
 
 | Parameter | Type     | Description                |

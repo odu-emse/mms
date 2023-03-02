@@ -4,7 +4,7 @@ from requests import post
 def testConnection():
     print('Testing connection...')
     # test connection to API
-    response = post('http://localhost:4000/graphql', {}, {
+    response = post('http://client:4000/graphql', {}, {
         'query': """query{
               module(input:{
               }){
