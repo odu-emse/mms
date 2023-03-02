@@ -31,7 +31,7 @@ class Recommender:
         prisma = Prisma()
         await prisma.connect()
 
-        modules = await prisma.module.find_many(include={'feedback': True})
+        modules = await prisma.module.find_many(include={"feedback": True})
 
         modules = list(map(lambda x: x.dict(), modules))
 
@@ -51,21 +51,13 @@ class Recommender:
         for module in sample:
             await prisma.modulefeedback.create(
                 data={
-                    'feedback': 'This is a sample review',
-                    'rating': random.randint(1, 5),
-                    'module': {
-                        'connect': {
-                            'id': module
-                        }
-                    },
-                    'student': {
-                        'connect': {
-                            'id': self.target
-                        }
-                    }
+                    "feedback": "This is a sample review",
+                    "rating": random.randint(1, 5),
+                    "module": {"connect": {"id": module}},
+                    "student": {"connect": {"id": self.target}},
                 }
             )
-            print(f'Created feedback for module {module}')
+            print(f"Created feedback for module {module}")
 
         await prisma.disconnect()
 
@@ -99,37 +91,17 @@ class Recs:
         self.prisma = Prisma()
         if target is None:
             target = [
-                {
-                    "id": "63f4ee98ece0495cbb312604",
-                    'title': 'orm,',
-                    'rating': 5
-                },
-                {
-                    'id': '63f4ee98ece0495cbb312608',
-                    'title': 'me',
-                    'rating': 3.5
-                },
-                {
-                    'id': '63f4ee98ece0495cbb3125f5',
-                    'title': '2017',
-                    'rating': 2
-                },
-                {
-                    "id": "63f4ee98ece0495cbb3125f9",
-                    'title': 'Souppe',
-                    'rating': 5
-                },
-                {
-                    "id": "63f4ee98ece0495cbb3125fe",
-                    'title': 'Frams.',
-                    'rating': 4.5
-                }
+                {"id": "63f4ee98ece0495cbb312604", "title": "orm,", "rating": 5},
+                {"id": "63f4ee98ece0495cbb312608", "title": "me", "rating": 3.5},
+                {"id": "63f4ee98ece0495cbb3125f5", "title": "2017", "rating": 2},
+                {"id": "63f4ee98ece0495cbb3125f9", "title": "Souppe", "rating": 5},
+                {"id": "63f4ee98ece0495cbb3125fe", "title": "Frams.", "rating": 4.5},
             ]
             self.inputMovies = pd.DataFrame(target)
 
-        self.movies_df = pd.read_csv('input/movies.csv')
+        self.movies_df = pd.read_csv("input/movies.csv")
         self.modules_df = None
-        self.ratings_df = pd.read_csv('input/ratings.csv')
+        self.ratings_df = pd.read_csv("input/ratings.csv")
         self.feedbacks_df = None
 
         self.userSubsetGroup = None
@@ -138,9 +110,9 @@ class Recs:
 
     def sampleModules(self):
         """
-            - get a random set of 10 modules
-            - create a ratings for each module
-            - return as a list of dicts with id, title and rating
+        - get a random set of 10 modules
+        - create a ratings for each module
+        - return as a list of dicts with id, title and rating
         """
 
     def cleanData(self):
@@ -148,29 +120,32 @@ class Recs:
         Removes all the columns that are not needed for the recommendation engine. This is done to reduce the size of
         the dataset and reduce overall complexity in our data.
         """
-        modules_df: DataFrame = self.modules_df.drop([
-            'description',
-            'duration',
-            'intro',
-            'numSlides',
-            'keywords',
-            'objectives',
-            'createdAt',
-            'updatedAt',
-            'members',
-            'assignments',
-            'parentModules',
-            'parentModuleIDs',
-            'subModules',
-            'subModuleIDs',
-            'collections',
-            'course',
-            'courseIDs',
-            'feedback',
-            'moduleName'
-        ], axis=1)
+        modules_df: DataFrame = self.modules_df.drop(
+            [
+                "description",
+                "duration",
+                "intro",
+                "numSlides",
+                "keywords",
+                "objectives",
+                "createdAt",
+                "updatedAt",
+                "members",
+                "assignments",
+                "parentModules",
+                "parentModuleIDs",
+                "subModules",
+                "subModuleIDs",
+                "collections",
+                "course",
+                "courseIDs",
+                "feedback",
+                "moduleName",
+            ],
+            axis=1,
+        )
 
-        feedbacks_df: DataFrame = self.feedbacks_df.drop(['student', 'module'], axis=1)
+        feedbacks_df: DataFrame = self.feedbacks_df.drop(["student", "module"], axis=1)
 
         self.feedbacks_df = feedbacks_df
 
@@ -201,16 +176,20 @@ class Recs:
         await self.prisma.disconnect()
 
     def handleUserInput(self):
-        inputID = self.modules_df[self.modules_df['id'].isin(self.inputMovies['id'].tolist())]
+        inputID = self.modules_df[
+            self.modules_df["id"].isin(self.inputMovies["id"].tolist())
+        ]
 
         inputMovies = pd.merge(inputID, self.inputMovies)
 
         self.inputMovies = inputMovies
 
     def createSubset(self):
-        userSubset = self.feedbacks_df[self.feedbacks_df['moduleId'].isin(self.inputMovies['id'].tolist())]
+        userSubset = self.feedbacks_df[
+            self.feedbacks_df["moduleId"].isin(self.inputMovies["id"].tolist())
+        ]
 
-        userSubsetGroup = userSubset.groupby(['studentId'])
+        userSubsetGroup = userSubset.groupby(["studentId"])
 
         userSubsetGroup = sorted(userSubsetGroup, key=lambda x: len(x[1]), reverse=True)
 
@@ -220,22 +199,27 @@ class Recs:
         pearsonCorrelationDict = {}
 
         for name, group in self.userSubsetGroup:
-            group = group.sort_values(by='id')
+            group = group.sort_values(by="id")
 
-            inputMovies = self.inputMovies.sort_values(by='rating')
+            inputMovies = self.inputMovies.sort_values(by="rating")
 
             nRatings = len(group)
 
-            temp_df = inputMovies[inputMovies['id'].isin(group['moduleId'].tolist())]
+            temp_df = inputMovies[inputMovies["id"].isin(group["moduleId"].tolist())]
 
-            tempRatingList = temp_df['rating'].tolist()
+            tempRatingList = temp_df["rating"].tolist()
 
-            tempGroupList = group['rating'].tolist()
+            tempGroupList = group["rating"].tolist()
 
-            Sxx = sum([i ** 2 for i in tempRatingList]) - pow(sum(tempRatingList), 2) / float(nRatings)
-            Syy = sum([i ** 2 for i in tempGroupList]) - pow(sum(tempGroupList), 2) / float(nRatings)
-            Sxy = sum(i * j for i, j in zip(tempRatingList, tempGroupList)) - sum(tempRatingList) * sum(
-                tempGroupList) / float(nRatings)
+            Sxx = sum([i**2 for i in tempRatingList]) - pow(
+                sum(tempRatingList), 2
+            ) / float(nRatings)
+            Syy = sum([i**2 for i in tempGroupList]) - pow(
+                sum(tempGroupList), 2
+            ) / float(nRatings)
+            Sxy = sum(i * j for i, j in zip(tempRatingList, tempGroupList)) - sum(
+                tempRatingList
+            ) * sum(tempGroupList) / float(nRatings)
 
             if Sxx != 0 and Syy != 0:
                 pearsonCorrelationDict[name] = Sxy / sqrt(Sxx * Syy)
@@ -245,36 +229,49 @@ class Recs:
         self.pearsonCorrelationDict = pearsonCorrelationDict
 
     def topUser(self):
-        pearsonDF = pd.DataFrame.from_dict(self.pearsonCorrelationDict, orient='index')
-        pearsonDF.columns = ['similarityIndex']
-        pearsonDF['studentId'] = pearsonDF.index
+        pearsonDF = pd.DataFrame.from_dict(self.pearsonCorrelationDict, orient="index")
+        pearsonDF.columns = ["similarityIndex"]
+        pearsonDF["studentId"] = pearsonDF.index
         pearsonDF.index = range(len(pearsonDF))
 
-        topUsers = pearsonDF.sort_values(by='similarityIndex', ascending=False)[0:50]
+        topUsers = pearsonDF.sort_values(by="similarityIndex", ascending=False)[0:50]
 
         print(topUsers.head())
 
-        topUsersRating = topUsers.merge(self.feedbacks_df, left_on='studentId', right_on='studentId', how='inner')
+        topUsersRating = topUsers.merge(
+            self.feedbacks_df, left_on="studentId", right_on="studentId", how="inner"
+        )
 
-        topUsersRating['weightedRating'] = topUsersRating['similarityIndex'] * topUsersRating['rating']
+        topUsersRating["weightedRating"] = (
+            topUsersRating["similarityIndex"] * topUsersRating["rating"]
+        )
 
-        tempTopUsersRating = topUsersRating.groupby('moduleId').sum()[['similarityIndex', 'weightedRating']]
+        tempTopUsersRating = topUsersRating.groupby("moduleId").sum()[
+            ["similarityIndex", "weightedRating"]
+        ]
 
-        tempTopUsersRating.columns = ['sum_similarityIndex', 'sum_weightedRating']
+        tempTopUsersRating.columns = ["sum_similarityIndex", "sum_weightedRating"]
 
         self.tempTopUsersRating = tempTopUsersRating
 
     def recommend(self):
         recommendation_df = pd.DataFrame()
 
-        recommendation_df['w-AVG score'] = self.tempTopUsersRating['sum_weightedRating'] / self.tempTopUsersRating['sum_similarityIndex']
-        recommendation_df['moduleId'] = self.tempTopUsersRating.index
+        recommendation_df["w-AVG score"] = (
+            self.tempTopUsersRating["sum_weightedRating"]
+            / self.tempTopUsersRating["sum_similarityIndex"]
+        )
+        recommendation_df["moduleId"] = self.tempTopUsersRating.index
 
-        recommendation_df = recommendation_df.sort_values(by='w-AVG score', ascending=False)
+        recommendation_df = recommendation_df.sort_values(
+            by="w-AVG score", ascending=False
+        )
 
         print(recommendation_df.head(10))
 
-        mods_df = self.modules_df.loc[self.modules_df['id'].isin(recommendation_df.head(20)['moduleId'].tolist())]
+        mods_df = self.modules_df.loc[
+            self.modules_df["id"].isin(recommendation_df.head(20)["moduleId"].tolist())
+        ]
 
         self.modules_df = mods_df
 
@@ -295,5 +292,5 @@ class Recs:
         return self.convertResultToJSON()
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     asyncio.run(main(target="63f7a3068b546b91eadb20a6"))
