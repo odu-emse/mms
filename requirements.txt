@@ -10,3 +10,4 @@ sklearn~=0.0.post1
 fastapi~=0.92.0
 pdoc3~=0.10.0
 uvicorn~=0.20.0
+black~=22.6.0
