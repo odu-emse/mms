@@ -2,6 +2,7 @@ from fastapi import FastAPI
 import json
 
 from keys import Keys
+from models.meta import MetaRecommender
 from recommend import Recommender, Recs
 
 app = FastAPI()
@@ -24,3 +25,14 @@ async def read_item(query: str):
     cleaned_data = json.loads(rec.run())
 
     return {"query": query, "data": cleaned_data}
+
+
+@app.get("/meta/")
+async def read_item(query: str):
+    recs = MetaRecommender(path="input/modules.json", target=query)
+
+    res = recs.run()
+
+    print(res)
+
+    return {"query": query, "data": res}
