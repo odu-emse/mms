@@ -3,6 +3,7 @@ import logging
 from typing import Union
 import pandas as pd
 from prisma import Prisma
+import requests
 
 
 class Fetcher:
@@ -11,8 +12,8 @@ class Fetcher:
         self.response = None
         self.prisma = Prisma()
 
-        self.logger = logging.getLogger('__fetch__')
-        logging.basicConfig(format='%(levelname)s:%(message)s', level=logging.INFO)
+        self.logger = logging.getLogger("__fetch__")
+        logging.basicConfig(format="%(levelname)s:%(message)s", level=logging.INFO)
 
     def _createModuleMutation(self):
         self.response = """query{
@@ -58,16 +59,16 @@ class Fetcher:
         return mods
 
     async def getModules(self):
-        self.logger.info('Fetching modules...')
+        self.logger.info("Fetching modules...")
 
         res = await self._getModules()
 
         if res:
-            self.logger.info('Modules successfully fetched')
+            self.logger.info("Modules successfully fetched")
             df = pd.DataFrame(res)
             print(df.info())
         else:
-            self.logger.error('Failed to fetch modules')
+            self.logger.error("Failed to fetch modules")
             return None
 
         return self.response
@@ -88,46 +89,73 @@ class Fetcher:
         return feedbacks
 
     async def getModuleFeedback(self):
-        self.logger.info('Fetching module feedback...')
+        self.logger.info("Fetching module feedback...")
 
         res = await self._getModuleFeedback()
 
         if res:
-            self.logger.info('Module feedback successfully fetched')
+            self.logger.info("Module feedback successfully fetched")
             df = pd.DataFrame(res)
             print(df.info())
         else:
-            self.logger.error('Failed to fetch module feedback')
+            self.logger.error("Failed to fetch module feedback")
             return None
 
         return self.response
 
     def convertJSONasDataFrame(self, model: str):
-        df = pd.DataFrame(self.response['data'][model])
+        df = pd.DataFrame(self.response["data"][model])
         return df
 
     def convertObjectTOColumn(self, model: str, column: Union[str, list, None]):
         df = self.convertJSONasDataFrame(model)
         if isinstance(column, list):
             for col in column:
-                conv = df[col].apply(lambda x: x['id'] if x else None)
+                conv = df[col].apply(lambda x: x["id"] if x else None)
                 df[col] = conv
             print(df.info())
         elif isinstance(column, str):
-            conv = df[column].apply(lambda x: x['id'] if x else None)
+            conv = df[column].apply(lambda x: x["id"] if x else None)
             df[column] = conv
             print(df.head())
         else:
             print(df.head())
 
+    def getModuleData(self):
+        query = """query{
+                  module(input: {}) {
+                    id
+                    moduleName
+                    keywords
+                    intro
+                    description
+                    objectives
+                  }
+                }"""
+
+        try:
+
+            res = requests.post(self.url, data={"query": query})
+
+            return res.json()
+
+        except Exception as e:
+            # self.logger.error(e)
+            return e.json()
+
 
 async def main():
-    fetcher = Fetcher('http://client:4000/graphql')
-    await fetcher.getModules()
+    fetcher = Fetcher("http://emse.dev.joeldesante.com:4000/graphql")
+
+    res = fetcher.getModuleData()
+
+    print(res)
+
+    # await fetcher.getModules()
     # fetcher.convertObjectTOColumn('module', None)
-    await fetcher.getModuleFeedback()
+    # await fetcher.getModuleFeedback()
     # fetcher.convertObjectTOColumn('moduleFeedback', ['module', 'student'])
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     asyncio.run(main())
