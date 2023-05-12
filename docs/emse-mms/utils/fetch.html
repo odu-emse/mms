@@ -31,6 +31,7 @@ import logging
 from typing import Union
 import pandas as pd
 from prisma import Prisma
+import requests
 
 
 class Fetcher:
@@ -39,8 +40,8 @@ class Fetcher:
         self.response = None
         self.prisma = Prisma()
 
-        self.logger = logging.getLogger(&#39;__fetch__&#39;)
-        logging.basicConfig(format=&#39;%(levelname)s:%(message)s&#39;, level=logging.INFO)
+        self.logger = logging.getLogger(&#34;__fetch__&#34;)
+        logging.basicConfig(format=&#34;%(levelname)s:%(message)s&#34;, level=logging.INFO)
 
     def _createModuleMutation(self):
         self.response = &#34;&#34;&#34;query{
@@ -86,16 +87,16 @@ class Fetcher:
         return mods
 
     async def getModules(self):
-        self.logger.info(&#39;Fetching modules...&#39;)
+        self.logger.info(&#34;Fetching modules...&#34;)
 
         res = await self._getModules()
 
         if res:
-            self.logger.info(&#39;Modules successfully fetched&#39;)
+            self.logger.info(&#34;Modules successfully fetched&#34;)
             df = pd.DataFrame(res)
             print(df.info())
         else:
-            self.logger.error(&#39;Failed to fetch modules&#39;)
+            self.logger.error(&#34;Failed to fetch modules&#34;)
             return None
 
         return self.response
@@ -116,48 +117,75 @@ class Fetcher:
         return feedbacks
 
     async def getModuleFeedback(self):
-        self.logger.info(&#39;Fetching module feedback...&#39;)
+        self.logger.info(&#34;Fetching module feedback...&#34;)
 
         res = await self._getModuleFeedback()
 
         if res:
-            self.logger.info(&#39;Module feedback successfully fetched&#39;)
+            self.logger.info(&#34;Module feedback successfully fetched&#34;)
             df = pd.DataFrame(res)
             print(df.info())
         else:
-            self.logger.error(&#39;Failed to fetch module feedback&#39;)
+            self.logger.error(&#34;Failed to fetch module feedback&#34;)
             return None
 
         return self.response
 
     def convertJSONasDataFrame(self, model: str):
-        df = pd.DataFrame(self.response[&#39;data&#39;][model])
+        df = pd.DataFrame(self.response[&#34;data&#34;][model])
         return df
 
     def convertObjectTOColumn(self, model: str, column: Union[str, list, None]):
         df = self.convertJSONasDataFrame(model)
         if isinstance(column, list):
             for col in column:
-                conv = df[col].apply(lambda x: x[&#39;id&#39;] if x else None)
+                conv = df[col].apply(lambda x: x[&#34;id&#34;] if x else None)
                 df[col] = conv
             print(df.info())
         elif isinstance(column, str):
-            conv = df[column].apply(lambda x: x[&#39;id&#39;] if x else None)
+            conv = df[column].apply(lambda x: x[&#34;id&#34;] if x else None)
             df[column] = conv
             print(df.head())
         else:
             print(df.head())
 
+    def getModuleData(self):
+        query = &#34;&#34;&#34;query{
+                  module(input: {}) {
+                    id
+                    moduleName
+                    keywords
+                    intro
+                    description
+                    objectives
+                  }
+                }&#34;&#34;&#34;
+
+        try:
+
+            res = requests.post(self.url, data={&#34;query&#34;: query})
+
+            return res.json()
+
+        except Exception as e:
+            # self.logger.error(e)
+            return e.json()
+
 
 async def main():
-    fetcher = Fetcher(&#39;http://localhost:4000/graphql&#39;)
-    await fetcher.getModules()
+    fetcher = Fetcher(&#34;http://emse.dev.joeldesante.com:4000/graphql&#34;)
+
+    res = fetcher.getModuleData()
+
+    print(res)
+
+    # await fetcher.getModules()
     # fetcher.convertObjectTOColumn(&#39;module&#39;, None)
-    await fetcher.getModuleFeedback()
+    # await fetcher.getModuleFeedback()
     # fetcher.convertObjectTOColumn(&#39;moduleFeedback&#39;, [&#39;module&#39;, &#39;student&#39;])
 
 
-if __name__ == &#39;__main__&#39;:
+if __name__ == &#34;__main__&#34;:
     asyncio.run(main())</code></pre>
 </details>
 </section>
@@ -178,10 +206,15 @@ if __name__ == &#39;__main__&#39;:
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">async def main():
-    fetcher = Fetcher(&#39;http://localhost:4000/graphql&#39;)
-    await fetcher.getModules()
+    fetcher = Fetcher(&#34;http://emse.dev.joeldesante.com:4000/graphql&#34;)
+
+    res = fetcher.getModuleData()
+
+    print(res)
+
+    # await fetcher.getModules()
     # fetcher.convertObjectTOColumn(&#39;module&#39;, None)
-    await fetcher.getModuleFeedback()
+    # await fetcher.getModuleFeedback()
     # fetcher.convertObjectTOColumn(&#39;moduleFeedback&#39;, [&#39;module&#39;, &#39;student&#39;])</code></pre>
 </details>
 </dd>
@@ -206,8 +239,8 @@ if __name__ == &#39;__main__&#39;:
         self.response = None
         self.prisma = Prisma()
 
-        self.logger = logging.getLogger(&#39;__fetch__&#39;)
-        logging.basicConfig(format=&#39;%(levelname)s:%(message)s&#39;, level=logging.INFO)
+        self.logger = logging.getLogger(&#34;__fetch__&#34;)
+        logging.basicConfig(format=&#34;%(levelname)s:%(message)s&#34;, level=logging.INFO)
 
     def _createModuleMutation(self):
         self.response = &#34;&#34;&#34;query{
@@ -253,16 +286,16 @@ if __name__ == &#39;__main__&#39;:
         return mods
 
     async def getModules(self):
-        self.logger.info(&#39;Fetching modules...&#39;)
+        self.logger.info(&#34;Fetching modules...&#34;)
 
         res = await self._getModules()
 
         if res:
-            self.logger.info(&#39;Modules successfully fetched&#39;)
+            self.logger.info(&#34;Modules successfully fetched&#34;)
             df = pd.DataFrame(res)
             print(df.info())
         else:
-            self.logger.error(&#39;Failed to fetch modules&#39;)
+            self.logger.error(&#34;Failed to fetch modules&#34;)
             return None
 
         return self.response
@@ -283,37 +316,59 @@ if __name__ == &#39;__main__&#39;:
         return feedbacks
 
     async def getModuleFeedback(self):
-        self.logger.info(&#39;Fetching module feedback...&#39;)
+        self.logger.info(&#34;Fetching module feedback...&#34;)
 
         res = await self._getModuleFeedback()
 
         if res:
-            self.logger.info(&#39;Module feedback successfully fetched&#39;)
+            self.logger.info(&#34;Module feedback successfully fetched&#34;)
             df = pd.DataFrame(res)
             print(df.info())
         else:
-            self.logger.error(&#39;Failed to fetch module feedback&#39;)
+            self.logger.error(&#34;Failed to fetch module feedback&#34;)
             return None
 
         return self.response
 
     def convertJSONasDataFrame(self, model: str):
-        df = pd.DataFrame(self.response[&#39;data&#39;][model])
+        df = pd.DataFrame(self.response[&#34;data&#34;][model])
         return df
 
     def convertObjectTOColumn(self, model: str, column: Union[str, list, None]):
         df = self.convertJSONasDataFrame(model)
         if isinstance(column, list):
             for col in column:
-                conv = df[col].apply(lambda x: x[&#39;id&#39;] if x else None)
+                conv = df[col].apply(lambda x: x[&#34;id&#34;] if x else None)
                 df[col] = conv
             print(df.info())
         elif isinstance(column, str):
-            conv = df[column].apply(lambda x: x[&#39;id&#39;] if x else None)
+            conv = df[column].apply(lambda x: x[&#34;id&#34;] if x else None)
             df[column] = conv
             print(df.head())
         else:
-            print(df.head())</code></pre>
+            print(df.head())
+
+    def getModuleData(self):
+        query = &#34;&#34;&#34;query{
+                  module(input: {}) {
+                    id
+                    moduleName
+                    keywords
+                    intro
+                    description
+                    objectives
+                  }
+                }&#34;&#34;&#34;
+
+        try:
+
+            res = requests.post(self.url, data={&#34;query&#34;: query})
+
+            return res.json()
+
+        except Exception as e:
+            # self.logger.error(e)
+            return e.json()</code></pre>
 </details>
 <h3>Methods</h3>
 <dl>
@@ -327,7 +382,7 @@ if __name__ == &#39;__main__&#39;:
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">def convertJSONasDataFrame(self, model: str):
-    df = pd.DataFrame(self.response[&#39;data&#39;][model])
+    df = pd.DataFrame(self.response[&#34;data&#34;][model])
     return df</code></pre>
 </details>
 </dd>
@@ -344,15 +399,47 @@ if __name__ == &#39;__main__&#39;:
     df = self.convertJSONasDataFrame(model)
     if isinstance(column, list):
         for col in column:
-            conv = df[col].apply(lambda x: x[&#39;id&#39;] if x else None)
+            conv = df[col].apply(lambda x: x[&#34;id&#34;] if x else None)
             df[col] = conv
         print(df.info())
     elif isinstance(column, str):
-        conv = df[column].apply(lambda x: x[&#39;id&#39;] if x else None)
+        conv = df[column].apply(lambda x: x[&#34;id&#34;] if x else None)
         df[column] = conv
         print(df.head())
     else:
         print(df.head())</code></pre>
+</details>
+</dd>
+<dt id="emse-mms.utils.fetch.Fetcher.getModuleData"><code class="name flex">
+<span>def <span class="ident">getModuleData</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def getModuleData(self):
+    query = &#34;&#34;&#34;query{
+              module(input: {}) {
+                id
+                moduleName
+                keywords
+                intro
+                description
+                objectives
+              }
+            }&#34;&#34;&#34;
+
+    try:
+
+        res = requests.post(self.url, data={&#34;query&#34;: query})
+
+        return res.json()
+
+    except Exception as e:
+        # self.logger.error(e)
+        return e.json()</code></pre>
 </details>
 </dd>
 <dt id="emse-mms.utils.fetch.Fetcher.getModuleFeedback"><code class="name flex">
@@ -365,16 +452,16 @@ if __name__ == &#39;__main__&#39;:
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">async def getModuleFeedback(self):
-    self.logger.info(&#39;Fetching module feedback...&#39;)
+    self.logger.info(&#34;Fetching module feedback...&#34;)
 
     res = await self._getModuleFeedback()
 
     if res:
-        self.logger.info(&#39;Module feedback successfully fetched&#39;)
+        self.logger.info(&#34;Module feedback successfully fetched&#34;)
         df = pd.DataFrame(res)
         print(df.info())
     else:
-        self.logger.error(&#39;Failed to fetch module feedback&#39;)
+        self.logger.error(&#34;Failed to fetch module feedback&#34;)
         return None
 
     return self.response</code></pre>
@@ -390,16 +477,16 @@ if __name__ == &#39;__main__&#39;:
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">async def getModules(self):
-    self.logger.info(&#39;Fetching modules...&#39;)
+    self.logger.info(&#34;Fetching modules...&#34;)
 
     res = await self._getModules()
 
     if res:
-        self.logger.info(&#39;Modules successfully fetched&#39;)
+        self.logger.info(&#34;Modules successfully fetched&#34;)
         df = pd.DataFrame(res)
         print(df.info())
     else:
-        self.logger.error(&#39;Failed to fetch modules&#39;)
+        self.logger.error(&#34;Failed to fetch modules&#34;)
         return None
 
     return self.response</code></pre>
@@ -433,6 +520,7 @@ if __name__ == &#39;__main__&#39;:
 <ul class="">
 <li><code><a title="emse-mms.utils.fetch.Fetcher.convertJSONasDataFrame" href="#emse-mms.utils.fetch.Fetcher.convertJSONasDataFrame">convertJSONasDataFrame</a></code></li>
 <li><code><a title="emse-mms.utils.fetch.Fetcher.convertObjectTOColumn" href="#emse-mms.utils.fetch.Fetcher.convertObjectTOColumn">convertObjectTOColumn</a></code></li>
+<li><code><a title="emse-mms.utils.fetch.Fetcher.getModuleData" href="#emse-mms.utils.fetch.Fetcher.getModuleData">getModuleData</a></code></li>
 <li><code><a title="emse-mms.utils.fetch.Fetcher.getModuleFeedback" href="#emse-mms.utils.fetch.Fetcher.getModuleFeedback">getModuleFeedback</a></code></li>
 <li><code><a title="emse-mms.utils.fetch.Fetcher.getModules" href="#emse-mms.utils.fetch.Fetcher.getModules">getModules</a></code></li>
 </ul>

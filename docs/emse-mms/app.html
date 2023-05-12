@@ -26,74 +26,26 @@
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">from pandas import DataFrame
-import asyncio
-from prisma import Prisma
-
+<pre><code class="python">import asyncio
 from utils.db import testConnection
-from utils.response import getModuleFromID
-from utils.seed import getModuleFeedback, Seeder, Skipper
-from utils.helper import convertReviewsFromDbToDf
+from utils.seed import Seeder, Skipper
 
 
 async def main() -&gt; None:
     print(&#39;Starting application...&#39;)
     testConnection()
-    # await seedUserDB()
-    # seedModuleModel()
-    # await seedPlanOfStudyDB()
-    # await seedEnrollmentDB()
 
     db = Seeder(
         skip=[Skipper.all],
         cleanup=[Skipper.all],
-        iterations=100
+        iterations=100,
     )
 
     await db.seedAll()
     await db.cleanupAll()
-    await getUserProfile(ID=&#34;63da9e40020a625cc55f64c5&#34;)
+    # targetID = await db.createTargetUser()
 
     exit(0)
-    # seedModuleModel()
-    # seedDbFeedback()
-
-
-def getReviews(userID):
-    # read data
-    mod_data = getModuleFeedback()
-    df = convertReviewsFromDbToDf(mod_data[&#39;module&#39;], userID)
-
-    # print(df)
-    # print(df.groupby([&#39;userID&#39;, &#39;moduleID&#39;]).sum().sort_values(&#39;rating&#39;, ascending=False).head())
-    # print(df.groupby(&#39;moduleID&#39;)[&#39;rating&#39;].sum().sort_values(ascending=False).head())
-
-    # get highest rated modules
-    top_mods: DataFrame = df.groupby(&#39;moduleID&#39;)[&#39;rating&#39;].sum().sort_values(ascending=False)
-
-    # run response for each row of the highest rated modules
-    print(top_mods)
-    res_top_mods = top_mods.reset_index()
-    res_top_mods.apply(lambda row: getModuleFromID(row), axis=1)
-
-
-async def getUserProfile(ID):
-    print(&#39;Fetching user data...&#39;)
-    # get user from ID
-    #  find enrolled modules
-    #  remove modules that already enrolled in
-    #  get feedback for each module
-    #  get similarity matrix
-    #  get recommendations
-    #  return recommendations
-    prisma = Prisma()
-    await prisma.connect()
-    account = await prisma.user.find_unique(
-        where={
-            &#39;id&#39;: ID
-        }
-    )
-    print(account)
 
 
 if __name__ == &#39;__main__&#39;:
@@ -107,61 +59,6 @@ if __name__ == &#39;__main__&#39;:
 <section>
 <h2 class="section-title" id="header-functions">Functions</h2>
 <dl>
-<dt id="emse-mms.app.getReviews"><code class="name flex">
-<span>def <span class="ident">getReviews</span></span>(<span>userID)</span>
-</code></dt>
-<dd>
-<div class="desc"></div>
-<details class="source">
-<summary>
-<span>Expand source code</span>
-</summary>
-<pre><code class="python">def getReviews(userID):
-    # read data
-    mod_data = getModuleFeedback()
-    df = convertReviewsFromDbToDf(mod_data[&#39;module&#39;], userID)
-
-    # print(df)
-    # print(df.groupby([&#39;userID&#39;, &#39;moduleID&#39;]).sum().sort_values(&#39;rating&#39;, ascending=False).head())
-    # print(df.groupby(&#39;moduleID&#39;)[&#39;rating&#39;].sum().sort_values(ascending=False).head())
-
-    # get highest rated modules
-    top_mods: DataFrame = df.groupby(&#39;moduleID&#39;)[&#39;rating&#39;].sum().sort_values(ascending=False)
-
-    # run response for each row of the highest rated modules
-    print(top_mods)
-    res_top_mods = top_mods.reset_index()
-    res_top_mods.apply(lambda row: getModuleFromID(row), axis=1)</code></pre>
-</details>
-</dd>
-<dt id="emse-mms.app.getUserProfile"><code class="name flex">
-<span>async def <span class="ident">getUserProfile</span></span>(<span>ID)</span>
-</code></dt>
-<dd>
-<div class="desc"></div>
-<details class="source">
-<summary>
-<span>Expand source code</span>
-</summary>
-<pre><code class="python">async def getUserProfile(ID):
-    print(&#39;Fetching user data...&#39;)
-    # get user from ID
-    #  find enrolled modules
-    #  remove modules that already enrolled in
-    #  get feedback for each module
-    #  get similarity matrix
-    #  get recommendations
-    #  return recommendations
-    prisma = Prisma()
-    await prisma.connect()
-    account = await prisma.user.find_unique(
-        where={
-            &#39;id&#39;: ID
-        }
-    )
-    print(account)</code></pre>
-</details>
-</dd>
 <dt id="emse-mms.app.main"><code class="name flex">
 <span>async def <span class="ident">main</span></span>(<span>) ‑> None</span>
 </code></dt>
@@ -174,24 +71,18 @@ if __name__ == &#39;__main__&#39;:
 <pre><code class="python">async def main() -&gt; None:
     print(&#39;Starting application...&#39;)
     testConnection()
-    # await seedUserDB()
-    # seedModuleModel()
-    # await seedPlanOfStudyDB()
-    # await seedEnrollmentDB()
 
     db = Seeder(
         skip=[Skipper.all],
         cleanup=[Skipper.all],
-        iterations=100
+        iterations=100,
     )
 
     await db.seedAll()
     await db.cleanupAll()
-    await getUserProfile(ID=&#34;63da9e40020a625cc55f64c5&#34;)
+    # targetID = await db.createTargetUser()
 
-    exit(0)
-    # seedModuleModel()
-    # seedDbFeedback()</code></pre>
+    exit(0)</code></pre>
 </details>
 </dd>
 </dl>
@@ -212,8 +103,6 @@ if __name__ == &#39;__main__&#39;:
 </li>
 <li><h3><a href="#header-functions">Functions</a></h3>
 <ul class="">
-<li><code><a title="emse-mms.app.getReviews" href="#emse-mms.app.getReviews">getReviews</a></code></li>
-<li><code><a title="emse-mms.app.getUserProfile" href="#emse-mms.app.getUserProfile">getUserProfile</a></code></li>
 <li><code><a title="emse-mms.app.main" href="#emse-mms.app.main">main</a></code></li>
 </ul>
 </li>
