@@ -31,46 +31,297 @@
 # multiply the rating by the weight of the module
 # divide the sum of the weighted ratings by the sum of the ratings
 import asyncio
+import random
 
 import pandas as pd
+from math import sqrt
+
+from pandas import DataFrame
 
 from prisma import Prisma
 
 
-async def getRecsForUser(userID: str):
-    prism = Prisma()
-    await prism.connect()
-
-    # get a set of modules the user has reviewed
-    user_reviews = await prism.modulefeedback.find_many(where={&#39;student&#39;: {&#39;id&#39;: userID}})
-
-    reviews = list(map(lambda x: x.dict(), user_reviews))
-
-    # all the reviews by the user
-    df = pd.DataFrame(reviews)
-
-    all_reviews = await prism.modulefeedback.find_many()
-
-    all_reviews = list(map(lambda x: x.dict(), all_reviews))
-
-    df_all_reviews = pd.DataFrame(all_reviews)
-
-    # get the weighted average of the reviews per module
-    df[&#39;weighted_rating&#39;] = df[&#39;rating&#39;] * df_all_reviews[&#39;rating&#39;].mean()
-
-    df.drop(columns=[&#39;module&#39;, &#39;student&#39;], inplace=True)
-    print(df.info())
-    print(df.head())
+async def main(target: str):
+    # rec = Recommender(target)
+    # await rec.recommend()
+    rec = Recs()
+    await rec.run()
 
 
+class Recommender:
+    def __init__(self, target: str):
+        self.target = target
+        self.sample = []
+        self.modules = []
+        self.recs = []
 
-async def main():
-    await getRecsForUser(userID=&#39;63f3b1cb9422322eb675292f&#39;)
-    pass
+    async def _sampleModules(self, skip: bool = True):
+        prisma = Prisma()
+        await prisma.connect()
+
+        modules = await prisma.module.find_many(include={&#34;feedback&#34;: True})
+
+        modules = list(map(lambda x: x.dict(), modules))
+
+        rand = random.sample(modules, len(modules) // 2)
+
+        # create module feedback for sample modules for target user
+        if not skip:
+            await self._seedTargetFeedback(rand)
+
+        await prisma.disconnect()
+
+        self.sample = rand
+
+    async def _seedTargetFeedback(self, sample: list):
+        prisma = Prisma()
+        await prisma.connect()
+        for module in sample:
+            await prisma.modulefeedback.create(
+                data={
+                    &#34;feedback&#34;: &#34;This is a sample review&#34;,
+                    &#34;rating&#34;: random.randint(1, 5),
+                    &#34;module&#34;: {&#34;connect&#34;: {&#34;id&#34;: module}},
+                    &#34;student&#34;: {&#34;connect&#34;: {&#34;id&#34;: self.target}},
+                }
+            )
+            print(f&#34;Created feedback for module {module}&#34;)
+
+        await prisma.disconnect()
+
+    async def recommend(self):
+        &#34;&#34;&#34;
+        At this point our target user has reviewed half of the modules in the database.
+        We have access to the modules that the user has reviewed through the modules parameter, and now
+        we can now get recommendations for the user
+        &#34;&#34;&#34;
+        prism = Prisma()
+        await prism.connect()
+        await self._sampleModules(skip=True)
+
+        df = pd.DataFrame(self.sample)
+
+        # convert our review data into a user x module matrix
+        # find cosine similarity between the target user and all other users
+        # get the top 5 users with the highest similarity
+        # get the modules that the top 5 users have reviewed
+        # get the modules that the target user has not reviewed
+        # get the modules that the top 5 users have reviewed that the target user has not reviewed
+        # get the average rating for each module
+        # get the top 5 modules with the highest average rating
+        # return the top 5 modules with the highest average rating as recommendations
+
+        await prism.disconnect()
 
 
-if __name__ == &#39;__main__&#39;:
-    asyncio.run(main())</code></pre>
+class Recs:
+    def __init__(self, target=None):
+        self.prisma = Prisma()
+        if target is None:
+            target = [
+                {&#34;id&#34;: &#34;63f4ee98ece0495cbb312604&#34;, &#34;title&#34;: &#34;orm,&#34;, &#34;rating&#34;: 5},
+                {&#34;id&#34;: &#34;63f4ee98ece0495cbb312608&#34;, &#34;title&#34;: &#34;me&#34;, &#34;rating&#34;: 3.5},
+                {&#34;id&#34;: &#34;63f4ee98ece0495cbb3125f5&#34;, &#34;title&#34;: &#34;2017&#34;, &#34;rating&#34;: 2},
+                {&#34;id&#34;: &#34;63f4ee98ece0495cbb3125f9&#34;, &#34;title&#34;: &#34;Souppe&#34;, &#34;rating&#34;: 5},
+                {&#34;id&#34;: &#34;63f4ee98ece0495cbb3125fe&#34;, &#34;title&#34;: &#34;Frams.&#34;, &#34;rating&#34;: 4.5},
+            ]
+            self.inputMovies = pd.DataFrame(target)
+
+        self.movies_df = pd.read_csv(&#34;input/movies.csv&#34;)
+        self.modules_df = None
+        self.ratings_df = pd.read_csv(&#34;input/ratings.csv&#34;)
+        self.feedbacks_df = None
+
+        self.userSubsetGroup = None
+        self.pearsonCorrelationDict = dict()
+        self.tempTopUsersRating = None
+
+    def sampleModules(self):
+        &#34;&#34;&#34;
+        - get a random set of 10 modules
+        - create a ratings for each module
+        - return as a list of dicts with id, title and rating
+        &#34;&#34;&#34;
+
+    def cleanData(self):
+        &#34;&#34;&#34;
+        Removes all the columns that are not needed for the recommendation engine. This is done to reduce the size of
+        the dataset and reduce overall complexity in our data.
+        &#34;&#34;&#34;
+        modules_df: DataFrame = self.modules_df.drop(
+            [
+                &#34;description&#34;,
+                &#34;duration&#34;,
+                &#34;intro&#34;,
+                &#34;numSlides&#34;,
+                &#34;keywords&#34;,
+                &#34;objectives&#34;,
+                &#34;createdAt&#34;,
+                &#34;updatedAt&#34;,
+                &#34;members&#34;,
+                &#34;assignments&#34;,
+                &#34;parentModules&#34;,
+                &#34;parentModuleIDs&#34;,
+                &#34;subModules&#34;,
+                &#34;subModuleIDs&#34;,
+                &#34;collections&#34;,
+                &#34;course&#34;,
+                &#34;courseIDs&#34;,
+                &#34;feedback&#34;,
+                &#34;moduleName&#34;,
+            ],
+            axis=1,
+        )
+
+        feedbacks_df: DataFrame = self.feedbacks_df.drop([&#34;student&#34;, &#34;module&#34;], axis=1)
+
+        self.feedbacks_df = feedbacks_df
+
+        self.modules_df = modules_df
+
+        pd.options.display.max_columns = 60
+
+    async def __get_module_data(self):
+        await self.prisma.connect()
+
+        modules = await self.prisma.module.find_many()
+
+        modules = list(map(lambda x: x.dict(), modules))
+
+        self.modules_df = pd.DataFrame(modules)
+
+        await self.prisma.disconnect()
+
+    async def __get_feedback_data(self):
+        await self.prisma.connect()
+
+        feedbacks = await self.prisma.modulefeedback.find_many()
+
+        feedbacks = list(map(lambda x: x.dict(), feedbacks))
+
+        self.feedbacks_df = pd.DataFrame(feedbacks)
+
+        await self.prisma.disconnect()
+
+    def handleUserInput(self):
+        inputID = self.modules_df[
+            self.modules_df[&#34;id&#34;].isin(self.inputMovies[&#34;id&#34;].tolist())
+        ]
+
+        inputMovies = pd.merge(inputID, self.inputMovies)
+
+        self.inputMovies = inputMovies
+
+    def createSubset(self):
+        userSubset = self.feedbacks_df[
+            self.feedbacks_df[&#34;moduleId&#34;].isin(self.inputMovies[&#34;id&#34;].tolist())
+        ]
+
+        userSubsetGroup = userSubset.groupby([&#34;studentId&#34;])
+
+        userSubsetGroup = sorted(userSubsetGroup, key=lambda x: len(x[1]), reverse=True)
+
+        self.userSubsetGroup = userSubsetGroup
+
+    def createSimilarityMatrix(self):
+        pearsonCorrelationDict = {}
+
+        for name, group in self.userSubsetGroup:
+            group = group.sort_values(by=&#34;id&#34;)
+
+            inputMovies = self.inputMovies.sort_values(by=&#34;rating&#34;)
+
+            nRatings = len(group)
+
+            temp_df = inputMovies[inputMovies[&#34;id&#34;].isin(group[&#34;moduleId&#34;].tolist())]
+
+            tempRatingList = temp_df[&#34;rating&#34;].tolist()
+
+            tempGroupList = group[&#34;rating&#34;].tolist()
+
+            Sxx = sum([i**2 for i in tempRatingList]) - pow(
+                sum(tempRatingList), 2
+            ) / float(nRatings)
+            Syy = sum([i**2 for i in tempGroupList]) - pow(
+                sum(tempGroupList), 2
+            ) / float(nRatings)
+            Sxy = sum(i * j for i, j in zip(tempRatingList, tempGroupList)) - sum(
+                tempRatingList
+            ) * sum(tempGroupList) / float(nRatings)
+
+            if Sxx != 0 and Syy != 0:
+                pearsonCorrelationDict[name] = Sxy / sqrt(Sxx * Syy)
+            else:
+                pearsonCorrelationDict[name] = 0
+
+        self.pearsonCorrelationDict = pearsonCorrelationDict
+
+    def topUser(self):
+        pearsonDF = pd.DataFrame.from_dict(self.pearsonCorrelationDict, orient=&#34;index&#34;)
+        pearsonDF.columns = [&#34;similarityIndex&#34;]
+        pearsonDF[&#34;studentId&#34;] = pearsonDF.index
+        pearsonDF.index = range(len(pearsonDF))
+
+        topUsers = pearsonDF.sort_values(by=&#34;similarityIndex&#34;, ascending=False)[0:50]
+
+        print(topUsers.head())
+
+        topUsersRating = topUsers.merge(
+            self.feedbacks_df, left_on=&#34;studentId&#34;, right_on=&#34;studentId&#34;, how=&#34;inner&#34;
+        )
+
+        topUsersRating[&#34;weightedRating&#34;] = (
+            topUsersRating[&#34;similarityIndex&#34;] * topUsersRating[&#34;rating&#34;]
+        )
+
+        tempTopUsersRating = topUsersRating.groupby(&#34;moduleId&#34;).sum()[
+            [&#34;similarityIndex&#34;, &#34;weightedRating&#34;]
+        ]
+
+        tempTopUsersRating.columns = [&#34;sum_similarityIndex&#34;, &#34;sum_weightedRating&#34;]
+
+        self.tempTopUsersRating = tempTopUsersRating
+
+    def recommend(self):
+        recommendation_df = pd.DataFrame()
+
+        recommendation_df[&#34;w-AVG score&#34;] = (
+            self.tempTopUsersRating[&#34;sum_weightedRating&#34;]
+            / self.tempTopUsersRating[&#34;sum_similarityIndex&#34;]
+        )
+        recommendation_df[&#34;moduleId&#34;] = self.tempTopUsersRating.index
+
+        recommendation_df = recommendation_df.sort_values(
+            by=&#34;w-AVG score&#34;, ascending=False
+        )
+
+        print(recommendation_df.head(10))
+
+        mods_df = self.modules_df.loc[
+            self.modules_df[&#34;id&#34;].isin(recommendation_df.head(20)[&#34;moduleId&#34;].tolist())
+        ]
+
+        self.modules_df = mods_df
+
+    def convertResultToJSON(self):
+        modules = self.modules_df
+
+        return modules.to_json(orient=&#34;records&#34;)
+
+    async def run(self):
+        await self.__get_module_data()
+        await self.__get_feedback_data()
+        self.cleanData()
+        self.handleUserInput()
+        self.createSubset()
+        self.createSimilarityMatrix()
+        self.topUser()
+        self.recommend()
+        return self.convertResultToJSON()
+
+
+if __name__ == &#34;__main__&#34;:
+    asyncio.run(main(target=&#34;63f7a3068b546b91eadb20a6&#34;))</code></pre>
 </details>
 </section>
 <section>
@@ -80,43 +331,8 @@ if __name__ == &#39;__main__&#39;:
 <section>
 <h2 class="section-title" id="header-functions">Functions</h2>
 <dl>
-<dt id="emse-mms.recommend.getRecsForUser"><code class="name flex">
-<span>async def <span class="ident">getRecsForUser</span></span>(<span>userID: str)</span>
-</code></dt>
-<dd>
-<div class="desc"></div>
-<details class="source">
-<summary>
-<span>Expand source code</span>
-</summary>
-<pre><code class="python">async def getRecsForUser(userID: str):
-    prism = Prisma()
-    await prism.connect()
-
-    # get a set of modules the user has reviewed
-    user_reviews = await prism.modulefeedback.find_many(where={&#39;student&#39;: {&#39;id&#39;: userID}})
-
-    reviews = list(map(lambda x: x.dict(), user_reviews))
-
-    # all the reviews by the user
-    df = pd.DataFrame(reviews)
-
-    all_reviews = await prism.modulefeedback.find_many()
-
-    all_reviews = list(map(lambda x: x.dict(), all_reviews))
-
-    df_all_reviews = pd.DataFrame(all_reviews)
-
-    # get the weighted average of the reviews per module
-    df[&#39;weighted_rating&#39;] = df[&#39;rating&#39;] * df_all_reviews[&#39;rating&#39;].mean()
-
-    df.drop(columns=[&#39;module&#39;, &#39;student&#39;], inplace=True)
-    print(df.info())
-    print(df.head())</code></pre>
-</details>
-</dd>
 <dt id="emse-mms.recommend.main"><code class="name flex">
-<span>async def <span class="ident">main</span></span>(<span>)</span>
+<span>async def <span class="ident">main</span></span>(<span>target: str)</span>
 </code></dt>
 <dd>
 <div class="desc"></div>
@@ -124,14 +340,609 @@ if __name__ == &#39;__main__&#39;:
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">async def main():
-    await getRecsForUser(userID=&#39;63f3b1cb9422322eb675292f&#39;)
-    pass</code></pre>
+<pre><code class="python">async def main(target: str):
+    # rec = Recommender(target)
+    # await rec.recommend()
+    rec = Recs()
+    await rec.run()</code></pre>
 </details>
 </dd>
 </dl>
 </section>
 <section>
+<h2 class="section-title" id="header-classes">Classes</h2>
+<dl>
+<dt id="emse-mms.recommend.Recommender"><code class="flex name class">
+<span>class <span class="ident">Recommender</span></span>
+<span>(</span><span>target: str)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class Recommender:
+    def __init__(self, target: str):
+        self.target = target
+        self.sample = []
+        self.modules = []
+        self.recs = []
+
+    async def _sampleModules(self, skip: bool = True):
+        prisma = Prisma()
+        await prisma.connect()
+
+        modules = await prisma.module.find_many(include={&#34;feedback&#34;: True})
+
+        modules = list(map(lambda x: x.dict(), modules))
+
+        rand = random.sample(modules, len(modules) // 2)
+
+        # create module feedback for sample modules for target user
+        if not skip:
+            await self._seedTargetFeedback(rand)
+
+        await prisma.disconnect()
+
+        self.sample = rand
+
+    async def _seedTargetFeedback(self, sample: list):
+        prisma = Prisma()
+        await prisma.connect()
+        for module in sample:
+            await prisma.modulefeedback.create(
+                data={
+                    &#34;feedback&#34;: &#34;This is a sample review&#34;,
+                    &#34;rating&#34;: random.randint(1, 5),
+                    &#34;module&#34;: {&#34;connect&#34;: {&#34;id&#34;: module}},
+                    &#34;student&#34;: {&#34;connect&#34;: {&#34;id&#34;: self.target}},
+                }
+            )
+            print(f&#34;Created feedback for module {module}&#34;)
+
+        await prisma.disconnect()
+
+    async def recommend(self):
+        &#34;&#34;&#34;
+        At this point our target user has reviewed half of the modules in the database.
+        We have access to the modules that the user has reviewed through the modules parameter, and now
+        we can now get recommendations for the user
+        &#34;&#34;&#34;
+        prism = Prisma()
+        await prism.connect()
+        await self._sampleModules(skip=True)
+
+        df = pd.DataFrame(self.sample)
+
+        # convert our review data into a user x module matrix
+        # find cosine similarity between the target user and all other users
+        # get the top 5 users with the highest similarity
+        # get the modules that the top 5 users have reviewed
+        # get the modules that the target user has not reviewed
+        # get the modules that the top 5 users have reviewed that the target user has not reviewed
+        # get the average rating for each module
+        # get the top 5 modules with the highest average rating
+        # return the top 5 modules with the highest average rating as recommendations
+
+        await prism.disconnect()</code></pre>
+</details>
+<h3>Methods</h3>
+<dl>
+<dt id="emse-mms.recommend.Recommender.recommend"><code class="name flex">
+<span>async def <span class="ident">recommend</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>At this point our target user has reviewed half of the modules in the database.
+We have access to the modules that the user has reviewed through the modules parameter, and now
+we can now get recommendations for the user</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">async def recommend(self):
+    &#34;&#34;&#34;
+    At this point our target user has reviewed half of the modules in the database.
+    We have access to the modules that the user has reviewed through the modules parameter, and now
+    we can now get recommendations for the user
+    &#34;&#34;&#34;
+    prism = Prisma()
+    await prism.connect()
+    await self._sampleModules(skip=True)
+
+    df = pd.DataFrame(self.sample)
+
+    # convert our review data into a user x module matrix
+    # find cosine similarity between the target user and all other users
+    # get the top 5 users with the highest similarity
+    # get the modules that the top 5 users have reviewed
+    # get the modules that the target user has not reviewed
+    # get the modules that the top 5 users have reviewed that the target user has not reviewed
+    # get the average rating for each module
+    # get the top 5 modules with the highest average rating
+    # return the top 5 modules with the highest average rating as recommendations
+
+    await prism.disconnect()</code></pre>
+</details>
+</dd>
+</dl>
+</dd>
+<dt id="emse-mms.recommend.Recs"><code class="flex name class">
+<span>class <span class="ident">Recs</span></span>
+<span>(</span><span>target=None)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class Recs:
+    def __init__(self, target=None):
+        self.prisma = Prisma()
+        if target is None:
+            target = [
+                {&#34;id&#34;: &#34;63f4ee98ece0495cbb312604&#34;, &#34;title&#34;: &#34;orm,&#34;, &#34;rating&#34;: 5},
+                {&#34;id&#34;: &#34;63f4ee98ece0495cbb312608&#34;, &#34;title&#34;: &#34;me&#34;, &#34;rating&#34;: 3.5},
+                {&#34;id&#34;: &#34;63f4ee98ece0495cbb3125f5&#34;, &#34;title&#34;: &#34;2017&#34;, &#34;rating&#34;: 2},
+                {&#34;id&#34;: &#34;63f4ee98ece0495cbb3125f9&#34;, &#34;title&#34;: &#34;Souppe&#34;, &#34;rating&#34;: 5},
+                {&#34;id&#34;: &#34;63f4ee98ece0495cbb3125fe&#34;, &#34;title&#34;: &#34;Frams.&#34;, &#34;rating&#34;: 4.5},
+            ]
+            self.inputMovies = pd.DataFrame(target)
+
+        self.movies_df = pd.read_csv(&#34;input/movies.csv&#34;)
+        self.modules_df = None
+        self.ratings_df = pd.read_csv(&#34;input/ratings.csv&#34;)
+        self.feedbacks_df = None
+
+        self.userSubsetGroup = None
+        self.pearsonCorrelationDict = dict()
+        self.tempTopUsersRating = None
+
+    def sampleModules(self):
+        &#34;&#34;&#34;
+        - get a random set of 10 modules
+        - create a ratings for each module
+        - return as a list of dicts with id, title and rating
+        &#34;&#34;&#34;
+
+    def cleanData(self):
+        &#34;&#34;&#34;
+        Removes all the columns that are not needed for the recommendation engine. This is done to reduce the size of
+        the dataset and reduce overall complexity in our data.
+        &#34;&#34;&#34;
+        modules_df: DataFrame = self.modules_df.drop(
+            [
+                &#34;description&#34;,
+                &#34;duration&#34;,
+                &#34;intro&#34;,
+                &#34;numSlides&#34;,
+                &#34;keywords&#34;,
+                &#34;objectives&#34;,
+                &#34;createdAt&#34;,
+                &#34;updatedAt&#34;,
+                &#34;members&#34;,
+                &#34;assignments&#34;,
+                &#34;parentModules&#34;,
+                &#34;parentModuleIDs&#34;,
+                &#34;subModules&#34;,
+                &#34;subModuleIDs&#34;,
+                &#34;collections&#34;,
+                &#34;course&#34;,
+                &#34;courseIDs&#34;,
+                &#34;feedback&#34;,
+                &#34;moduleName&#34;,
+            ],
+            axis=1,
+        )
+
+        feedbacks_df: DataFrame = self.feedbacks_df.drop([&#34;student&#34;, &#34;module&#34;], axis=1)
+
+        self.feedbacks_df = feedbacks_df
+
+        self.modules_df = modules_df
+
+        pd.options.display.max_columns = 60
+
+    async def __get_module_data(self):
+        await self.prisma.connect()
+
+        modules = await self.prisma.module.find_many()
+
+        modules = list(map(lambda x: x.dict(), modules))
+
+        self.modules_df = pd.DataFrame(modules)
+
+        await self.prisma.disconnect()
+
+    async def __get_feedback_data(self):
+        await self.prisma.connect()
+
+        feedbacks = await self.prisma.modulefeedback.find_many()
+
+        feedbacks = list(map(lambda x: x.dict(), feedbacks))
+
+        self.feedbacks_df = pd.DataFrame(feedbacks)
+
+        await self.prisma.disconnect()
+
+    def handleUserInput(self):
+        inputID = self.modules_df[
+            self.modules_df[&#34;id&#34;].isin(self.inputMovies[&#34;id&#34;].tolist())
+        ]
+
+        inputMovies = pd.merge(inputID, self.inputMovies)
+
+        self.inputMovies = inputMovies
+
+    def createSubset(self):
+        userSubset = self.feedbacks_df[
+            self.feedbacks_df[&#34;moduleId&#34;].isin(self.inputMovies[&#34;id&#34;].tolist())
+        ]
+
+        userSubsetGroup = userSubset.groupby([&#34;studentId&#34;])
+
+        userSubsetGroup = sorted(userSubsetGroup, key=lambda x: len(x[1]), reverse=True)
+
+        self.userSubsetGroup = userSubsetGroup
+
+    def createSimilarityMatrix(self):
+        pearsonCorrelationDict = {}
+
+        for name, group in self.userSubsetGroup:
+            group = group.sort_values(by=&#34;id&#34;)
+
+            inputMovies = self.inputMovies.sort_values(by=&#34;rating&#34;)
+
+            nRatings = len(group)
+
+            temp_df = inputMovies[inputMovies[&#34;id&#34;].isin(group[&#34;moduleId&#34;].tolist())]
+
+            tempRatingList = temp_df[&#34;rating&#34;].tolist()
+
+            tempGroupList = group[&#34;rating&#34;].tolist()
+
+            Sxx = sum([i**2 for i in tempRatingList]) - pow(
+                sum(tempRatingList), 2
+            ) / float(nRatings)
+            Syy = sum([i**2 for i in tempGroupList]) - pow(
+                sum(tempGroupList), 2
+            ) / float(nRatings)
+            Sxy = sum(i * j for i, j in zip(tempRatingList, tempGroupList)) - sum(
+                tempRatingList
+            ) * sum(tempGroupList) / float(nRatings)
+
+            if Sxx != 0 and Syy != 0:
+                pearsonCorrelationDict[name] = Sxy / sqrt(Sxx * Syy)
+            else:
+                pearsonCorrelationDict[name] = 0
+
+        self.pearsonCorrelationDict = pearsonCorrelationDict
+
+    def topUser(self):
+        pearsonDF = pd.DataFrame.from_dict(self.pearsonCorrelationDict, orient=&#34;index&#34;)
+        pearsonDF.columns = [&#34;similarityIndex&#34;]
+        pearsonDF[&#34;studentId&#34;] = pearsonDF.index
+        pearsonDF.index = range(len(pearsonDF))
+
+        topUsers = pearsonDF.sort_values(by=&#34;similarityIndex&#34;, ascending=False)[0:50]
+
+        print(topUsers.head())
+
+        topUsersRating = topUsers.merge(
+            self.feedbacks_df, left_on=&#34;studentId&#34;, right_on=&#34;studentId&#34;, how=&#34;inner&#34;
+        )
+
+        topUsersRating[&#34;weightedRating&#34;] = (
+            topUsersRating[&#34;similarityIndex&#34;] * topUsersRating[&#34;rating&#34;]
+        )
+
+        tempTopUsersRating = topUsersRating.groupby(&#34;moduleId&#34;).sum()[
+            [&#34;similarityIndex&#34;, &#34;weightedRating&#34;]
+        ]
+
+        tempTopUsersRating.columns = [&#34;sum_similarityIndex&#34;, &#34;sum_weightedRating&#34;]
+
+        self.tempTopUsersRating = tempTopUsersRating
+
+    def recommend(self):
+        recommendation_df = pd.DataFrame()
+
+        recommendation_df[&#34;w-AVG score&#34;] = (
+            self.tempTopUsersRating[&#34;sum_weightedRating&#34;]
+            / self.tempTopUsersRating[&#34;sum_similarityIndex&#34;]
+        )
+        recommendation_df[&#34;moduleId&#34;] = self.tempTopUsersRating.index
+
+        recommendation_df = recommendation_df.sort_values(
+            by=&#34;w-AVG score&#34;, ascending=False
+        )
+
+        print(recommendation_df.head(10))
+
+        mods_df = self.modules_df.loc[
+            self.modules_df[&#34;id&#34;].isin(recommendation_df.head(20)[&#34;moduleId&#34;].tolist())
+        ]
+
+        self.modules_df = mods_df
+
+    def convertResultToJSON(self):
+        modules = self.modules_df
+
+        return modules.to_json(orient=&#34;records&#34;)
+
+    async def run(self):
+        await self.__get_module_data()
+        await self.__get_feedback_data()
+        self.cleanData()
+        self.handleUserInput()
+        self.createSubset()
+        self.createSimilarityMatrix()
+        self.topUser()
+        self.recommend()
+        return self.convertResultToJSON()</code></pre>
+</details>
+<h3>Methods</h3>
+<dl>
+<dt id="emse-mms.recommend.Recs.cleanData"><code class="name flex">
+<span>def <span class="ident">cleanData</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Removes all the columns that are not needed for the recommendation engine. This is done to reduce the size of
+the dataset and reduce overall complexity in our data.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def cleanData(self):
+    &#34;&#34;&#34;
+    Removes all the columns that are not needed for the recommendation engine. This is done to reduce the size of
+    the dataset and reduce overall complexity in our data.
+    &#34;&#34;&#34;
+    modules_df: DataFrame = self.modules_df.drop(
+        [
+            &#34;description&#34;,
+            &#34;duration&#34;,
+            &#34;intro&#34;,
+            &#34;numSlides&#34;,
+            &#34;keywords&#34;,
+            &#34;objectives&#34;,
+            &#34;createdAt&#34;,
+            &#34;updatedAt&#34;,
+            &#34;members&#34;,
+            &#34;assignments&#34;,
+            &#34;parentModules&#34;,
+            &#34;parentModuleIDs&#34;,
+            &#34;subModules&#34;,
+            &#34;subModuleIDs&#34;,
+            &#34;collections&#34;,
+            &#34;course&#34;,
+            &#34;courseIDs&#34;,
+            &#34;feedback&#34;,
+            &#34;moduleName&#34;,
+        ],
+        axis=1,
+    )
+
+    feedbacks_df: DataFrame = self.feedbacks_df.drop([&#34;student&#34;, &#34;module&#34;], axis=1)
+
+    self.feedbacks_df = feedbacks_df
+
+    self.modules_df = modules_df
+
+    pd.options.display.max_columns = 60</code></pre>
+</details>
+</dd>
+<dt id="emse-mms.recommend.Recs.convertResultToJSON"><code class="name flex">
+<span>def <span class="ident">convertResultToJSON</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def convertResultToJSON(self):
+    modules = self.modules_df
+
+    return modules.to_json(orient=&#34;records&#34;)</code></pre>
+</details>
+</dd>
+<dt id="emse-mms.recommend.Recs.createSimilarityMatrix"><code class="name flex">
+<span>def <span class="ident">createSimilarityMatrix</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def createSimilarityMatrix(self):
+    pearsonCorrelationDict = {}
+
+    for name, group in self.userSubsetGroup:
+        group = group.sort_values(by=&#34;id&#34;)
+
+        inputMovies = self.inputMovies.sort_values(by=&#34;rating&#34;)
+
+        nRatings = len(group)
+
+        temp_df = inputMovies[inputMovies[&#34;id&#34;].isin(group[&#34;moduleId&#34;].tolist())]
+
+        tempRatingList = temp_df[&#34;rating&#34;].tolist()
+
+        tempGroupList = group[&#34;rating&#34;].tolist()
+
+        Sxx = sum([i**2 for i in tempRatingList]) - pow(
+            sum(tempRatingList), 2
+        ) / float(nRatings)
+        Syy = sum([i**2 for i in tempGroupList]) - pow(
+            sum(tempGroupList), 2
+        ) / float(nRatings)
+        Sxy = sum(i * j for i, j in zip(tempRatingList, tempGroupList)) - sum(
+            tempRatingList
+        ) * sum(tempGroupList) / float(nRatings)
+
+        if Sxx != 0 and Syy != 0:
+            pearsonCorrelationDict[name] = Sxy / sqrt(Sxx * Syy)
+        else:
+            pearsonCorrelationDict[name] = 0
+
+    self.pearsonCorrelationDict = pearsonCorrelationDict</code></pre>
+</details>
+</dd>
+<dt id="emse-mms.recommend.Recs.createSubset"><code class="name flex">
+<span>def <span class="ident">createSubset</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def createSubset(self):
+    userSubset = self.feedbacks_df[
+        self.feedbacks_df[&#34;moduleId&#34;].isin(self.inputMovies[&#34;id&#34;].tolist())
+    ]
+
+    userSubsetGroup = userSubset.groupby([&#34;studentId&#34;])
+
+    userSubsetGroup = sorted(userSubsetGroup, key=lambda x: len(x[1]), reverse=True)
+
+    self.userSubsetGroup = userSubsetGroup</code></pre>
+</details>
+</dd>
+<dt id="emse-mms.recommend.Recs.handleUserInput"><code class="name flex">
+<span>def <span class="ident">handleUserInput</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def handleUserInput(self):
+    inputID = self.modules_df[
+        self.modules_df[&#34;id&#34;].isin(self.inputMovies[&#34;id&#34;].tolist())
+    ]
+
+    inputMovies = pd.merge(inputID, self.inputMovies)
+
+    self.inputMovies = inputMovies</code></pre>
+</details>
+</dd>
+<dt id="emse-mms.recommend.Recs.recommend"><code class="name flex">
+<span>def <span class="ident">recommend</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def recommend(self):
+    recommendation_df = pd.DataFrame()
+
+    recommendation_df[&#34;w-AVG score&#34;] = (
+        self.tempTopUsersRating[&#34;sum_weightedRating&#34;]
+        / self.tempTopUsersRating[&#34;sum_similarityIndex&#34;]
+    )
+    recommendation_df[&#34;moduleId&#34;] = self.tempTopUsersRating.index
+
+    recommendation_df = recommendation_df.sort_values(
+        by=&#34;w-AVG score&#34;, ascending=False
+    )
+
+    print(recommendation_df.head(10))
+
+    mods_df = self.modules_df.loc[
+        self.modules_df[&#34;id&#34;].isin(recommendation_df.head(20)[&#34;moduleId&#34;].tolist())
+    ]
+
+    self.modules_df = mods_df</code></pre>
+</details>
+</dd>
+<dt id="emse-mms.recommend.Recs.run"><code class="name flex">
+<span>async def <span class="ident">run</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">async def run(self):
+    await self.__get_module_data()
+    await self.__get_feedback_data()
+    self.cleanData()
+    self.handleUserInput()
+    self.createSubset()
+    self.createSimilarityMatrix()
+    self.topUser()
+    self.recommend()
+    return self.convertResultToJSON()</code></pre>
+</details>
+</dd>
+<dt id="emse-mms.recommend.Recs.sampleModules"><code class="name flex">
+<span>def <span class="ident">sampleModules</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"><ul>
+<li>get a random set of 10 modules</li>
+<li>create a ratings for each module</li>
+<li>return as a list of dicts with id, title and rating</li>
+</ul></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def sampleModules(self):
+    &#34;&#34;&#34;
+    - get a random set of 10 modules
+    - create a ratings for each module
+    - return as a list of dicts with id, title and rating
+    &#34;&#34;&#34;</code></pre>
+</details>
+</dd>
+<dt id="emse-mms.recommend.Recs.topUser"><code class="name flex">
+<span>def <span class="ident">topUser</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def topUser(self):
+    pearsonDF = pd.DataFrame.from_dict(self.pearsonCorrelationDict, orient=&#34;index&#34;)
+    pearsonDF.columns = [&#34;similarityIndex&#34;]
+    pearsonDF[&#34;studentId&#34;] = pearsonDF.index
+    pearsonDF.index = range(len(pearsonDF))
+
+    topUsers = pearsonDF.sort_values(by=&#34;similarityIndex&#34;, ascending=False)[0:50]
+
+    print(topUsers.head())
+
+    topUsersRating = topUsers.merge(
+        self.feedbacks_df, left_on=&#34;studentId&#34;, right_on=&#34;studentId&#34;, how=&#34;inner&#34;
+    )
+
+    topUsersRating[&#34;weightedRating&#34;] = (
+        topUsersRating[&#34;similarityIndex&#34;] * topUsersRating[&#34;rating&#34;]
+    )
+
+    tempTopUsersRating = topUsersRating.groupby(&#34;moduleId&#34;).sum()[
+        [&#34;similarityIndex&#34;, &#34;weightedRating&#34;]
+    ]
+
+    tempTopUsersRating.columns = [&#34;sum_similarityIndex&#34;, &#34;sum_weightedRating&#34;]
+
+    self.tempTopUsersRating = tempTopUsersRating</code></pre>
+</details>
+</dd>
+</dl>
+</dd>
+</dl>
 </section>
 </article>
 <nav id="sidebar">
@@ -147,8 +958,31 @@ if __name__ == &#39;__main__&#39;:
 </li>
 <li><h3><a href="#header-functions">Functions</a></h3>
 <ul class="">
-<li><code><a title="emse-mms.recommend.getRecsForUser" href="#emse-mms.recommend.getRecsForUser">getRecsForUser</a></code></li>
 <li><code><a title="emse-mms.recommend.main" href="#emse-mms.recommend.main">main</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-classes">Classes</a></h3>
+<ul>
+<li>
+<h4><code><a title="emse-mms.recommend.Recommender" href="#emse-mms.recommend.Recommender">Recommender</a></code></h4>
+<ul class="">
+<li><code><a title="emse-mms.recommend.Recommender.recommend" href="#emse-mms.recommend.Recommender.recommend">recommend</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="emse-mms.recommend.Recs" href="#emse-mms.recommend.Recs">Recs</a></code></h4>
+<ul class="">
+<li><code><a title="emse-mms.recommend.Recs.cleanData" href="#emse-mms.recommend.Recs.cleanData">cleanData</a></code></li>
+<li><code><a title="emse-mms.recommend.Recs.convertResultToJSON" href="#emse-mms.recommend.Recs.convertResultToJSON">convertResultToJSON</a></code></li>
+<li><code><a title="emse-mms.recommend.Recs.createSimilarityMatrix" href="#emse-mms.recommend.Recs.createSimilarityMatrix">createSimilarityMatrix</a></code></li>
+<li><code><a title="emse-mms.recommend.Recs.createSubset" href="#emse-mms.recommend.Recs.createSubset">createSubset</a></code></li>
+<li><code><a title="emse-mms.recommend.Recs.handleUserInput" href="#emse-mms.recommend.Recs.handleUserInput">handleUserInput</a></code></li>
+<li><code><a title="emse-mms.recommend.Recs.recommend" href="#emse-mms.recommend.Recs.recommend">recommend</a></code></li>
+<li><code><a title="emse-mms.recommend.Recs.run" href="#emse-mms.recommend.Recs.run">run</a></code></li>
+<li><code><a title="emse-mms.recommend.Recs.sampleModules" href="#emse-mms.recommend.Recs.sampleModules">sampleModules</a></code></li>
+<li><code><a title="emse-mms.recommend.Recs.topUser" href="#emse-mms.recommend.Recs.topUser">topUser</a></code></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
