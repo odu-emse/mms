@@ -34,7 +34,6 @@ services:
       bash -c "yarn && yarn generate && yarn dev"
     networks:
       - mmsNetwork
-
   redis:
     container_name: mms_redis
     image: redis
