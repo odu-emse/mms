@@ -11,3 +11,4 @@ fastapi~=0.92.0
 pdoc3~=0.10.0
 uvicorn~=0.20.0
 black~=22.6.0
+nltk~=3.6.5
