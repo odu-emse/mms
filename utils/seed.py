@@ -1,3 +1,5 @@
+import asyncio
+import csv
 from enum import Enum
 import os
 from typing import Union
@@ -6,7 +8,7 @@ from essential_generators import DocumentGenerator
 from numpy import random
 from prisma import Prisma
 import logging
-from requests import post
+from requests import post, Response
 
 
 def getModuleFeedback():
@@ -44,7 +46,8 @@ class Seeder:
     database and the essential_generators library to create document templates.
     """
 
-    def __init__(self, skip: [Skipper] = None, cleanup: [Skipper] = None, iterations: int = 25, target: Union[str, None] = None):
+    def __init__(self, skip: [Skipper] = None, cleanup: [Skipper] = None, iterations: int = 25,
+                 target: Union[str, None] = None):
         self.gen = DocumentGenerator()
         self.gen.init_word_cache(5000)
         self.gen.init_sentence_cache(5000)
@@ -78,11 +81,11 @@ class Seeder:
         Creates a target user for testing purposes.
         """
         account = await self.prisma.user.create(data={
-                'firstName': 'Test User',
-                'lastName': 'Test User',
-                'email': '',
-                'openID': ''
-            })
+            'firstName': 'Test User',
+            'lastName': 'Test User',
+            'email': '',
+            'openID': ''
+        })
 
         self.logger.info('Created target user: %s' % account.id)
         return account.id
@@ -211,6 +214,102 @@ class Seeder:
         self.modules = modules
         self.logger.info('Module model seeded successfully with %d documents!' % module_res)
 
+    def _is_float_(self, num: str):
+        try:
+            if float(num).is_integer():
+                return False
+            return True
+        except ValueError:
+            return False
+
+    # function to create acronym
+    def fxn(self, stng: str):
+        # add first letter
+        oupt = stng[0]
+        # iterate over string
+        for i in range(1, len(stng)):
+            if stng[i - 1] == ' ':
+                # add letter next to space
+                oupt += stng[i]
+        # uppercase oupt
+        oupt = oupt.upper()
+        return oupt
+
+    async def seedModuleFromFile(self, path: str):
+        """
+        Seeds the module model with data from a csv file. The structure of the files must be as follows:
+            - the first two rows should be ignored as they contain the column names and data types
+            - column 1: module number - if it is an integer, we will need to create a unique prefix for it. if it is a float, the prefix will be the integer part of the number and the decimal number will be the module number
+            - column 2: module name
+            - column 3: module description
+            - column 4: module objectives - this will be a list of strings separated by a semicolon
+            - column 5: module keywords - this will be a list of strings separated by a semicolon
+            - column 6: module hours - this will be an float number representing the number of hours the module will take to complete
+
+        :return: Boolean
+        """
+        self.logger.info('Seeding module model from file...')
+
+        modules = list()
+
+        with open(path, 'r') as csvFile:
+            parsedFile = csv.reader(csvFile, delimiter='\t', quotechar='|')
+            next(parsedFile)
+            prefix = ''
+
+            for row in parsedFile:
+                document = dict()
+
+                if float(row[0]).is_integer():
+                    prefix = self.fxn(row[1])
+                    document['number'] = 0
+                else:
+                    dec = row[0].split('.')
+                    document['number'] = dec[1]
+
+                document['name'] = row[1]
+                document['prefix'] = prefix
+                document['description'] = row[2]
+                document['objectives'] = row[3].split(';')
+                document['keywords'] = row[4].split(';')
+                document['hours'] = row[5]
+
+                modules.append(document)
+
+        print(modules)
+
+        self.logger.info('Successfully parsed %d documents!' % len(modules))
+
+        # send each element in the array to the GraphQL API endpoint without using Prisma
+
+        for module in modules:
+            query = """
+                mutation {
+                    createModule(input: {
+                        name: "%s"
+                        number: %s
+                        prefix: "%s"
+                        description: "%s"
+                        objectives: %s
+                        hours: %s
+                    }) {
+                        id
+                    }
+                }
+            """ % (module['name'], module['number'], module['prefix'], module['description'], module['objectives'], module['hours'])
+
+            print(query)
+
+            res: Response = post("http://localhost:4000/graphql", json={'query': query})
+
+            print(res.text)
+
+            if res.status_code != 200:
+                self.logger.error('Failed to seed module model from file!')
+                return False
+
+        return True
+
     async def _seedPlanOfStudyDB(self):
         """
         Seeds the plan of study model with dummy data for each account already present in the DB.
@@ -273,7 +372,8 @@ class Seeder:
                 'moduleId': enrollment['moduleId'],
                 'rating': random.randint(1, 6),
                 'feedback': self.gen.sentence(),
-                'studentId': list(map(lambda x: x['studentID'], filter(lambda x: x['id'] == enrollment['planID'], plans))).pop()
+                'studentId': list(
+                    map(lambda x: x['studentID'], filter(lambda x: x['id'] == enrollment['planID'], plans))).pop()
             })
 
         feedback_res = await self.prisma.modulefeedback.create_many(data=feedbacks)
@@ -391,3 +491,14 @@ class Seeder:
     async def _cleanupEnrollmentDB(self):
         count = await self.prisma.moduleenrollment.delete_many()
         self.logger.info('Enrollment model cleaned up successfully! (%d documents deleted)' % count)
+
+
+async def main():
+    seeder = Seeder(
+        skip=[Skipper.all],
+        cleanup=[Skipper.all],
+    )
+    await seeder.seedModuleFromFile(path='../input/ENMA603_1.txt')
+
+if __name__ == '__main__':
+    asyncio.run(main())
