@@ -3,9 +3,10 @@ import csv
 from enum import Enum
 import os
 from typing import Union
+from string import Template
 
+import numpy as np
 from essential_generators import DocumentGenerator
-from numpy import random
 from prisma import Prisma
 import logging
 from requests import post, Response
@@ -272,37 +273,76 @@ class Seeder:
                 document['description'] = row[2]
                 document['objectives'] = row[3].split(';')
                 document['keywords'] = row[4].split(';')
-                document['hours'] = row[5]
+
+                if row[5] == ' ' or row[5] == '':
+                    document['hours'] = np.random.uniform(0.25, 2)
+                else:
+                    document['hours'] = float(row[5])
 
                 modules.append(document)
 
-        print(modules)
+        message = Template('Successfully parsed $number documents from file $name!')
 
-        self.logger.info('Successfully parsed %d documents!' % len(modules))
+        self.logger.info(message.substitute(number=len(modules), name=path.split('/')[-1]))
 
         # send each element in the array to the GraphQL API endpoint without using Prisma
 
         for module in modules:
-            query = """
+            query = Template("""
                 mutation {
                     createModule(input: {
-                        name: "%s"
-                        number: %s
-                        prefix: "%s"
-                        description: "%s"
-                        objectives: %s
-                        hours: %s
+                        name: "$name"
+                        number: $number
+                        prefix: "$prefix"
+                        description: "$description"
+                        objectives: [$objectives]
+                        keywords: [$keywords]
+                        hours: $hours
                     }) {
                         id
                     }
                 }
-            """ % (module['name'], module['number'], module['prefix'], module['description'], module['objectives'], module['hours'])
+            """)
 
-            print(query)
+            cleanedObjectives = ""
 
-            res: Response = post("http://localhost:4000/graphql", json={'query': query})
+            for obj in module['objectives']:
+                curr = obj.split(';')[0]
+                if len(curr) == 0:
+                    continue
+                if curr[0] == '"' and curr[-1] == '"':
+                    cleanedObjectives += '' + obj.split(';')[0] + ','
+                elif curr[0] == '"' and curr[-1] != '"':
+                    cleanedObjectives += '' + obj.split(';')[0] + '",'
+                else:
+                    cleanedObjectives += '"' + obj.split(';')[0] + '",'
 
-            print(res.text)
+            cleanedKeys = ""
+            for key in module['keywords']:
+                if len(key) == 0:
+                    continue
+                if key[0] == '"' and key[-1] == '"':
+                    cleanedKeys += '' + key + ','
+                elif key[0] == '"' and key[-1] != '"':
+                    cleanedKeys += '' + key + '",'
+                else:
+                    cleanedKeys += '"' + key + '",'
+
+            finalizedQuery = query.substitute(
+                name=module['name'],
+                number=module['number'],
+                prefix=module['prefix'],
+                description=module['description'],
+                objectives=cleanedObjectives,
+                keywords=cleanedKeys.strip(','),
+                hours=module['hours']
+            )
+
+            # print(finalizedQuery)
+
+            res: Response = post("http://localhost:4000/graphql", json={'query': finalizedQuery})
+
+            # print(res.text)
 
             if res.status_code != 200:
                 self.logger.error('Failed to seed module model from file!')
@@ -347,7 +387,7 @@ class Seeder:
                 enrollments.append({
                     'planID': pos['id'],
                     'moduleId': module['id'],
-                    'role': random.choice(list(EnrollmentRole)).name
+                    'role': np.random.choice(list(EnrollmentRole)).name
                 })
 
         enrollment_res = await self.prisma.moduleenrollment.create_many(data=enrollments)
@@ -370,7 +410,7 @@ class Seeder:
         for enrollment in self.enrollments:
             feedbacks.append({
                 'moduleId': enrollment['moduleId'],
-                'rating': random.randint(1, 6),
+                'rating': np.random.randint(1, 6),
                 'feedback': self.gen.sentence(),
                 'studentId': list(
                     map(lambda x: x['studentID'], filter(lambda x: x['id'] == enrollment['planID'], plans))).pop()
@@ -498,7 +538,26 @@ async def main():
         skip=[Skipper.all],
         cleanup=[Skipper.all],
     )
-    await seeder.seedModuleFromFile(path='../input/ENMA603_1.txt')
+    modules = [
+        # '../input/ENMA603_1.txt',
+        # '../input/ENMA603_2.txt',
+        # '../input/ENMA603_3.txt',
+        # '../input/ENMA603_4.txt',
+        # '../input/ENMA603_5.txt',
+        # '../input/ENMA603_6.txt',
+        # '../input/ENMA603_7.txt',
+        # '../input/ENMA603_8.txt',
+        # '../input/ENMA603_9.txt',
+        # '../input/ENMA603_10.txt',
+        # '../input/ENMA603_11.txt',
+        # '../input/ENMA603_12.txt',
+        # '../input/ENMA603_13.txt',
+        # '../input/ENMA603_14.txt',
+    ]
+
+    for module in modules:
+        await seeder.seedModuleFromFile(path=module)
+
 
 if __name__ == '__main__':
     asyncio.run(main())
