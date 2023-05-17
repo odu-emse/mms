@@ -17,7 +17,7 @@ class MetaRecommender:
         self.df = pd.read_json(path)
         self.featureDf = pd.DataFrame()
         self.target = target
-        nltk.download("stopwords")
+        # nltk.download("stopwords")
         self.stop = stopwords.words("english")
         self.cv = CountVectorizer()
         self.similarity = None
