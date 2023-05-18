@@ -1,0 +1,2171 @@
+[
+  {
+    "id": "644827afc3faa4c9ea96a800",
+    "name": "Linear Regression",
+    "prefix": "DS",
+    "number": 72,
+    "objectives": [
+      "Linear Regression",
+      "Correlation",
+      "Regression Analysis",
+      "Least Squares",
+      "Coefficient of Determination",
+      "Regression Line",
+      "Independent Variable",
+      "Dependent Variable",
+      "Prediction",
+      "Outliers",
+      "Residuals",
+      "Confidence Interval",
+      "Hypothesis Testing",
+      "ANOVA",
+      "Statistical Inference",
+      "Multiple Linear Regression",
+      "Model Selection",
+      "Regularization",
+      "Ridge Regression"
+    ],
+    "hours": 0.75,
+    "description": "This module is designed to introduce students to linear regression, a powerful statistical technique used to model the relationship between two variables. Through interactive lessons and hands-on activities, students will learn how to build linear regression models, interpret their results, and use them to make predictions and draw conclusions about the data. The module will cover the assumptions and limitations of linear regression, as well as techniques for validating and improving the model. Students will also learn about different types of linear regression, including simple and multiple regression, and how to apply them to real-world problems. By the end of the module, students will have a strong understanding of linear regression and be able to apply it to a wide range of fields, including business, social sciences, and natural sciences.",
+    "keywords": [
+      "Linear regression",
+      "Statistical technique",
+      "Modeling relationships",
+      "Building models",
+      "Interpreting results",
+      "Making predictions"
+    ]
+  },
+  {
+    "id": "64496079d5fb014e40d5ea39",
+    "name": "Statistical Analysis",
+    "prefix": "DS",
+    "number": 9,
+    "objectives": [
+      "Statistical Analysis",
+      "Descriptive Statistics",
+      "Inferential Statistics",
+      "Probability",
+      "Distributions",
+      "Hypothesis Testing",
+      "Confidence Interval",
+      "Central Limit Theorem",
+      "Sampling Methods",
+      "Statistical Inference",
+      "Regression Analysis",
+      "ANOVA",
+      "Chi-Square Test",
+      "Correlation",
+      "Experimental Design",
+      "Nonparametric Statistics",
+      "Time Series Analysis",
+      "Multivariate Analysis",
+      "Big Data Analytics",
+      "Machine Learning"
+    ],
+    "hours": 1.5,
+    "description": "This module is designed to teach students the fundamentals of statistical analysis, including data collection, organization, and analysis. Through hands-on activities and real-world case studies, students will learn how to use statistical techniques to make informed decisions and draw meaningful conclusions from data. The module will cover basic statistical concepts such as measures of central tendency, variance, and standard deviation, as well as more advanced topics such as hypothesis testing and regression analysis. By the end of the module, students will have a comprehensive understanding of statistical analysis and be able to apply it to a wide range of fields, including business, science, and social sciences.",
+    "keywords": [
+      "Statistical Analysis",
+      "Data Collection",
+      "Data Organization",
+      "Data Analysis",
+      "Measures of Central Tendency",
+      "Hypothesis Testing",
+      "Regression Analysis",
+      "Variance",
+      "Standard Deviation",
+      "Business",
+      "Science",
+      "Social Sciences"
+    ]
+  },
+  {
+    "id": "644960add5fb014e40d5ea3a",
+    "name": "Logarithms",
+    "prefix": "DS",
+    "number": 121,
+    "objectives": [
+      "Logarithms",
+      "Exponential Functions",
+      "Logarithmic Functions",
+      "Properties of Logarithms",
+      "Natural Logarithm",
+      "Logarithmic Equations",
+      "Logarithmic Differentiation",
+      "Exponential Growth",
+      "Exponential Decay",
+      "Change of Base Formula",
+      "Inverse Functions",
+      "Trigonometry",
+      "Hyperbolic Functions",
+      "Calculus",
+      "Derivatives",
+      "Integrals",
+      "Complex Numbers",
+      "Applications of Logarithms",
+      "Mathematical Modeling",
+      "Big O Notation"
+    ],
+    "hours": 2,
+    "description": "This module is designed to introduce students to logarithms, an important mathematical concept used in many fields, including science, engineering, and finance. Through interactive lessons and problem-solving activities, students will learn the properties and rules of logarithms, as well as how to use them to solve exponential equations and real-world problems. The module will also cover logarithmic functions and their applications, such as in modeling population growth and radioactive decay. By the end of the module, students will have a solid understanding of logarithms and be able to apply them to a wide range of mathematical and scientific problems.",
+    "keywords": [
+      "Logarithms",
+      "Exponential equations",
+      "Problem-solving",
+      "Logarithmic Functions",
+      "Population growth",
+      "Radioactive decay"
+    ]
+  },
+  {
+    "id": "644960bcd5fb014e40d5ea3b",
+    "name": "Arithmetics",
+    "prefix": "DS",
+    "number": 2,
+    "objectives": [
+      "Arithmetic",
+      "Operations",
+      "Addition",
+      "Subtraction",
+      "Multiplication",
+      "Division",
+      "Fractions",
+      "Decimals",
+      "Integers",
+      "Real Numbers",
+      "Absolute Value",
+      "Exponents",
+      "Roots",
+      "Order of Operations",
+      "Scientific Notation",
+      "Percentages",
+      "Ratios",
+      "Proportions",
+      "Linear Equations"
+    ],
+    "hours": 0.5,
+    "description": "This module is designed to teach students the fundamentals of arithmetic, including whole number operations, fractions, decimals, and percentages. Through hands-on activities and real-world problem-solving, students will develop a solid understanding of arithmetic concepts and improve their mathematical reasoning skills. The module will also introduce students to different arithmetic techniques and strategies, such as mental math and estimation, to help them become more efficient and effective learners. By the end of the module, students will have the confidence and skills needed to tackle more advanced mathematical topics.",
+    "keywords": [
+      "Arithmetic",
+      "Whole Number Operations",
+      "Fractions",
+      "Decimals",
+      "Percentages",
+      "Mental Math"
+    ]
+  },
+  {
+    "id": "64496111d5fb014e40d5ea3c",
+    "name": "Euclidean distance",
+    "prefix": "DS",
+    "number": 887,
+    "objectives": [
+      "Euclidean Distance",
+      "Distance Formula",
+      "Pythagorean Theorem",
+      "Cartesian Coordinates",
+      "Euclidean Space",
+      "Distance Metrics",
+      "Metric Spaces",
+      "Norms",
+      "Inner Products",
+      "Orthogonality",
+      "Unit Vectors",
+      "Vectors",
+      "Vector Spaces",
+      "Vector Addition",
+      "Scalar Multiplication",
+      "Dot Product",
+      "Cross Product",
+      "Matrices",
+      "Matrix Operations",
+      "Eigenvalues"
+    ],
+    "hours": 2.25,
+    "description": "In this module, we'll be learning about the Euclidean distance, a fundamental concept in mathematics and computer science. The Euclidean distance is the straight-line distance between two points in a Euclidean space, which is a space with a well-defined notion of distance and angles. We'll explore how to calculate the Euclidean distance in two dimensions using the Pythagorean theorem, and extend this concept to higher dimensions. We'll also look at some practical applications of the Euclidean distance in fields such as data analysis and machine learning. By the end of this module, you'll have a clear understanding of what the Euclidean distance is, how to calculate it, and why it's important.",
+    "keywords": [
+      "Euclidean Distance",
+      "Mathematics",
+      "Computer Science",
+      "Pythagorean Theorem",
+      "Data Analysis",
+      "Machine Learning"
+    ]
+  },
+  {
+    "id": "64511f49f9ce74323575fffe",
+    "name": "Introduction",
+    "prefix": "CSLP",
+    "number": 1,
+    "objectives": [
+      "Linear Programming",
+      "Modeling",
+      "Computer Implementation",
+      "Sensitivity Analysis",
+      "Uncertainty",
+      "Graphical Method",
+      "Computer Models",
+      "Post Analysis",
+      "Parameters",
+      "Scenarios",
+      "New Variables",
+      "New Constraints",
+      "Manual Sensitivity Analysis",
+      "Automatic Sensitivity Analysis",
+      "Objective Function",
+      "Decision Variables",
+      "Constraints",
+      "Optimization",
+      "Feasibility",
+      "Mathematical Models"
+    ],
+    "hours": 0.3,
+    "description": "In this module, we return to the modeling process and present how to implement a model using the computer. We also cover the topic of Sensitivity Analysis which is a post analysis method to study uncertainty that may occur to the model’s parameters as well as some potential scenarios that may occur such as adding a new variable or a new constraint.  We cover this topic for both the Graphical Method and the computer models. We will learn how to conduct sensitivity analysis manually for graphical solutions and automatically using the computer.",
+    "keywords": [
+      "Modeling",
+      "Computer implementation",
+      "Sensitivity Analysis",
+      "Uncertainty",
+      "Graphical Method",
+      "Computer models"
+    ]
+  },
+  {
+    "id": "64511f4bf9ce74323575ffff",
+    "name": "Computer Solutions for LP Formulations",
+    "prefix": "CSLP",
+    "number": 2,
+    "objectives": [
+      "Linear Programming",
+      "Computer Solutions",
+      "Solver",
+      "Excel",
+      "AMPL",
+      "LINDO",
+      "GAMS",
+      "Algorithm",
+      "Sensitivity Analysis",
+      "Shadow Prices",
+      "Dual Problem",
+      "Interior Point Method",
+      "Branch and Bound Method",
+      "Network Simplex Method",
+      "Two-Phase Method",
+      "Integer Programming",
+      "Nonlinear Programming",
+      "Heuristics",
+      "Metaheuristics",
+      "Artificial Intelligence"
+    ],
+    "hours": 0.3,
+    "description": "In this module, we will introduce the concept of computer solutions for LP formulations. We will learn how computers can help us to solve more complex LP models in a more efficient manner. Specifically, we will discuss the Simplex method, one of the most popular and powerful algorithms for solving LP problems. We will cover the different phases of the Simplex method, including initialization, iteration, and termination, and learn how to interpret the output generated by the computer.  We will also introduce some of the popular software tools available for solving LP problems. These tools can greatly simplify the process of solving LP problems and reduce the risk of errors. We will provide hands-on experience with some of these software tools to give you a better understanding of how they can be used to solve LP problems.",
+    "keywords": [
+      "Linear Programming (LP)",
+      "Simplex Method",
+      "Computational Solutions",
+      "Initialization",
+      "Iteration",
+      "Termination",
+      "Software Tools",
+      "Hands-on Experience"
+    ]
+  },
+  {
+    "id": "646270b939769687f2a6d858",
+    "name": "Linear Programming - Modeling Example",
+    "prefix": "LP-ME",
+    "number": 1,
+    "objectives": [
+      "Linear",
+      "Programming",
+      "Modelling",
+      "Linear Programming",
+      "Model",
+      "Linear Programming"
+    ],
+    "hours": 0.3,
+    "description": "Welcome to the Linear Programming: Modeling Example module! In this module, we will explore the application of linear programming in solving optimization problems. We will begin by introducing linear programming, including its mathematical formulation. Then, we will discuss two main types of linear programming problems, the maximization and minimization problem. We will use examples to demonstrate the differences between them. We will then examine some of the most commonly used algorithms for solving linear programming problems. Finally, we will look at how linear programming can",
+    "keywords": [
+      "Optimization",
+      "Mathematics",
+      "Maximization",
+      "Minimization",
+      "Algorithms",
+      "Problem Solving"
+    ]
+  },
+  {
+    "id": "646273ce39769687f2a6d860",
+    "name": "Transportation Example",
+    "prefix": "TP",
+    "number": 1,
+    "objectives": [
+      "Transportation",
+      "Example",
+      "Transportation Example",
+      "Introduction",
+      "Transport",
+      "Transportation"
+    ],
+    "hours": 0.7,
+    "description": "In this module, we'll be exploring the various forms of transportation. We'll cover everything from cars to trains, buses to planes, and even boats. We'll examine the different components of each mode of transportation and how they fit into modern life. We'll also look at the practical applications of each form of transportation and how they can be used to help get us from point A to point B. Finally, we'll delve into the environmental impact of transportation and the different types of regulations that are in",
+    "keywords": [
+      "Cars",
+      "Trains",
+      "Buses",
+      "Planes",
+      "Boats",
+      "Environmental Impact"
+    ]
+  },
+  {
+    "id": "646273e539769687f2a6d861",
+    "name": "Transshipment Example",
+    "prefix": "TP",
+    "number": 2,
+    "objectives": [
+      "Transshipment",
+      "Example",
+      "Transshipment Example",
+      "Introduction",
+      "Transshipment"
+    ],
+    "hours": 0.73,
+    "description": "Welcome to the Transshipment Example module! In this module, we will explore the concept of transshipment, which is the movement of goods from one place to another. We will also examine how transshipment affects the global economy and the various strategies businesses use to maximize their success in this area. Finally, we will look at a real-life example of transshipment, and use it to analyze and draw conclusions about the effectiveness of the process. By the end of the module, you",
+    "keywords": [
+      "Global Economy",
+      "Business Strategies",
+      "Real-life Examples",
+      "Analysis",
+      "Conclusions",
+      "Effectiveness"
+    ]
+  },
+  {
+    "id": "6462741d39769687f2a6d862",
+    "name": "Assignment Problem Example",
+    "prefix": "TP",
+    "number": 3,
+    "objectives": [
+      "Transshipment",
+      "Transportation",
+      "Shipment",
+      "Transport",
+      "Assignment Problems"
+    ],
+    "hours": 0.525,
+    "description": "In this module, students will learn the concept of assignment problems. We will go through an example problem together, step-by-step, to understand the underlying principles and techniques. These principles and techniques will then be applied to more complex problems in order to practice and solidify the student's understanding of the topic. At the end of the module, students will have a good understanding of the concepts and methods used to solve assignment problems.",
+    "keywords": [
+      "Example Problem",
+      "Step-by-Step Approach",
+      "Principles & Techniques",
+      "Practice & Solidify Understanding",
+      "Conceptual Understanding",
+      "Methods for Solving Problems"
+    ]
+  },
+  {
+    "id": "6462745c39769687f2a6d863",
+    "name": "Shortest Path Example",
+    "prefix": "TP",
+    "number": 1,
+    "objectives": [
+      "Shortest",
+      "Path",
+      "Example",
+      "Shortest Path",
+      "Short",
+      "Shortest Path"
+    ],
+    "hours": 0.265,
+    "description": "Welcome to the Shortest Path Example module! In this module, we will be exploring the concept of finding the shortest path between two points on a graph. We will cover topics such as breadth-first search, Dijkstra's algorithm, and other key algorithms. We will look at examples and use our own data to compare the efficiency of different approaches. By the end of this module, you will have a thorough understanding of how to find the shortest path between two points.",
+    "keywords": [
+      "Graphs",
+      "Breadth-First Search",
+      "Dijkstra’s Algorithm",
+      "Pathfinding Algorithms",
+      "Path Efficiency",
+      "Shortest Path Solution"
+    ]
+  },
+  {
+    "id": "6462747b39769687f2a6d864",
+    "name": "Maximal Flow Problem",
+    "prefix": "TP",
+    "number": 2,
+    "objectives": [
+      "Maximal",
+      "Flow",
+      "Example",
+      "Problem",
+      "Graph Theory"
+    ],
+    "hours": 0.351,
+    "description": "Welcome to the Maximal Flow Problem module. In this module, you will learn about the application of graph theory to solve network flow problems. We will explore the Ford-Fulkerson algorithm in detail, and will examine examples of how this algorithm can be used to maximize the flow through a network of conduits. You will also learn how to apply the algorithm to solve the Maximal Flow Problem, and understand the underlying principles of graph theory. This will be a challenging but rewarding module, so come",
+    "keywords": [
+      "Network Flow",
+      "Ford-Fulkerson Algorithm",
+      "Maximal Flow Problem",
+      "Conduits",
+      "Graph Theory Principles",
+      "Module Challenges"
+    ]
+  },
+  {
+    "id": "6462749a39769687f2a6d865",
+    "name": "Travelling Salesman Problem",
+    "prefix": "TP",
+    "number": 3,
+    "objectives": [
+      "Travelling",
+      "AI",
+      "Algorithm",
+      "Example",
+      "Problem",
+      "Travelling Salesman Problem"
+    ],
+    "hours": 0.75,
+    "description": "In this module, we will be exploring the Travelling Salesman Problem. This is a classic problem in computer science, where given a list of cities and the distance between each pair of them, we must find the shortest possible tour that visits each city exactly once. We will explore different ways to solve this problem, as well as efficient algorithms for doing so. By the end of this module, you will have a better understanding of the Travelling Salesman Problem and an increased ability to come up with",
+    "keywords": [
+      "Classic Problem in Computer Science",
+      "City Tour",
+      "Distance Matrix",
+      "Algorithm Solutions",
+      "Shortest Path",
+      "Optimal Route"
+    ]
+  },
+  {
+    "id": "646274c539769687f2a6d866",
+    "name": "Non-Linear Profit Analysis/Constrained Optimization",
+    "prefix": "NFM",
+    "number": 1,
+    "objectives": [
+      "Non-Linear",
+      "Optimization",
+      "Profit",
+      "Analysis",
+      "Linear",
+      "Non-Linear Profit Analysis"
+    ],
+    "hours": 0.225,
+    "description": "Welcome to the Non-Linear Profit Analysis/Constrained Optimization module! In this module, you will learn how to apply advanced optimization techniques to inform optimal decision making within the context of non-linear profit models. Through a combination of theoretical lectures and hands-on practicals, you will gain an appreciation of constrained optimization techniques and their application in various fields, such as operational research, finance, and accounting. You will also develop the skills needed to identify, analyse, and manage optimal solutions",
+    "keywords": [
+      "Constrained Optimization",
+      "Advanced Optimization",
+      "Decision Making",
+      "Operational Research",
+      "Finance",
+      "Accounting"
+    ]
+  },
+  {
+    "id": "646274e939769687f2a6d867",
+    "name": "Facility Location Problem",
+    "prefix": "NFM",
+    "number": 2,
+    "objectives": [
+      "Facility",
+      "Location",
+      "Problem",
+      "Facility Location",
+      "Location problem",
+      "Facility Location Problem"
+    ],
+    "hours": 0.32,
+    "description": "Welcome to the Facility Location Problem module! In this module, we will explore the process of facility location, which is the process of determining the optimal location for a new facility. We will examine the different factors that go into deciding the best location for a facility, such as cost, customer proximity, and available resources. We will also discuss the various mathematical models used to solve facility location problems and the results they produce. By the end of this module, you will have a better understanding of the facility location",
+    "keywords": [
+      "Optimal Location",
+      "Cost Estimation",
+      "Customer Proximity",
+      "Available Resources",
+      "Mathematical Models",
+      "Location Decision-Making"
+    ]
+  },
+  {
+    "id": "6462750d39769687f2a6d868",
+    "name": "Mixed Integer Non-Linear Programming",
+    "prefix": "NFM",
+    "number": 3,
+    "objectives": [
+      "Mixed",
+      "Integer",
+      "Non-Linear",
+      "Programming",
+      "Linear, Programming",
+      "Mixed Integer Non-Linear Programming"
+    ],
+    "hours": 0.645,
+    "description": "This module will cover the fundamentals of Mixed Integer Non-Linear Programming. We will explore various methods for solving general non-linear optimization problems, as well as look into specific, mixed integer-based approaches. We will examine the concept of mixed integer non-linear programming and its applications in various business and engineering scenarios. Additionally, we will look into various software tools used to solve such problems, and discuss the practical implications of utilizing these tools. By the end of this module, you will be able",
+    "keywords": [
+      "Non-Linear Optimization",
+      "Mixed Integer-Based Approaches",
+      "Business & Engineering Scenarios",
+      "Software Tools",
+      "Practical Implications",
+      "Problem Solving"
+    ]
+  },
+  {
+    "id": "6462752e39769687f2a6d869",
+    "name": "Solving Unconstrained Non-Linear EquationsNumerically",
+    "prefix": "NFM",
+    "number": 4,
+    "objectives": [
+      "Unconstrained",
+      "Non linear",
+      "Equations",
+      "Numerically",
+      "Linear",
+      "Non-linear equations"
+    ],
+    "hours": 0.743,
+    "description": "This module will focus on solving non-linear equations numerically. We'll start by discussing some of the necessary concepts, including the definition of a non-linear equation and the significance of its numerical solution. We'll cover various methods of solving these equations, such as Newton-Raphson, Broyden's method, and some more advanced methods. We'll also share some tips and tricks for solving non-linear equations numerically. At the end of the module, you should have a good understanding",
+    "keywords": [
+      "Numerical solution",
+      "Newton-Raphson",
+      "Broyden's method",
+      "Advanced methods",
+      "Tips and tricks",
+      "Numerical understanding"
+    ]
+  },
+  {
+    "id": "6462756339769687f2a6d86a",
+    "name": "Goal programming Formulation and Graphical Interpretation",
+    "prefix": "MCD",
+    "number": 1,
+    "objectives": [
+      "Goal",
+      "Programming",
+      "Formulation",
+      "Graphical",
+      "Interpretation",
+      "Goal Programming"
+    ],
+    "hours": 0.22,
+    "description": "Welcome to the module on Goal Programming Formulation and Graphical Interpretation! In this module, you will learn how to develop linear programming models that incorporate multiple objectives and non-linear objectives. You will also explore graphical interpretation techniques to study the impact of changing the decision variables and parameters on the final solution. By successfully completing the module, you will be able to develop sophisticated models to identify the best solution from multiple objectives.",
+    "keywords": [
+      "Linear Programming",
+      "Multiple Objectives",
+      "Non-Linear Objectives",
+      "Graphical Interpretation",
+      "Decision Variables",
+      "Parameters"
+    ]
+  },
+  {
+    "id": "6462758c39769687f2a6d86b",
+    "name": "Goal Programming Computer Solution",
+    "prefix": "MCD",
+    "number": 2,
+    "objectives": [
+      "Goal",
+      "Programming",
+      "Computer",
+      "Solution",
+      "Computer Solution",
+      "Goal Programming"
+    ],
+    "hours": 0.45,
+    "description": "Welcome to our Goal Programming Computer Solution module! In this module, we will explore the use of goal programming in computer-based solutions. We will learn about the concepts and applications of goal programming, the software used for goal programming, and the tools and techniques used to develop a goal programming computer solution. We will also delve into the issues related to the implementation of a goal programming solution, such as the use of algorithms, data structures, and optimization techniques. By the end of this module, you will",
+    "keywords": [
+      "Computer Solutions",
+      "Concepts and Applications",
+      "Software",
+      "Tools and Techniques",
+      "Algorithms",
+      "Data Structures"
+    ]
+  },
+  {
+    "id": "646275a839769687f2a6d86c",
+    "name": "Non-Linear Multi-Criteria Decision Making",
+    "prefix": "MCD",
+    "number": 3,
+    "objectives": [
+      "Non-Linear",
+      "Multi-Criteria",
+      "Decision",
+      "Making",
+      "linear",
+      "Non-Linear"
+    ],
+    "hours": 0.45,
+    "description": "Welcome to the Non-Linear Multi-Criteria Decision Making module! In this course, you will explore the decision-making process when faced with multiple, conflicting criteria. Through a combination of lectures, readings, and practical activities, you will learn how to identify, analyze, and evaluate criteria for decision making, as well as explore various non-linear decision making models. You will also gain an understanding of how to apply decision making techniques to real-world scenarios. By the end of this module",
+    "keywords": [
+      "Multi-Criteria",
+      "Decision Making",
+      "Lectures",
+      "Readings",
+      "Evaluate Criteria",
+      "Real-World Scenarios"
+    ]
+  },
+  {
+    "id": "646275ce39769687f2a6d86d",
+    "name": "Dynamic programming-Shortest Path Problem",
+    "prefix": "DP",
+    "number": 1,
+    "objectives": [
+      "Dynamic",
+      "Programming",
+      "Shortest",
+      "Path",
+      "Problem",
+      "Dynamic Programming"
+    ],
+    "hours": 1.25,
+    "description": "Welcome to the learning module on Dynamic Programming and Shortest Path Problem! In this module, we will explore the use of dynamic programming algorithms to solve shortest path problems. We will analyze the time complexity of the algorithms and discuss how to optimize them. We will also look at some real-world applications of dynamic programming for solving shortest path problems. By the end of this module, you should have a solid grasp of dynamic programming and the ability to apply it in your own projects.",
+    "keywords": [
+      "Shortest Path Problem",
+      "Algorithms",
+      "Time complexity",
+      "Optimization",
+      "Real-world applications",
+      "Projects"
+    ]
+  },
+  {
+    "id": "646275e739769687f2a6d86e",
+    "name": "Dynamic Programming-Allocation of Medical Terms",
+    "prefix": "DP",
+    "number": 2,
+    "objectives": [
+      "Medical terms",
+      "Dynamic Programming",
+      "Allocation",
+      "Medical",
+      "Dynamic",
+      "Dynamic Programming"
+    ],
+    "hours": 1.25,
+    "description": "Welcome to the Dynamic Programming-Allocation of Medical Terms module! In this module, you will learn the fundamentals of dynamic programming, an important technique used to solve a wide variety of problems in the field of medicine. You will discover the different types of dynamic programming algorithms, their applications, and how to apply them to medical terms. You will also be able to identify the various problems of medical term allocation and develop solutions that optimize the time and resources used to solve them. By the end of this module",
+    "keywords": [
+      "Allocation of Medical Terms",
+      "Algorithms",
+      "Applications",
+      "Medical Term Allocation",
+      "Optimization",
+      "Time and Resource Management"
+    ]
+  },
+  {
+    "id": "6462763e39769687f2a6d86f",
+    "name": "Introduction to Queuing Analysis",
+    "prefix": "NLP",
+    "number": 1,
+    "objectives": [
+      "Introduction",
+      "Queuing",
+      "Analysis",
+      "Queuing Analysis",
+      "Queuing Theory"
+    ],
+    "hours": 0.6,
+    "description": "Welcome to Introduction to Queuing Analysis! In this module, you will learn the fundamentals of queuing theory and its applications. We will discuss topics such as the birth-death process, the M/M/1 queue, and Little’s law. You will gain a thorough understanding of how to analyze the dynamics of queues and its performance. We will also use real-world examples to explore the challenges faced when dealing with queues. By the end of this module, you will have the knowledge",
+    "keywords": [
+      "Birth-Death Process",
+      "M/M/1 Queue",
+      "Little's Law",
+      "Queue Dynamics",
+      "Queue Performance",
+      "Real-World Examples"
+    ]
+  },
+  {
+    "id": "6462765939769687f2a6d870",
+    "name": "Design of Queuing Systems",
+    "prefix": "NLP",
+    "number": 2,
+    "objectives": [
+      "Design",
+      "Queuing",
+      "Analysis",
+      "Systems",
+      "Queuing Systems"
+    ],
+    "hours": 0.45,
+    "description": "In this module we will explore the design of queuing systems. Queuing systems are used in many fields, from computer networking to telecommunications, and they are an important element of any network. We will investigate various models of queuing systems and learn to design and analyze these models. We will also discuss the implications of these models on network performance. This module will provide an introduction to the fundamentals of queuing systems and will provide the necessary tools for the successful design of these systems.",
+    "keywords": [
+      "Networking",
+      "Telecommunications",
+      "Network Performance",
+      "Design",
+      "Analysis",
+      "Fundamentals"
+    ]
+  },
+  {
+    "id": "6462768539769687f2a6d871",
+    "name": "Multiple Servers/Finite Queues",
+    "prefix": "NLP",
+    "number": 3,
+    "objectives": [
+      "Multiple",
+      "Servers",
+      "Finite",
+      "Queues",
+      "Servers/Finite",
+      "Queuing Theory"
+    ],
+    "hours": 0.5,
+    "description": "Welcome to the Multiple Servers/Finite Queues module! In this module, we'll be exploring the concepts of queuing theory and how they apply to a system of multiple servers. We'll discuss what finite queues mean and how they work, and also learn about the various types of queues and the corresponding characteristics. We'll also look at how waiting line models can be used to analyze the performance of a system with multiple servers. By the end of this module, you will have a full understanding",
+    "keywords": [
+      "Finite Queues",
+      "Multiple Servers",
+      "Waiting Line Models",
+      "System Analysis",
+      "Performance Evaluation",
+      "System Characteristics"
+    ]
+  },
+  {
+    "id": "64627a0e39769687f2a6d872",
+    "name": "Introduction to Markov Chains",
+    "prefix": "LP-MC",
+    "number": 1,
+    "objectives": [
+      "Markov",
+      "Chains",
+      "Introduction",
+      "Markov Chains"
+    ],
+    "hours": 0.5,
+    "description": "Welcome to Introduction to Markov Chains! In this module, you will learn about the Markov Chain, a type of mathematical system used to model and analyze complex systems. We will explore the fundamentals of Markov Chains, including their definition, properties and applications. You will gain a deep understanding of how Markov Chains can be used to solve real world problems. We will also look at some more advanced topics, like computing the probability of a certain outcome and the connections between Markov Chains and hidden Mark",
+    "keywords": [
+      "Markov Chain Definition",
+      "Markov Chain Properties",
+      "Markov Chain Applications",
+      "Markov Chain Probability",
+      "Markov Chain Connections",
+      "Hidden Markov Chains"
+    ]
+  },
+  {
+    "id": "64627a2739769687f2a6d873",
+    "name": "Ergodic Markov Chains",
+    "prefix": "LP-MC",
+    "number": 2,
+    "objectives": [
+      "Markov",
+      "Chains",
+      "Erodic",
+      "Example",
+      "Ergodic Markov Chains"
+    ],
+    "hours": 0.65,
+    "description": "Welcome to the Ergodic Markov Chains learning module! In this module, we'll be exploring the theory of ergodic Markov chains and its applications in real-world scenarios. We'll start by discussing the mathematical models of Markov chains and their stationary distributions, and then delve deeper into their practical applications in probability problems. After that, we'll look at how to use ergodic Markov chains to solve problems from areas such as queueing theory, finance, and game theory.",
+    "keywords": [
+      "Stochastic Processes",
+      "Stationary Distributions",
+      "Probability Problems",
+      "Queueing Theory",
+      "Financial Applications",
+      "Game Theory"
+    ]
+  },
+  {
+    "id": "64627a3b39769687f2a6d874",
+    "name": "Absorbing Markov Chains",
+    "prefix": "LP-MC",
+    "number": 3,
+    "objectives": [
+      "Markov",
+      "Chains",
+      "Absorbing",
+      "Example",
+      "Markov Chains"
+    ],
+    "hours": 0.45,
+    "description": "Welcome to Absorbing Markov Chains! This module will explore the fundamentals of this powerful mathematical system. We will examine several examples of Markov Chains in detail, learning how to leverage their properties to study and analyze real-world systems. In addition, we'll also examine the concept of absorbing states and see how they can be used to analyze problems involving multiple elements. By the end of this module, you will have a firm grasp of the basics of Markov Chains and will be able to apply",
+    "keywords": [
+      "Mathematical System",
+      "Real-world Systems",
+      "Absorbing States",
+      "Problem Analysis",
+      "Multi-element Systems",
+      "Fundamentals"
+    ]
+  },
+  {
+    "id": "64627c5239769687f2a6d875",
+    "name": "Applying Markov Chains",
+    "prefix": "A-MC",
+    "number": 1,
+    "objectives": [
+      "Markov",
+      "Chains",
+      "Applying",
+      "Markov Chains"
+    ],
+    "hours": 1.25,
+    "description": "Welcome to the Applying Markov Chains module. In this module, we will explore the fundamentals of Markov chains and apply them to practical examples. We will start by introducing the concept of a Markov chain, its transition matrix, and its properties, as well as discuss the advantages and disadvantages of using this technique. After that, we will explore how to apply Markov chains to different kinds of problems, such as financial forecasting, natural language processing, and decision making. Finally, we will conclude",
+    "keywords": [
+      "Transition Matrix",
+      "Fundamentals",
+      "Advantages/Disadvantages",
+      "Financial Forecasting",
+      "Natural Language Processing",
+      "Decision Making"
+    ]
+  },
+  {
+    "id": "646506c28019c4d441f6ec0a",
+    "name": "Introduction to Operations Research Model Formulation and Break-even Analysis",
+    "prefix": "ITORMFABA",
+    "number": 1,
+    "objectives": [
+      "During this session it is my goal to provide a basic understanding of the development,formulation and analysis of deterministic and stochastic models"
+    ],
+    "hours": 1.497573535,
+    "description": "In this video module, students will be introduced to the field of Operations Research (OR) and its general approach to mathematical modeling. The video will cover the process of problem definition and how to define an optimization objective subject to certain constraints. Students will also learn about the history of OR and its most common applications.",
+    "keywords": [
+      "Linear programming",
+      " Optimization",
+      " Decision making",
+      " Mathematical models",
+      " Constraints"
+    ]
+  },
+  {
+    "id": "646506c28019c4d441f6ec0b",
+    "name": "Introdcution: Understanding Operations Research",
+    "prefix": "ITORMFABA",
+    "number": 1,
+    "objectives": [
+      "Identify the key components of operational research.",
+      "Explain the different types of OR models such as transportation, inventory and queuing models.",
+      "Describe the unique benefits of the application of OR.",
+      "Explain the various limitations of using OR models.",
+      "Explain the importance of data analysis for OR models.",
+      "List the different types of optimization techniques used in OR.",
+      "Analyze various scenarios and make decisions based on OR models.",
+      "Formulate models to solve business problems using OR.",
+      "Interpret the results of OR models and make decisions.",
+      "Apply OR models to case studies."
+    ],
+    "hours": 1.565922524,
+    "description": "This video module will cover the most common applications of OR. Students will learn about transportation models, inventory models, and queuing models. The video will also cover the benefits and limitations of using OR in different fields.",
+    "keywords": [
+      "Simplex method",
+      " Sensitivity analysis",
+      " Fixed costs",
+      " Variable costs",
+      " Break-even point"
+    ]
+  },
+  {
+    "id": "646506c28019c4d441f6ec0c",
+    "name": "Model Constrction",
+    "prefix": "ITORMFABA",
+    "number": 2,
+    "objectives": [
+      "Understand the concepts and principles of OR modeling and its different types.",
+      "Be able to apply OR models to solve real-world problems.",
+      "Identify the key components of a linear programming problem.",
+      "Utilize different methods to optimize linear programming problems.",
+      "Construct linear programming models to solve various types of optimization problems.",
+      "Employ different software packages to solve OR models.",
+      "Interpret the results from the OR models.",
+      "Analyze the sensitivity of the results to changes in the parameters.",
+      "Troubleshoot and identify mistakes in OR models.",
+      "Analyze and evaluate the effectiveness of OR models."
+    ],
+    "hours": 1.713728622,
+    "description": "This video module covers the basics of OR modeling. Students will learn about the different types of models used in OR and their applications. The module will also cover linear programming models, and how to optimize them using different methods.",
+    "keywords": [
+      "Fuzzy logic",
+      " Artificial Intelligence",
+      " Neural networks",
+      " Decision trees",
+      " Expert systems"
+    ]
+  },
+  {
+    "id": "646506c28019c4d441f6ec0d",
+    "name": "Break Even Analysis",
+    "prefix": "ITORMFABA",
+    "number": 3,
+    "objectives": [
+      "Break-even analysis is a good topic to expand our discussion of model building",
+      " The purpose of break-even analysis is to determine the number of units of a product(i.e volume) to sell or produce that will equate total revenue witht the total cost",
+      "The point that will equate total revenue with total cost",
+      "The point where total revenue equals total cost is called the break-even point and at this point profit is zero."
+    ],
+    "hours": 0.715262323,
+    "description": "In this video module, students will learn about the Break-Even Analysis and its importance in business decision-making. The module covers how to calculate break-even points using linear equations, how to calculate profit and loss, and how to graph the break-even analysis. Additionally, the module will discuss the limitations of Break-Even Analysis and its applications in real-world scenarios.",
+    "keywords": [
+      "Fixed costs",
+      " Variable costs",
+      " Total costs",
+      " Total revenue",
+      " Break-even point"
+    ]
+  },
+  {
+    "id": "646506c28019c4d441f6ec0e",
+    "name": "Optimization Example",
+    "prefix": "ITORMFABA",
+    "number": 4,
+    "objectives": [
+      "Demonstrate proficiency in making inferences from data.",
+      "Develop the ability to use mathematics and statistics to interpret data.",
+      "Use numerical analysis to solve problems.",
+      "Generate and analyze trends in data sets.",
+      "Critically analyze and interpret data.",
+      "Graphically represent data in an appropriate manner.",
+      "Create and interpret various types of charts and tables.",
+      "Apply probability and statistical inference techniques to data sets.",
+      "Identify and evaluate biases in data collection and analysis.",
+      "Develop the ability to develop and use predictive models."
+    ],
+    "hours": 1.855216595,
+    "description": "The Optimization Example module will provide you with an in-depth exploration of how optimization works. We will discuss some of the most popular optimization algorithms, such as gradient descent and simulated annealing, as well as practical applications of optimization in various fields. Through this module, you will gain a better understanding of the concept of optimization, as well as how to use it to improve the efficiency of your own work.",
+    "keywords": [
+      "Objective function",
+      " Decision variables",
+      " Constraints",
+      " Feasible solution",
+      " Optimal solution"
+    ]
+  },
+  {
+    "id": "646506c28019c4d441f6ec0f",
+    "name": "Linear Programming Graphical Solution",
+    "prefix": "LPGS",
+    "number": 1,
+    "objectives": [
+      "Explain what Linear Programming is",
+      "Identify decision variables, objective function and constraints",
+      "Describe the different steps in the modeling process",
+      "Analyze a given problem and determine which variables and constraints must be included in an LP model",
+      "Construct a model using appropriate mathematical notation",
+      "Utilize solvers to find optimal solutions of LP models",
+      "Interpret and analyze the output of the solvers",
+      "Utilize sensitivity analysis to analyze the effects of changes in the parameters of an LP model",
+      "Use software packages such as Excel to create an LP model",
+      "Utilize software such as Excel Solver to solve an LP model"
+    ],
+    "hours": 0.303309341,
+    "description": "This module serves as an introduction to Linear Programming modeling. We will discuss the components of a linear program, which includes decision variables, objective function, and constraints. We will also go over the modeling process, where we will learn how to define each of these components. By the end of this module, you will have a good understanding of what Linear Programming is and how to approach a modeling problem.",
+    "keywords": [
+      "Linear programming",
+      " Objective function",
+      " Constraints",
+      " Feasible region"
+    ]
+  },
+  {
+    "id": "646506c28019c4d441f6ec10",
+    "name": "Model Formulation",
+    "prefix": "LPGS",
+    "number": 1,
+    "objectives": [
+      "Often our goals as a management scientist are to efficiently allocate resources",
+      "We most often are trying to maximize or minimize some objective function",
+      "Many times these functions are profit or cost"
+    ],
+    "hours": 0.502538338,
+    "description": "In this module, we will walk through an example of how to formulate an LP model. We will cover the steps involved in defining the decision variables, objective function, and constraints for a specific problem. By the end of this module, you will have a good understanding of how to apply the modeling process to real-world problems.",
+    "keywords": [
+      "Decision variables",
+      " Objective function",
+      " Constraints",
+      " Feasible",
+      "Solutions"
+    ]
+  },
+  {
+    "id": "646506c28019c4d441f6ec11",
+    "name": "Maximization Model Example",
+    "prefix": "LPGS",
+    "number": 2,
+    "objectives": [
+      "Understand the foundations of linear programming and the graphical method.",
+      "Understand the use of linear programming for maximization and minimization problems.",
+      "Know how to graphically represent a linear programming problem.",
+      "Gain the knowledge to identify feasible and infeasible regions.",
+      "Comprehend the concept of effective objective function and optimal solutions.",
+      "Develop the skills to determine the optimal solution of an LP problem.",
+      "Learn how to interpret the solution obtained by the graphical method.",
+      "Know how to apply the graphical method to solve real-world problems.",
+      "Understand the concept of sensitivity analysis.",
+      "Be able to interpret and use the results of the sensitivity analysis."
+    ],
+    "hours": 1.691273656,
+    "description": "This module will focus on the Graphical Method for solving LP problems with a maximization objective. We will learn how to graphically represent the constraints and objective function to find the optimal solution. By the end of this module, you will have a solid understanding of the Graphical Method and be able to apply it to maximize an LP problem.",
+    "keywords": [
+      "Objective",
+      " Decision variables",
+      " Constraints",
+      " Feasible ",
+      " Optimal solution"
+    ]
+  },
+  {
+    "id": "646506c38019c4d441f6ec12",
+    "name": "Graphical Analysis",
+    "prefix": "LPGS",
+    "number": 3,
+    "objectives": [
+      "Understand the basics of Linear Programming and the Graphical Method.",
+      "Learn how to formulate an LP problem using mathematical equations.",
+      "Identify the constraints and objective function for a given LP problem.",
+      "Use the Graphical Method to construct an LP problem’s graphical representation.",
+      "Interpret the graphical representation of an LP problem.",
+      "Identify the feasible region and optimal solution of an LP problem.",
+      "Determine the optimal solution of an LP problem by maximizing or minimizing the objective function.",
+      "Compare the optimal solution of an LP problem with the optimal solution of the same LP problem solved using linear algebra.",
+      "Analyze different LP problems and apply the Graphical Method to each one.",
+      "Utilize the Graphical Method to solve LP problems with multiple objectives."
+    ],
+    "hours": 1.590067998,
+    "description": "Similar to the previous module, this module will focus on the Graphical Method for solving LP problems but with a minimization objective. We will learn how to graphically represent the constraints and objective function to find the optimal solution. By the end of this module, you will be able to apply the Graphical Method to minimize an LP problem.",
+    "keywords": [
+      "Feasible",
+      " Region",
+      " Objective function",
+      " Constraints",
+      " Optimal solution"
+    ]
+  },
+  {
+    "id": "646506f18019c4d441f6ec13",
+    "name": "Linear Programming Solutions and Sensitivity Analysis",
+    "prefix": "LPSASA",
+    "number": 1,
+    "objectives": [
+      "Explain the concept of sensitivity analysis and its purpose",
+      "Demonstrate proficiency in manual sensitivity analysis using the Simplex tableau",
+      "Utilize software tools to perform automatic sensitivity analysis",
+      "Identify shadow prices and binding constraints in LP models",
+      "Compute allowable ranges of parameter values in an LP model",
+      "Apply sensitivity analysis to make informed decisions about changes in an LP model",
+      "Use sensitivity analysis to identify infeasible LP models",
+      "Discuss the impact of changes in parameter values on the optimal solution to an LP model",
+      "Formulate LP models to model a variety of real-world problems",
+      "Analyze the effects of changes in parameter values on the optimal solutions of different LP models."
+    ],
+    "hours": 1.38460779,
+    "description": "In this module, we will explore the topic of sensitivity analysis for LP models. Sensitivity analysis is a powerful tool that allows us to examine the effects of changes to the parameters of an LP model. Specifically, we will cover the concepts of shadow prices, allowable ranges, and binding constraints, and how to interpret them in the context of an LP model.  We will start by discussing manual sensitivity analysis, where we use the Simplex tableau to make changes to the parameters of an LP model and observe the effects on the optimal solution. We will then move on to automatic sensitivity analysis, where we use software tools to perform sensitivity analysis automatically. Finally, we will discuss some practical applications of sensitivity analysis, including how to use it to make informed decisions about changes to the parameters of an LP model.",
+    "keywords": [
+      "Feasible",
+      " Optimal solution",
+      " Linear",
+      " Degeneracy",
+      "Sensitivity analysis"
+    ]
+  },
+  {
+    "id": "646506f18019c4d441f6ec14",
+    "name": "The Simplex Algorithm",
+    "prefix": "LPSASA",
+    "number": 1,
+    "objectives": [
+      "Explain the history of the Simplex algorithm.",
+      "Identify the key concepts of the Simplex algorithm.",
+      "Describe the step-by-step process of the Simplex algorithm.",
+      "Construct the objective function of a linear programming problem.",
+      "Utilize the Simplex algorithm to solve linear programming problems.",
+      "Formulate simplex tableaus for linear programming problems.",
+      "Calculate optimal solutions using the Simplex algorithm.",
+      "Demonstrate the ability to apply the Simplex algorithm to a given problem.",
+      "Explain the importance of the Simplex algorithm in today’s world.",
+      "Analyze how to use the Simplex algorithm to solve real-world problems."
+    ],
+    "hours": 1.931216799,
+    "description": "In this video module, we will be diving deep into the Simplex algorithm, which is the most commonly used algorithm for solving linear programming problems. We will discuss the history of the Simplex algorithm, the concepts behind it, and how it works step by step. We will also be looking at examples of how to solve linear programming problems using the Simplex algorithm.",
+    "keywords": [
+      "Linear programming",
+      " Simplex method",
+      "Big-M method",
+      " Sensitivity analysis",
+      "Infeasibility"
+    ]
+  },
+  {
+    "id": "646506f18019c4d441f6ec15",
+    "name": "Simplex Method:(Furniture Company Example)",
+    "prefix": "LPSASA",
+    "number": 2,
+    "objectives": [
+      "Describe the concept of linear programming and the optimization problem.",
+      "Understand the Simplex Method and the steps involved to solve a linear programming problem.",
+      "Set up a linear programming problem, including the objective function and constraints.",
+      "Use the Simplex Method to solve a linear programming problem.",
+      "Analyze the sensitivity of the optimal solution to changes in the objective function and constraints.",
+      "Interpret results of the Simplex Method and study the optimal solution.",
+      "Explain the concept of shadow prices and how they are used to measure changes in the optimal solution.",
+      "Discuss the implications of the optimal solution for the Furniture company.",
+      "Explain the economic interpretation of the optimal solution.",
+      "Use the Simplex Method to solve multiple linear programming problems."
+    ],
+    "hours": 1.204817672,
+    "description": "In this video module, we will be looking at a real-world example of a Furniture company and how they can use the Simplex method to maximize their profits. We will walk through the entire process of formulating the linear programming problem, setting up the objective function and constraints, and then using the Simplex method to find the optimal solution. This will give you a practical understanding of how the Simplex method can be applied to real-world problems.",
+    "keywords": [
+      "Artificial variables",
+      " Dual simplex method",
+      " Bland's rule",
+      " Big-M method",
+      " Sensitivity analysis"
+    ]
+  },
+  {
+    "id": "646506f18019c4d441f6ec16",
+    "name": "Overview of Simplex",
+    "prefix": "LPSASA",
+    "number": 3,
+    "objectives": [
+      "Describe the purpose of the Simplex algorithm and its role in linear programming",
+      "Explain the process of the Simplex algorithm",
+      "Analyze the advantages and disadvantages of the Simplex algorithm",
+      "Apply the Simplex algorithm to solve linear programming problems",
+      "Differentiate between types of linear programming problems",
+      "Recognize the steps required to set up and execute a Simplex algorithm",
+      "Utilize graphically illustrated examples to understand the Simplex algorithm",
+      "Identify when the best solution is reached using the Simplex algorithm",
+      "Analyze the sensitivity of a solution to changes in the parameters of a linear programming problem",
+      "Explain the implications of a solution reached using the Simplex algorithm"
+    ],
+    "hours": 1.988235111,
+    "description": "In this video module, we will be providing an overview of the Simplex algorithm. We will be discussing the importance of the Simplex algorithm in the world of linear programming, how it works, and its advantages and disadvantages. This video will give you a high-level understanding of the Simplex algorithm, and help you decide if it's the right method for your linear programming problem.",
+    "keywords": [
+      "Linear programming",
+      " Objective function",
+      " Constraints",
+      " Feasible region",
+      " Slack variables"
+    ]
+  },
+  {
+    "id": "646506f28019c4d441f6ec17",
+    "name": "Linear Programming Modeling Examples",
+    "prefix": "LP-ME",
+    "number": 1,
+    "objectives": [
+      "Understand the fundamentals of linear programming.",
+      "Learn how to formulate linear programming problems from given business problems.",
+      "Analyze linear programming models using linear algebra.",
+      "Solve linear programming problems using graphical methods.",
+      "Solve linear programming problems using the simplex algorithm.",
+      "Interpret the solutions of linear programming problems.",
+      "Construct and solve linear programming models in Excel.",
+      "Compare and contrast linear programming and other optimization methods.",
+      "Develop strategies for dealing with multiple objective functions and constraints.",
+      "Analyze and interpret the economic implications of linear programming solutions."
+    ],
+    "hours": 1.661044161,
+    "description": "In this module, we will explore a range of Linear Programming modeling examples to help you get familiar with the process and techniques of formulating linear programming problems. We will walk through a series of examples, such as optimizing a company's product mix or determining the optimal transportation routes. By working through these examples, you will develop a strong understanding of how to model real-world problems as linear programming models.",
+    "keywords": [
+      "Cost minimization",
+      " Integer ",
+      "Programming",
+      " Binary variables",
+      " Sensitivity analysis."
+    ]
+  },
+  {
+    "id": "646506f28019c4d441f6ec18",
+    "name": "Examples Solved Using Computer",
+    "prefix": "LP-ME",
+    "number": 1,
+    "objectives": [
+      "Students will be able to explain the three components of a Linear Programming problem.",
+      "Students will be able to identify when to use the graphical and computer-based methods of solving LP problems.",
+      "Students will be able to correctly input the data into a computer-based solver.",
+      "Students will be able to interpret the output of the computer-based solver.",
+      "Students will be able to use the output to analyze the optimal solution of the LP problem.",
+      "Students will be able to determine if a LP problem is feasible or not.",
+      "Students will be able to identify the constraints and objective function of an LP problem.",
+      "Students will be able to solve LP problems using the graphical method.",
+      "Students will be able to formulate LP problems from given data.",
+      "Students will be able to recognize and apply the fundamental concepts of Linear Programming."
+    ],
+    "hours": 0.772828146,
+    "description": "In this module, we will demonstrate how to solve Linear Programming models using computer software. Specifically, we will use software to solve LP problems that are too complex to solve manually using the graphical method. We will show you how to input a Linear Programming model into the software, how to interpret the output, and how to analyze the results. By the end of this module, you will have hands-on experience solving Linear Programming problems using computer software.",
+    "keywords": [
+      "Supply chain optimization",
+      " Transportation ",
+      " Resource allocation",
+      " Production ",
+      " Inventory management examples"
+    ]
+  },
+  {
+    "id": "646506f28019c4d441f6ec19",
+    "name": "Sensitivity Analysis",
+    "prefix": "LP-ME",
+    "number": 2,
+    "objectives": [
+      "Differentiate between graphical solutions and computer software solutions for sensitivity analysis",
+      "Identify the different types of changes that can be made to a Linear Programming model",
+      "Demonstrate an understanding of how changing the parameters of a Linear Programming model can affect the optimal solution",
+      "Analyze the sensitivity of the optimal solution to changes in the parameters of the Linear Programming model",
+      "Compute the range of values of the objective function coefficients, constraints, and right-hand side values that will yield optimal solutions",
+      "Demonstrate proficiency in using Graphical and/or Computer Software methods to perform sensitivity analysis on Linear Programming models",
+      "Apply sensitivity analysis techniques to assess the effects of changes in the parameters of Linear Programming models",
+      "Interpret the results of sensitivity analysis to determine the best course of action",
+      "Explain the importance of sensitivity analysis in Linear Programming models",
+      "Analyze real-world problems in order to demonstrate an understanding of the concepts of sensitivity analysis for Linear Programming models."
+    ],
+    "hours": 1.548681036,
+    "description": "In this module, we will dive into the topic of Sensitivity Analysis for Linear Programming models. Sensitivity Analysis is a powerful tool for examining how changes in the parameters of a Linear Programming model impact the optimal solution. We will cover different types of changes, including changing the objective function coefficients, adding or removing constraints, and changing the right-hand side values of the constraints. We will show you how to conduct sensitivity analysis manually for graphical solutions, and we will also demonstrate how to perform sensitivity analysis automatically using computer software. By the end of this module, you will have a solid understanding of how to use Sensitivity Analysis to make informed decisions based on the results of your Linear Programming models.",
+    "keywords": [
+      "Sensitivity report",
+      " Parametric analysis",
+      "  Perturbation ",
+      " Degeneracy",
+      " Unboundedness"
+    ]
+  },
+  {
+    "id": "646506f28019c4d441f6ec1a",
+    "name": "Linear Programming Applications",
+    "prefix": "LPA",
+    "number": 1,
+    "objectives": [
+      "Recognize different types of Linear Programming (LP) models.",
+      "Understand the principles of LP modeling.",
+      "Set up LP models using various approaches.",
+      "Identify the objective function and feasible region of an LP model.",
+      "Formulate an LP problem in terms of a mathematical model.",
+      "Apply different techniques to solve LP problems.",
+      "Utilize software tools to solve an LP model.",
+      "Interpret and analyze the results of an LP solution.",
+      "Conduct sensitivity analysis for LP models.",
+      "Design an LP model to address a given business problem."
+    ],
+    "hours": 0.257330649,
+    "description": "In this module, we dive deeper into Linear Programming modeling. We will explore different types of LP models, including maximization and minimization problems. We will also discuss how to set up and solve LP models using various solution methods. By the end of this module, you will be able to recognize different types of LP models and know how to approach solving them.",
+    "keywords": [
+      "Constraints",
+      " Feasible region",
+      " Resource allocation",
+      " Production",
+      " Inventory management"
+    ]
+  },
+  {
+    "id": "646506f28019c4d441f6ec1b",
+    "name": "PERT/CPM Analysis",
+    "prefix": "LPA",
+    "number": 1,
+    "objectives": [
+      "Identify and describe the purpose of the Program Evaluation and Review Technique (PERT).",
+      "Explain how to use PERT/CPM to manage complex projects.",
+      "Sequence project activities in a logical order.",
+      "Estimate project activity durations.",
+      "Construct a network diagram to represent the logical order of activities.",
+      "Analyze the network diagram to identify the critical path.",
+      "Calculate the expected project duration.",
+      "Determine the slack time for non-critical activities.",
+      "Solve PERT/CPM problems using relevant equations.",
+      "Apply the PERT/CPM methodology to an example project."
+    ],
+    "hours": 1.62084923,
+    "description": "In this module, we discuss the Program Evaluation and Review Technique (PERT) and the Critical Path Method (CPM). These techniques help to model and manage complex projects by identifying the critical path and calculating the expected project duration. We will cover the steps of the PERT/CPM method, including activity identification, sequencing, duration estimation, and network diagram construction. We will also learn how to determine the critical path and calculate the slack time for non-critical activities.",
+    "keywords": [
+      "Slack time",
+      " Critical path",
+      " PERT (Program Evaluation and Review Technique)",
+      " CPM (Critical Path Method)",
+      " Activity"
+    ]
+  },
+  {
+    "id": "646506f28019c4d441f6ec1c",
+    "name": "Probabilistic Activity Time",
+    "prefix": "LPA",
+    "number": 2,
+    "objectives": [
+      "Understand the concept of probabilistic activity times in project management.",
+      "Describe how probability distributions can be used to estimate the duration of activities.",
+      "Calculate the expected duration of a project using the expected value of the activities.",
+      "Calculate the variance and standard deviation of the project duration.",
+      "Explain how to use variance and standard deviation to calculate the probability of completing the project within a certain time frame.",
+      "Analyze how uncertain activity times affect the expected duration and cost of a project.",
+      "Analyze the impact of risk events on the expected duration and cost of a project.",
+      "Estimate the probability of completing a project within a given budget and timeline.",
+      "Develop strategies to mitigate risks associated with uncertain activity times.",
+      "Construct a risk response plan for a project with uncertain activity times."
+    ],
+    "hours": 1.084093997,
+    "description": "In this module, we introduce the concept of probabilistic activity time in project management. We will explore how to use probability distributions to estimate the duration of activities and how to calculate the expected duration of a project using the expected value of the activities. We will also discuss how to calculate the variance and standard deviation of the project duration, and how to use this information to calculate the probability of completing the project within a certain time frame.",
+    "keywords": [
+      "Activity time",
+      " Optimistic time",
+      " Expected ",
+      " Variance",
+      " Standard deviation"
+    ]
+  },
+  {
+    "id": "646506f28019c4d441f6ec1d",
+    "name": "Time-Cost Trade-Offs Analysis",
+    "prefix": "LPA",
+    "number": 3,
+    "objectives": [
+      "Analyze the trade-offs between time and cost associated with a project.",
+      "Utilize crashing and resource leveling techniques to optimize the project.",
+      "Implement strategies to reduce project cost without impacting the timeline.",
+      "Understand the impact of trade-offs on the critical path and total project cost.",
+      "Utilize cost-benefit analysis for decision-making.",
+      "Develop action plans for mitigating risk associated with the project.",
+      "Utilize cost-estimation models to accurately estimate cost and timeline for a specific project.",
+      "Interpret project data and identify areas of potential cost savings or time-savings.",
+      "Compare different project management tools and techniques.",
+      "Explain the importance of time-cost trade-offs in project management."
+    ],
+    "hours": 1.438277564,
+    "description": "In this module, we discuss the trade-offs between time and cost in project management. We will learn how to calculate the cost and time required for a project and how to determine the optimal balance between them. We will explore different techniques for analyzing time-cost trade-offs, including crashing and resource leveling. We will also discuss the impact of these techniques on the critical path and the total project cost. Finally, we will learn how to determine the optimal solution that minimizes both time and cost.",
+    "keywords": [
+      "Project management",
+      " Time-cost trade-offs",
+      " Project scheduling",
+      " Critical path method (CPM)",
+      " Resource allocation"
+    ]
+  },
+  {
+    "id": "646506f28019c4d441f6ec1e",
+    "name": "Integer Programming ",
+    "prefix": "IP",
+    "number": 1,
+    "objectives": [
+      "Understand the basics of Integer Programming and its applications",
+      "Analyze the various techniques and algorithms related to Integer Programming",
+      "Solve linear, non-linear, and dynamic programming problems with Integer Programming",
+      "Use Integer Programming to develop efficient solutions to real-world problems",
+      "Identify and apply the appropriate heuristics to a given Integer Programming problem",
+      "Analyze the various factors that can affect the solution of an Integer Programming problem",
+      "Develop a knowledge of the limitations of Integer Programming",
+      "Evaluate the cost-effectiveness of different Integer Programming solutions",
+      "Develop skills in the implementation of Integer Programming algorithms",
+      "Explain the results of Integer Programming solutions in a clear and concise manner."
+    ],
+    "hours": 1.622044201,
+    "description": "Welcome to the Integer Programming module! This module will be an in-depth exploration of the techniques and algorithms related to Integer Programming. We will explore various methods to solve different types of Integer Programming problems, such as linear, non-linear, and dynamic programming. We will also discuss the application of the Integer Programming techniques on different real-world problems and their efficient solutions. By the end of this module, you will have a good understanding of Integer Programming and its applications.",
+    "keywords": [
+      "Optimization",
+      " Integer",
+      " Binary ",
+      " Linear programming",
+      "Feasible solutions"
+    ]
+  },
+  {
+    "id": "646506f38019c4d441f6ec1f",
+    "name": "Introduction to Integer Programming",
+    "prefix": "IP",
+    "number": 1,
+    "objectives": [
+      "Understand the fundamentals of integer programming.",
+      "Identify and explain the different types of integer programming algorithms.",
+      "Demonstrate an ability to solve integer programming problems using various algorithms.",
+      "Explain the applications of integer programming in the real world.",
+      "Analyze and design integer programming models for a variety of real-world scenarios.",
+      "Demonstrate a proficiency in using linear programming software.",
+      "Develop an understanding of integer programming techniques to solve complex mathematical problems.",
+      "Analyze the efficiency of integer programming algorithms and design strategies to optimize the solution.",
+      "Apply knowledge of integer programming to solve real-world optimization problems.",
+      "Utilize integer programming principles to create, analyze, and optimize models."
+    ],
+    "hours": 1.980176519,
+    "description": "Welcome to Introduction to Integer Programming! In this module, we will explore the fundamentals of integer programming, a type of problem-solving technique used to solve mathematical problems with integral or discrete values. We will explore the different types of integer programming and the various algorithms used to solve them. We will also discuss the applications of integer programming in the real world and how the techniques learned can be applied to a variety of real-world scenarios. Get ready to dive deep into integer programming and unlock its power!",
+    "keywords": [
+      "Constraints",
+      " Integer variables",
+      " Binary variables",
+      " Mixed-integer programming",
+      " Feasibility region"
+    ]
+  },
+  {
+    "id": "646506f38019c4d441f6ec20",
+    "name": "Integer programming Examples",
+    "prefix": "IP",
+    "number": 2,
+    "objectives": [
+      "Discuss the concepts and techniques of Linear Programming.",
+      "Discuss the concepts and techniques of Integer Programming.",
+      "Develop proficiency in formulating Integer Programming problems.",
+      "Apply the methods of Branch and Bound for solving Integer Programming problems.",
+      "Apply the methods of Cutting Planes for solving Integer Programming problems.",
+      "Develop proficiency in solving Integer Programming problems using software.",
+      "Understand and apply the solution techniques of Goal Programming.",
+      "Understand and apply the solution techniques of Network Flow Programming.",
+      "Analyze the results of Integer Programming problems.",
+      "Summarize the advantages and limitations of using Integer Programming."
+    ],
+    "hours": 0.738019642,
+    "description": "Welcome to Integer Programming Examples! In this module, we will be discussing mathematical optimization problems in which the variables are restricted to take integer values only. We will be covering a variety of topics including linear programming, integer programming, mixed integer programming, goal programming, and network flow programming among others. You will learn how to formulate, solve, and interpret the results of these types of problems. We will also explore various methods for solving integer programming problems such as branch and bound, cutting planes, and branch and",
+    "keywords": [
+      "Optimization",
+      " Integer programming",
+      " Decision variables",
+      " Objective function",
+      " Constraints"
+    ]
+  },
+  {
+    "id": "646506f38019c4d441f6ec21",
+    "name": "Interger Programming: Set Covering Example",
+    "prefix": "IP",
+    "number": 3,
+    "objectives": [
+      "Explain the concept of Integer Programming as applied to Set Covering problems",
+      "Understand how Integer Programming can be used to optimize solutions for Set Covering problems",
+      "Demonstrate the ability to use Integer Programming to solve a Set Covering problem",
+      "Apply methods and techniques for solving Set Covering problems using Integer Programming",
+      "Explain the implications of Integer Programming for Set Covering problems",
+      "Identify the key elements of a Set Covering problem",
+      "Evaluate the effectiveness of various algorithms for solving a particular Set Covering problem",
+      "Identify the tradeoffs involved when using Integer Programming techniques for Set Covering",
+      "Compare and contrast Integer Programming and other optimization methods",
+      "Synthesize Integer Programming knowledge to identify novel solutions to Set Covering problems."
+    ],
+    "hours": 1.970192049,
+    "description": "Welcome to the Interger Programming: Set Covering Example module. In this module, we will explore the uses of Integer Programming in the context of the classic Set Covering problem. We will look at how Integer Programming can be used to find the optimal solution for a Set Covering problem, and how it can be used to optimize the solution. We'll also discuss various algorithms and techniques for solving the Set Covering problem. We'll wrap up the module by discussing the implications of Integer Programming for Set",
+    "keywords": [
+      "Optimization",
+      " Integer programming",
+      " Set covering problem",
+      " Decision variables",
+      " Objective function"
+    ]
+  },
+  {
+    "id": "646506f38019c4d441f6ec22",
+    "name": "Integer Programming : University Student Selection Example",
+    "prefix": "IP",
+    "number": 4,
+    "objectives": [
+      "Explain the concept of Integer Programming and its various components",
+      "Utilize the University Student Selection Example to assess potential student applications",
+      "Comprehend the advantages and limitations of Integer Programming for selection problems",
+      "Calculate the optimal solution to a selection problem using Integer Programming",
+      "Identify potential Integer Programming techniques and algorithms",
+      "Develop a model to apply Integer Programming to selection problems",
+      "Utilize software to solve Integer Programming selection problems",
+      "Design tests to evaluate the performance of Integer Programming algorithms",
+      "Compare the results of different Integer Programming algorithms and select the best one",
+      "Create a comprehensive report summarizing the results of the selection problem and recommendations for the next steps."
+    ],
+    "hours": 0.440968387,
+    "description": "Welcome to Integer Programming: University Student Selection Example! In this module, we will explore the important concept of Integer Programming, and how it can be used to solve complex selection problems. We will look at the University Student Selection Example, and see how it can be used to evaluate potential student applications and allocate resources. Through hands-on activities and interactive lectures, you will gain an understanding of the various approaches to Integer Programming and develop the skills to apply it to selection problems. By the end of this module",
+    "keywords": [
+      "Objective function",
+      " Constraints",
+      " Feasible solutions",
+      " Student selection problem",
+      " University admissions"
+    ]
+  },
+  {
+    "id": "646506f38019c4d441f6ec23",
+    "name": "Integer Programs Modeling Examples",
+    "prefix": "IPME",
+    "number": 1,
+    "objectives": [
+      "Understand the principles and fundamentals of integer programming.",
+      "Identify and explain the types of optimization problems that can be solved using integer programming.",
+      "Explain how integer constraints can be used to improve the modeling of optimization problems.",
+      "Use a variety of real-world examples to demonstrate the effectiveness of integer programming.",
+      "Analyze different types of decision-making problems and determine how integer programming can be used to provide insights.",
+      "Identify and evaluate different software tools available to solve integer programming problems.",
+      "Build a mathematical model that uses integer constraints to solve a given optimization problem.",
+      "Apply techniques such as linear programming, branch and bound, dynamic programming, and cutting plane algorithms to solve integer programming problems.",
+      "Develop and use computer programs to solve integer programming problems.",
+      "Use real-world data sets to evaluate the performance of integer programming models."
+    ],
+    "hours": 1.250403611,
+    "description": "Welcome to the Integer Programs Modeling Examples module! This module will explore the basics of integer programming, and how it can be applied to solve various types of decision-making problems. We will look at different types of optimization problems and how adding integer constraints can help to better model them. We will use a variety of real-world examples to illustrate the concepts and demonstrate how integer programming can provide insights into decisions. Finally, we will go over some of the software tools available to help solve integer programming problems",
+    "keywords": [
+      "Knapsack problem",
+      " Traveling Salesman Problem (TSP)",
+      " Facility location problem",
+      " Assignment problem",
+      " Production planning"
+    ]
+  },
+  {
+    "id": "646506f38019c4d441f6ec24",
+    "name": "Transportation Example",
+    "prefix": "IPME",
+    "number": 1,
+    "objectives": [
+      "Demonstrate an understanding of the characteristics of LP problems with multiple optimal solutions.",
+      "Identify situations where a LP problem is infeasible.",
+      "Explain the concept of an LP problem that is unbounded.",
+      "Utilize appropriate techniques to address LP problems with multiple optimal solutions.",
+      "Select the most efficient method of solving an LP problem that is infeasible.",
+      "Develop strategies for maximizing an LP problem that is unbounded.",
+      "Utilize data to identify and solve irregular LP problems.",
+      "Evaluate the effectiveness of various techniques used to solve irregular LP problems.",
+      "Analyze different scenarios to determine the most appropriate solution to an irregular LP problem.",
+      "Discuss the advantages and disadvantages of using multiple optimal solutions to solve LP problems."
+    ],
+    "hours": 1.261409853,
+    "description": "In this module, we will discuss some irregular types of LP problems that may arise. We will cover situations where LP problems have multiple optimal solutions, infeasible solutions, or unbounded solutions. We will also learn how to recognize and address these irregularities. By the end of this module, you will be able to identify and solve irregular LP problems.",
+    "keywords": [
+      "Transportation problem",
+      " Optimization",
+      " Integer programming",
+      " Decision variables",
+      " Objective function"
+    ]
+  },
+  {
+    "id": "646506f38019c4d441f6ec25",
+    "name": "Transshipment Example",
+    "prefix": "IPME",
+    "number": 2,
+    "objectives": [
+      "Identify the components of transshipment.",
+      "Describe the advantages and disadvantages of transshipment.",
+      "Explain the concept of transshipment.",
+      "Analyze how transshipment works.",
+      "Present the concept of transshipment in business terms.",
+      "Develop a comprehensive understanding of global transshipment.",
+      "Develop an understanding of the environmental impact of transshipment.",
+      "Differentiate between different types of transshipment.",
+      "Utilize transshipment for their own advantage.",
+      "Apply the concept of transshipment to current business practices."
+    ],
+    "hours": 0.714769093,
+    "description": "Welcome to our learning module on Transshipment Example. In this module, we will explore the concept of transshipment and provide an example of how it works. We will discuss the advantages and disadvantages of transshipment, and provide a comprehensive understanding of what it is and how it works. By the end of this module, you'll have a good grasp on the basics of transshipment and how to use it for your advantage. So let's get started!",
+    "keywords": [
+      "Transshipment problem",
+      " Optimization",
+      " Integer programming",
+      " Decision variables",
+      " Objective function"
+    ]
+  },
+  {
+    "id": "646506f38019c4d441f6ec26",
+    "name": "Assignment Problem Example",
+    "prefix": "IPME",
+    "number": 3,
+    "objectives": [
+      "Understand the basics of the Assignment Problem Example.",
+      "Explain the mathematical formulation of the Assignment Problem Example.",
+      "Identify the components of the Assignment Problem Example.",
+      "Analyze the various types of optimization algorithms used to solve the Assignment Problem Example.",
+      "Demonstrate the ability to use the optimization algorithms to solve the Assignment Problem Example.",
+      "Understand the limitations and potential errors that may arise when using the optimization algorithms to solve the Assignment Problem Example.",
+      "Identify the importance of the Assignment Problem Example in optimization.",
+      "Exhibit the ability to apply the Assignment Problem Example to real-world scenarios.",
+      "Analyze the impact that the Assignment Problem Example has on the field of optimization.",
+      "Develop an individual project to demonstrate their mastery of the Assignment Problem Example."
+    ],
+    "hours": 1.409395562,
+    "description": "Welcome students! Today, we will be diving into an introduction to the Assignment Problem Example. We will go over the basics of the problem, the mathematical formulation, and the optimization algorithms used to solve it. By the end of this module, you should have a better understanding of the Assignment Problem Example, its related algorithms, and how to use them. So let's get started!",
+    "keywords": [
+      "Job allocation",
+      " Resource allocation",
+      " Binary variables",
+      " Integer variables",
+      " Workload balancing"
+    ]
+  },
+  {
+    "id": "646506f48019c4d441f6ec27",
+    "name": "Network Flow Models",
+    "prefix": "NFM",
+    "number": 1,
+    "objectives": [
+      "Identify and describe the fundamental components of network flow models.",
+      "Analyze and evaluate network flow models and their components.",
+      "Create a network flow model to solve a specific problem.",
+      "Describe the most commonly used network flow models, such as max-flow and min-cost flow.",
+      "Explain the differences between network flow models and other types of optimization problems.",
+      "Interpret the results of network flow models in various real-world scenarios.",
+      "Apply appropriate algorithms to solve a given network flow problem.",
+      "Utilize network flow models to optimize resource utilization.",
+      "Utilize network flow models to optimize traffic routing.",
+      "Use a variety of software programs to design, analyze and evaluate network flow models."
+    ],
+    "hours": 0.61481869,
+    "description": "Welcome to our Network Flow Models learning module! In this module, you will explore the various network flow models used in mathematics and computer science. You will learn how to analyze, evaluate and create models for a variety of tasks, such as traffic routing, optimizing resource utilization, and more. By the end of this module, you will have a comprehensive understanding of network flow models and their applications. Let’s get started!",
+    "keywords": [
+      "Optimization",
+      "Network flow models",
+      "Network",
+      "Graph theory",
+      "Flow network",
+      "Nodes"
+    ]
+  },
+  {
+    "id": "646506f48019c4d441f6ec28",
+    "name": "Non-Linear Profit Analysis/Constrained Optimization",
+    "prefix": "NFM",
+    "number": 1,
+    "objectives": [
+      "Understand the concept of Non-Linear Profit Analysis/Constrained Optimization.",
+      "Formulate and analyze non-linear optimization problems.",
+      "Acquire knowledge on the different optimization techniques used in Non-Linear Profit Analysis/Constrained Optimization.",
+      "Develop the ability to interpret the results of optimization runs.",
+      "Explore the use of constraints in finding the best solution to an optimization problem.",
+      "Learn how to identify and apply appropriate optimization techniques to maximize profits.",
+      "Utilize numerical methods in solving optimization problems in Non-Linear Profit Analysis/Constrained Optimization.",
+      "Construct and evaluate a mathematical model of a non-linear optimization problem.",
+      "Learn how to assess the quality of the solutions generated in non-linear optimization.",
+      "Develop the ability to analyze the effects of different decisions on the profit-maximizing objectives."
+    ],
+    "hours": 1.958456401,
+    "description": "Welcome to our learning module on Non-Linear Profit Analysis/Constrained Optimization! Through this module, you will gain an understanding of how to use mathematical models and optimization techniques to maximize profits through decision-making. You will learn how to formulate and solve non-linear optimization problems, as well as how to analyze the results of the optimization. You will also get experience in using constraint-solving techniques to identify the best possible solution in any given situation. By the end of",
+    "keywords": [
+      "Non-linear",
+      "Profit analysis",
+      "Constrained",
+      "Optimization",
+      "Constraints"
+    ]
+  },
+  {
+    "id": "646506f48019c4d441f6ec29",
+    "name": "Facility Location Problem",
+    "prefix": "NFM",
+    "number": 2,
+    "objectives": [
+      "Identify the types of facility location problems and the associated optimization objectives.",
+      "Understand the mathematical models and algorithms used to solve facility location problems.",
+      "Analyze different data sets and evaluate the optimal solutions for various facility location problems.",
+      "Predict the impacts of changes in demand or supply on optimal solutions.",
+      "Analyze different scenarios and determine the best locations for placing facilities given the constraints.",
+      "Design strategies for efficiently managing the placement of multiple facilities.",
+      "Examine the implications of different objectives on the optimal solutions for facility location problems.",
+      "Utilize various software tools to solve facility location problems.",
+      "Develop a comprehensive facility location plan for a given real-world problem.",
+      "Appraise the advantages and disadvantages of different algorithms and strategies used to solve facility location problems."
+    ],
+    "hours": 0.704717178,
+    "description": "Welcome to the Facility Location Problem learning module! This module will guide you through the basics of facility location, a type of optimization problem in which certain key locations are chosen to maximize efficiency or minimize cost. We will explore the various types of facility location problems, discuss the underlying mathematical models, and learn how to apply various algorithms to solve them. By the end of this module, you will have a better understanding of how to effectively plan and optimize the placement of facilities for various applications. Let's",
+    "keywords": [
+      "Optimization",
+      "Location",
+      "analysis",
+      "Supply",
+      "Facility",
+      "Site selection"
+    ]
+  },
+  {
+    "id": "646506f48019c4d441f6ec2a",
+    "name": "Mixed Integer Non-Linear Programming",
+    "prefix": "NFM",
+    "number": 3,
+    "objectives": [
+      "Understand the fundamentals of Mixed Integer Non-Linear Programming.",
+      "Be able to model and solve optimization problems involving discrete decision variables.",
+      "Understand the various algorithms and techniques used in this area.",
+      "Be able to apply these tools to analyze and solve real-world problems.",
+      "Understand how to construct linear programming models for mixed-integer nonlinear programming problems.",
+      "Be able to identify and apply the appropriate algorithms to solve mixed-integer nonlinear programming problems.",
+      "Understand the impact of linearization techniques on the efficiency of solving mixed-integer nonlinear programming problems.",
+      "Be able to recognize and interpret the solutions of mixed-integer nonlinear programming problems.",
+      "Understand the complexity of mixed integer nonlinear programming problems.",
+      "Be able to evaluate and compare different solution approaches for solving mixed-integer nonlinear programming problems."
+    ],
+    "hours": 1.901259152,
+    "description": "Welcome to our learning module on Mixed Integer Non-Linear Programming! This module is designed to provide you with a comprehensive introduction to this important topic. You will learn how to model and solve non-linear optimization problems involving discrete decision variables. You will gain an understanding of the various algorithms and techniques used in this area, and you will be able to apply these tools to analyze and solve real-world problems. By the end of this module, you will have a solid foundation of the basics",
+    "keywords": [
+      "Decision",
+      "Continuous",
+      "Integer",
+      "Non-convex optimization",
+      "Global optimization"
+    ]
+  },
+  {
+    "id": "646506f48019c4d441f6ec2b",
+    "name": "Solving Unconstrained Non-Linear EquationsNumerically",
+    "prefix": "NFM",
+    "number": 4,
+    "objectives": [
+      "Describe the concept of unconstrained non-linear equations",
+      "Identify different numerical methods to solve unconstrained non-linear equations",
+      "Design a numerical solution to a given unconstrained non-linear equation",
+      "Apply the Newton-Raphson method and determine the solution's accuracy",
+      "Analyze the convergence rate of the bisection and secant methods",
+      "Compare and contrast the Newton-Raphson, bisection, and secant methods",
+      "Implement numerical methods to solve large-scale equations",
+      "Develop an algorithm to solve unconstrained non-linear equations numerically",
+      "Utilize the bisection and secant methods to determine the solution's accuracy",
+      "Test and evaluate the Newton-Raphson method for various equations"
+    ],
+    "hours": 0.827202674,
+    "description": "Welcome to this learning module on Solving Unconstrained Non-Linear Equations Numerically. In this module, we will learn how to solve equations that cannot be solved analytically using numerical methods. We will discuss important concepts such as the Newton-Raphson method, the bisection method and the secant method. We will also learn how to apply these methods to solve real-world equations. By the end of this module, you will be able to identify different",
+    "keywords": [
+      "Numerical methods",
+      "Non-linear equations",
+      "Unconstrained",
+      "optimization",
+      "Iterative methods"
+    ]
+  },
+  {
+    "id": "646506f48019c4d441f6ec2c",
+    "name": "Multi-Criteria Decision  Making: Goal  Programming",
+    "prefix": "GP",
+    "number": 1,
+    "objectives": [
+      "Demonstrate an understanding of the principles, techniques, and models employed in Goal Programming.",
+      "2.Identify the objectives of a decision-making problem and formulate them mathematically in the form of a Goal Programming problem.",
+      "3.Implement Goal Programming models in spreadsheets, software packages, or programming languages.",
+      "4.Analyze the sensitivity of the results to changes in parameters or objectives.",
+      "5.Identify the optimal solution to a Goal Programming problem.",
+      "6.Interpret the results of Goal Programming and identify the best decision to be made.",
+      "7.Evaluate the trade-offs between conflicting objectives in a decision-making problem.",
+      "8.Combine multiple Goal Programming models to solve more complex decision-making problems.",
+      "9.Assess the effectiveness of Goal Programming and identify potential improvements.",
+      "10.Develop an understanding of the ethical implications of using Goal Programming to make decisions."
+    ],
+    "hours": 0.266527052,
+    "description": "Welcome to the Multi-Criteria Decision-Making: Goal Programming module! In this course, you will learn how to apply Goal Programming to solve decision-making problems with multiple conflicting objectives. We will explore different techniques and models for Goal Programming, as well as their application in various practical scenarios. You will also gain an understanding of how to interpret the results of Goal Programming and use them to make effective decisions. By the end of this module, you will be able to confidently apply Goal Programming to",
+    "keywords": [
+      "Goal programming",
+      "Optimization",
+      " Analysis",
+      " Criteria",
+      " Objectives"
+    ]
+  },
+  {
+    "id": "646506f48019c4d441f6ec2d",
+    "name": "Goal programming Formulation and Graphical Interpretation",
+    "prefix": "GP",
+    "number": 1,
+    "objectives": [
+      "Analyze the formulation of practical goal programming problems.",
+      "Apply graph theory to goal programming problems.",
+      "Understand the importance of graphical interpretation for goal programming.",
+      "Modify a goal programming problem in order to refine its solution.",
+      "Formulate and optimize a feasible solution using the goal programming approach.",
+      "Demonstrate the ability to interpret a goal programming model in terms of its solution.",
+      "Describe how different types of constraints can be represented in a goal programming model.",
+      "Compare and contrast the different methods of solving goal programming problems.",
+      "Explain how the graphical representation of goal programming can be used to assist in decisions.",
+      "Develop the ability to utilize goal programming modelling techniques in the solution of complex problems."
+    ],
+    "hours": 1.966362683,
+    "description": "Welcome students! In this learning module, you will be familiarizing yourself with the concept of goal programming formulation and its graphical interpretation. Throughout this module, you will learn the theory and methods of goal programming, and be able to apply this knowledge to practical problems. You will also be exploring the use of graphical representation to help you gain a better understanding of goal programming. By the end of the module, you will be able to use goal programming formulation and its graphical interpretation to solve a range of",
+    "keywords": [
+      "Linear programming",
+      " Minimization",
+      " Maximization",
+      " Slack variables",
+      " Graphical"
+    ]
+  },
+  {
+    "id": "646506f48019c4d441f6ec2e",
+    "name": "Goal Programming Computer Solution",
+    "prefix": "GP",
+    "number": 2,
+    "objectives": [
+      "Understand the concept of goal programming and its application to problem solving.",
+      "Explain why goal programming is a useful tool for problem solving.",
+      "Describe the process of creating a goal programming model.",
+      "Demonstrate how to define decision variables, set objectives and constraints, and use a computer program to solve a goal programming problem.",
+      "Develop the ability to design a goal programming model and algorithm to solve a given problem.",
+      "Analyze the results of a goal programming solution.",
+      "Interpret the results of a goal programming solution.",
+      "Utilize software tools to solve goal programming problems.",
+      "Compare and contrast different techniques available for solving goal programming problems.",
+      "Design a goal programming model and algorithm to solve a given problem."
+    ],
+    "hours": 1.034748461,
+    "description": "Welcome to this learning module on Goal Programming Computer Solution! Here, you will learn how to use goal programming in a computer-based environment to solve complex problems. You will gain knowledge about how goal programming can be used to maximize or minimize a set of objectives with conflicting requirements. You will also become familiar with creating a goal programming model, defining decision variables, setting objectives and constraints, and using a computer program to solve the problem. By the end of this module, you will be able to",
+    "keywords": [
+      "Goal programming",
+      " Optimization",
+      " Mathematical",
+      " Solver software",
+      " Linear programming"
+    ]
+  },
+  {
+    "id": "646506f58019c4d441f6ec2f",
+    "name": "Non-Linear Multi-Criteria Decision Making",
+    "prefix": "GP",
+    "number": 3,
+    "objectives": [
+      "Understand the fundamental concepts of non-linear decision making.",
+      "2.Analyze different types of non-linear models and their application in different decision-making contexts.",
+      "Develop an understanding of the Analytic Hierarchy Process (AHP) and its components.",
+      "Apply the Analytic Hierarchy Process (AHP) to solve problems.",
+      "5.Identify and analyze the components of the multicriteria decision analysis (MCDA) model.",
+      "6.Construct an Analytic Network Process (ANP) model.",
+      "7.Interpret and assess the results of an Analytic Network Process (ANP) model.",
+      "8.Compare and contrast the different non-linear decision making models.",
+      "9.Recognize the limitations of non-linear decision making models.",
+      "10.Integrate non-linear decision making models into complex decision problems."
+    ],
+    "hours": 1.215893917,
+    "description": "Welcome to the Non-Linear Multi-Criteria Decision Making learning module! This module is designed to introduce you to the concepts of non-linear decision making and how it is used in a variety of contexts to make decisions. We will discuss different types of non-linear models, such as the Analytic Hierarchy Process (AHP), the multicriteria decision analysis (MCDA), and the Analytic Network Process (ANP). We will also discuss how non-linear models",
+    "keywords": [
+      "Multi-criteria",
+      " Decision making",
+      " Non-linear programming",
+      " Optimization",
+      " Decision analysis"
+    ]
+  },
+  {
+    "id": "646506f58019c4d441f6ec30",
+    "name": "Goal Programming Discussion",
+    "prefix": "GPD",
+    "number": 1,
+    "objectives": [
+      "Develop an understanding of the fundamentals of goal programming and its different components.",
+      "Learn to identify and create a problem as a goal programming model.",
+      "Utilize various methods to solve a goal programming problem.",
+      "Identify the different objectives and constraints in a goal programming problem.",
+      "Analyze the impact of changes in objectives and constraints on the goal programming problem.",
+      "Determine the best solution that satisfies all objectives and constraints.",
+      "Develop the skills to effectively interpret and present the results of a goal programming problem.",
+      "Understand the role of various software tools in solving goal programming problems.",
+      "Familiarize yourself with the real-world applications and implications of goal programming.",
+      "Compose a well-structured report that details your understanding of goal programming and its uses."
+    ],
+    "hours": 1.179394244,
+    "description": "Welcome to the Goal Programming Discussion module! In this module, we will be discussing the basics of goal programming and how it can be used to identify optimal solutions to problems. We will explore how to set up a problem as a goal programming model and discuss various methods for solving it. By the end of this module, you will have a better understanding of goal programming and how to apply it to various real-world scenarios. Let's get started!",
+    "keywords": [
+      "Goal programming",
+      " Optimization",
+      " Making",
+      " Objectives",
+      " Variables"
+    ]
+  },
+  {
+    "id": "646506f58019c4d441f6ec31",
+    "name": "Dynamic programming-Shortest Path Problem",
+    "prefix": "GPD",
+    "number": 1,
+    "objectives": [
+      "Understand the key components of the problem and the common algorithms used for solving the Shortest Path Problem.",
+      "Analyze and compare the different algorithms in order to find the optimal solution.",
+      "Identify the time and space complexities of each algorithm.",
+      "Develop and implement a dynamic programming solution to the Shortest Path Problem.",
+      "Analyze the running time and memory requirements of the algorithms.",
+      "Use a variety of techniques to simplify and optimize the problem-solving process.",
+      "Develop an understanding of the tradeoffs between time and space complexity.",
+      "Recognize the limitations of dynamic programming and when it is appropriate to use.",
+      "Understand the principles of optimization and how they can be applied to the Shortest Path Problem.",
+      "Use existing software packages to aid in solving the Shortest Path Problem."
+    ],
+    "hours": 0.796675424,
+    "description": "Welcome to our learning module on Dynamic Programming and the Shortest Path Problem! In this module, you will gain a comprehensive understanding of dynamic programming principles and how they can be applied to solving the Shortest Path Problem. You will learn to identify the key components of the problem, evaluate different algorithms, and find the optimal solution. You will also learn how to use a variety of tools and techniques to simplify and optimize your problem-solving process. By the end of this module, you should",
+    "keywords": [
+      "Path cost",
+      " Edge weights",
+      " Directed graph",
+      " Topological",
+      " Sorting"
+    ]
+  },
+  {
+    "id": "646506f58019c4d441f6ec32",
+    "name": "Dynamic Programming-Allocation of Medical Terms",
+    "prefix": "GPD",
+    "number": 2,
+    "objectives": [
+      "Explain the definition of dynamic programming and its fundamental principles.",
+      "Analyze and compare the different algorithms used for dynamic programming.",
+      "Identify the advantages and disadvantages of using dynamic programming for medical term allocation.",
+      "Analyze real-world examples of successful implementations of dynamic programming for medical term allocation.",
+      "Develop strategies for optimally allocating medical terms using dynamic programming.",
+      "Analyze the impact of dynamic programming on the efficiency of medical record processing.",
+      "Compare different approaches to allocating medical terms using dynamic programming.",
+      "Utilize dynamic programming algorithms to allocate medical terms to a medical record.",
+      "Test the results of dynamic programming algorithms to determine the optimal allocation of medical terms.",
+      "Develop a clear understanding of the processes involved in allocating medical terms using dynamic programming."
+    ],
+    "hours": 1.604403433,
+    "description": "Introduction Paragraph  Welcome to our learning module on dynamic programming and the allocation of medical terms! In this module, we will cover the basics of dynamic programming, from the definition and the fundamentals to the applications and the various algorithms. We will also explore how dynamic programming can be used to optimally allocate medical terms, such as diagnostics and treatment codes, to a medical record. We will discuss the advantages and disadvantages of using dynamic programming for this purpose and look at some examples of successful implementations.",
+    "keywords": [
+      "Dynamic ",
+      " Optimization",
+      " Allocation",
+      " Resource",
+      " Problem"
+    ]
+  },
+  {
+    "id": "646506f58019c4d441f6ec33",
+    "name": "Non-Linear Programming",
+    "prefix": "NP",
+    "number": 1,
+    "objectives": [
+      "Analyze and explain the fundamentals of non-linear programming techniques",
+      "Compare and contrast various non-linear optimization algorithms",
+      "Construct and manipulate non-linear programming models",
+      "Utilize software packages to solve non-linear optimization problems",
+      "Interpret results from non-linear programming",
+      "Design real-world applications to solve non-linear programming problems",
+      "Construct and manipulate linear programming models to solve non-linear programming problems",
+      "Analyze and compare the efficacy of various non-linear optimization algorithms",
+      "Demonstrate an understanding of the constraints and objectives of non-linear programming",
+      "Develop an understanding of the use of non-linear programming techniques in real-world scenarios."
+    ],
+    "hours": 0.375957913,
+    "description": "Welcome to the Non-Linear Programming learning module! In this module, you will gain a comprehensive understanding of the subject matter, including the fundamentals of non-linear programming techniques, the constraints and objectives that are involved, and the applications of these techniques in real-world scenarios. You will learn to solve various non-linear optimization problems by using various algorithms and software packages, and to interpret the results. Additionally, you will be able to apply the techniques you have learned to design and develop",
+    "keywords": [
+      "Non-linear",
+      " Objective",
+      "  function",
+      " Constraints",
+      " Equations"
+    ]
+  },
+  {
+    "id": "646506f68019c4d441f6ec34",
+    "name": "Introduction to Queuing Analysis",
+    "prefix": "NP",
+    "number": 1,
+    "objectives": [
+      "Explain the fundamentals of queuing analysis and how it applies to operations management.",
+      "Identify the components of a queuing system and how they interact.",
+      "Calculate the arrival and service rates within a queuing system.",
+      "Explain the various measures for performance evaluation.",
+      "Analyze queuing models and how they can be applied to real-world operations.",
+      "Determine the probability of customer waiting in line.",
+      "Calculate the expected wait time for customers in a queuing system.",
+      "Explain queue discipline and how it affects efficiency.",
+      "Apply the concepts of queuing analysis to practical examples.",
+      "Develop an understanding of the various strategies to improve the performance of a queuing system."
+    ],
+    "hours": 1.608089007,
+    "description": "Welcome to Introduction to Queuing Analysis! In this module, we will explore the fundamentals of queuing analysis and how it applies to operations management. You will gain an understanding of the different components of the queuing system, such as the arrival and service rates, as well as the various measures for performance evaluation. We will also discuss examples of queuing models and how they can be applied to real-world operations. At the end of the module, you should be able to apply the concepts and",
+    "keywords": [
+      "Waiting lines",
+      " Arrival process",
+      " Service ",
+      " Rate",
+      "  Queue length"
+    ]
+  },
+  {
+    "id": "646506f68019c4d441f6ec35",
+    "name": "Design of Queuing Systems",
+    "prefix": "NP",
+    "number": 2,
+    "objectives": [
+      "Understand the fundamentals of designing queuing systems",
+      "Analyze customer service requirements and design a queuing system",
+      "Develop an understanding of how operational decisions affect the design of a queuing system",
+      "Describe the different queuing models and their characteristics",
+      "Implement basic queueing algorithms in programming language",
+      "Analyze the performance of a queuing system using simulation",
+      "Design strategies for controlling queue length and customer waiting times",
+      "Develop strategies to improve the efficiency of a queuing system",
+      "Use statistical methods to evaluate the performance of a queuing system",
+      "Apply the principles of queuing systems to real-world problems."
+    ],
+    "hours": 0.472855594,
+    "description": "Welcome to the Design of Queuing Systems module! In this module, you will explore the fundamentals of designing queuing systems in order to ensure efficient service delivery. You will learn how to analyze and design queuing systems to meet customer service requirements. You will also investigate how the queuing system should be monitored and modified to deliver excellent service. Finally, you will gain an understanding of how various operational decisions affect the design of a queuing system. I am excited to take you on this journey",
+    "keywords": [
+      "Queuing systems",
+      " Arrival ",
+      " Service ",
+      " Discipline",
+      " Capacity"
+    ]
+  },
+  {
+    "id": "646506f68019c4d441f6ec36",
+    "name": "Multiple Servers/Finite Queues",
+    "prefix": "NP",
+    "number": 3,
+    "objectives": [
+      "Analyze the behavior of a queue system when there are multiple servers.",
+      "Explain the implications of having multiple servers and finite queues.",
+      "Identify how varying server capacities and queue sizes affect customer service times.",
+      "Comprehend the importance of optimally setting up a customer service system.",
+      "Illustrate what strategies are most effective in improving customer service times.",
+      "Simulate a queue system with multiple servers and finite queues.",
+      "Discuss the impact that server availability has on customer service times.",
+      "Evaluate various queueing models to determine the most suitable for a given context.",
+      "Analyze the performance of a queue system with multiple servers and finite queues.",
+      "Describe the challenges of balancing customer service times with operational costs."
+    ],
+    "hours": 1.152130395,
+    "description": "Welcome to our learning module on Input: Multiple Servers/Finite Queues! In this module, we will explore queues and servers, and discuss the implications of having multiple servers and finite queues. We will look at the impact of varying server capacities and queue sizes on the overall waiting time of customers. You will gain an understanding of how these variables affect customer service times, and how to optimise the setup of a customer service system. We will also discuss the effectiveness of strategies for",
+    "keywords": [
+      "Multiple servers",
+      " Finite queues",
+      " Systems",
+      " Queuing",
+      " Analysis"
+    ]
+  },
+  {
+    "id": "646506f68019c4d441f6ec37",
+    "name": "Non-Linear Programming Discussion",
+    "prefix": "NPD",
+    "number": 1,
+    "objectives": [
+      "Understand the basic principles of non-linear programming.",
+      "Analyze and identify various types of non-linear problems.",
+      "Evaluate the effectiveness of existing non-linear programming methods.",
+      "Construct and solve simple non-linear programming problems.",
+      "Utilize the appropriate numerical techniques for solving non-linear programming problems.",
+      "Interpret the results of non-linear programming techniques.",
+      "Estimate the effectiveness of various optimization techniques.",
+      "Analyze the impact of perturbation on non-linear programming solutions.",
+      "Understand the relationship between non-linear programming and other related topics.",
+      "Implement non-linear programming techniques in real-world problems."
+    ],
+    "hours": 1.072546395,
+    "description": "Welcome to the Non-Linear Programming Discussion module! In this module, we will explore the concepts behind non-linear programming, the different types of non-linear problems, and the ways to solve them. Through examples and exercises, you will learn how to apply non-linear programming techniques in real-world problems. By the end of this module, you will have a better understanding of the use of non-linear programming to optimize solutions.",
+    "keywords": [
+      "Global",
+      " Optimization",
+      " Heuristic algorithms",
+      " Genetic",
+      " Algorithms"
+    ]
+  },
+  {
+    "id": "646506f68019c4d441f6ec38",
+    "name": "Introduction to Markov Chains",
+    "prefix": "NPD",
+    "number": 1,
+    "objectives": [
+      "Demonstrate understanding of the concept of states and transitions in Markov Chains.",
+      "Identify and interpret the properties of a Markov Chain.",
+      "Implement a simple Markov Chain model to describe and predict events.",
+      "Explain the importance of Markov Chains in modeling and predicting events.",
+      "Describe common applications of Markov Chains.",
+      "Evaluate the accuracy and reliability of Markov Chain models.",
+      "Apply the principles of Markov Chains to real-world examples.",
+      "Develop an understanding of using Markov Chains for decision making.",
+      "Analyze natural language processing techniques in the context of Markov Chains.",
+      "Create a report summarizing the results of a Markov Chain analysis."
+    ],
+    "hours": 1.95761905,
+    "description": "Welcome to the Introduction to Markov Chains module! In this module, we'll be exploring the basics of Markov Chains, a powerful tool for modeling and predicting events. We'll discuss the concept of states and transitions, the properties and structure of Markov Chains, and some common applications of these models. By the end of this module, you'll have a better understanding of Markov Chains and their importance in modeling and predicting events. I'm looking forward to helping you gain a deeper understanding of",
+    "keywords": [
+      "Markov Chains",
+      " Probability theory",
+      " Stochastic processes",
+      " Discrete-time Markov chains",
+      " State transitions"
+    ]
+  },
+  {
+    "id": "646506f78019c4d441f6ec39",
+    "name": "Ergodic Markov Chains",
+    "prefix": "NPD",
+    "number": 2,
+    "objectives": [
+      "Understand the fundamentals of Markov chains and their application to random processes",
+      "Calculate expected values using Markov chain models",
+      "Apply ergodic Markov chains to explore the long-term behavior of a given random process",
+      "Understand the properties of ergodic Markov chains and their relation to the stationary and ergodic conditions",
+      "Be able to identify and use the appropriate transition matrix for a given process",
+      "Understand the concept of a Markov chain state and its application in modeling random processes",
+      "Develop an understanding of the different types of Markov chain processes and their applications",
+      "Demonstrate the ability to use the Chapman-Kolmogorov equation to solve for the probability of a given process",
+      "Analyze and interpret the results of simulations of ergodic Markov chains",
+      "Apply learned concepts to solve problems involving ergodic Markov chains."
+    ],
+    "hours": 1.694717651,
+    "description": "Welcome everyone! We are here to dive into the fascinating world of ergodic Markov chains. In this learning module, we'll be exploring how to use Markov chains to model random processes, and then how to use those models to calculate expected values. We'll also be learning how to use ergodic Markov chains to explore the long-term behavior of a given process. By the end of this module, you'll have a solid understanding of ergodic Markov chains",
+    "keywords": [
+      "Convergence",
+      " Limiting behavior",
+      " Balance equations",
+      " Transition probabilities",
+      " Markov process."
+    ]
+  },
+  {
+    "id": "646506f78019c4d441f6ec3a",
+    "name": "Absorbing Markov Chains",
+    "prefix": "NPD",
+    "number": 3,
+    "objectives": [
+      "Demonstrate an understanding of the fundamentals of Markov chains",
+      "Explain the differences between ordinary and absorbing Markov chains",
+      "Analyze the transition matrix of an absorbing Markov chain",
+      "Calculate the probability of reaching an absorbing state in a Markov chain",
+      "Interpret the absorption probability matrix of an absorbing Markov chain",
+      "Develop skills in solving Markov chain problems",
+      "Use the theory of Markov chains to calculate the probability of a given event",
+      "Identify the transition probabilities in a Markov chain and determine the expected behavior of the system",
+      "Analyze the steady-state probabilities of an absorbing Markov chain",
+      "Formulate algorithms for finding the equilibrium probability of an absorbing Markov chain"
+    ],
+    "hours": 0.802422565,
+    "description": "Welcome to our learning module on absorbing Markov chains. Markov Chains are a mathematical model used to describe a sequence of events in which the probability of the current event is determined by the state of the preceding event. An absorbing Markov Chain is a type of Markov chain where the probability of transitioning into a different state is zero, meaning that once the chain enters an absorbing state, it will remain in that state forever. In this module, you will learn the fundamentals of Markov chains",
+    "keywords": [
+      "Absorbing",
+      " Markov",
+      "Stationary distribution",
+      " Recurrent states",
+      " Transient states"
+    ]
+  },
+  {
+    "id": "646506f78019c4d441f6ec3b",
+    "name": "Applications of Markov Analysis",
+    "prefix": "AOMA",
+    "number": 1,
+    "objectives": [
+      "Understand the fundamentals of Markov Analysis, including its components, definitions, and properties.",
+      "Analyze and interpret Markov Chains and probability matrices.",
+      "Utilize Markov Analysis to gain insight into future outcomes.",
+      "Determine how external events can influence a system.",
+      "Recognize the potential for long-term changes in a system.",
+      "Apply Markov Analysis to various real-world applications.",
+      "Identify and utilize appropriate data sources to construct models.",
+      "Utilize different software packages to perform Markov Analysis.",
+      "Analyze and synthesize data to draw meaningful conclusions.",
+      "Explain the implications of Markov Analysis on different scenarios."
+    ],
+    "hours": 1.953978444,
+    "description": "Welcome to our learning module on Applications of Markov Analysis! In this module, we will explore how Markov Analysis can be used to model and analyze a wide range of phenomena, from complex financial systems to simple biological processes. Through careful examination of Markov Chains and the associated probability matrices, we'll learn how to apply Markov Analysis to a variety of tasks such as predicting future outcomes, analyzing how external events influence a system, and understanding the potential for long-term change. By",
+    "keywords": [
+      "Applications",
+      " Markov",
+      " Analysis",
+      "of",
+      " Introduction"
+    ]
+  },
+  {
+    "id": "646506f78019c4d441f6ec3c",
+    "name": "Applying Markov Chains",
+    "prefix": "AOMA",
+    "number": 1,
+    "objectives": [
+      "Demonstrate an understanding of the Markov Chain process and the associated terminology.",
+      "Develop an understanding of the data and model structure of Markov Chains.",
+      "Construct models that represent a system of state transitions and calculate probabilities.",
+      "Analyze data to determine optimal solutions and calculate expected outcomes.",
+      "Utilize the Markov Chain process to predict future states of a system.",
+      "Evaluate the accuracy of models with real-world data.",
+      "Synthesize knowledge and apply the Markov Chain process to cases with non-stationary characteristics.",
+      "Make predictions and decisions based on data and models.",
+      "Construct Markov Chain models that represent a system of multiple states.",
+      "Utilize the Markov Chain process to predict behavior of a system over time."
+    ],
+    "hours": 1.553646909,
+    "description": "Welcome to the Applying Markov Chains learning module! In this module, you will learn about Markov Chains and how they can be used to analyze and predict the behavior of a system that changes over time. You will use these concepts to build models and use them to analyze different situations. By the end of this module, you will understand how to apply Markov Chains to real-world data and be able to make predictions and decisions based on the data you have. I look forward to",
+    "keywords": [
+      "Markov chains",
+      " Transition",
+      " Probabilities",
+      " Steady state analysis",
+      " Absorbing Markov chains"
+    ]
+  }
+]
