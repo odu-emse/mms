@@ -1,4 +1,5 @@
 import pandas as pd
+import nltk
 from nltk.corpus import stopwords
 from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
@@ -16,6 +17,7 @@ class MetaRecommender:
         self.df = pd.read_json(path)
         self.featureDf = pd.DataFrame()
         self.target = target
+        nltk.download("stopwords")
         self.stop = stopwords.words("english")
         self.cv = CountVectorizer()
         self.similarity = None
