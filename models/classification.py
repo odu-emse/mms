@@ -91,6 +91,22 @@ class Classify:
 
         return df
 
+    def __clean_text__(self, input: str):
+        """
+        Clean the text by removing special characters.
+        """
+        import re
+
+        return re.sub(
+            "([A-Z][a-z]+)",
+            r" \1",
+            re.sub(
+                "([A-Z]+)",
+                r" \1",
+                input.replace("\\'", ""),
+            ),
+        )
+
     def __split_camel_case__(self, df: DataFrame, col: str) -> DataFrame:
         """
         Split the words in the DataFrame column which are in camel case.
@@ -102,17 +118,7 @@ class Classify:
         split_words = []
 
         for obj in lst:
-            split_words.append(
-                re.sub(
-                    "([A-Z][a-z]+)",
-                    r" \1",
-                    re.sub(
-                        "([A-Z]+)",
-                        r" \1",
-                        obj.replace("\\'", ""),
-                    ),
-                ).split()
-            )
+            split_words.append(self.__clean_text__(obj).split())
 
         payload = [" ".join(entry) for entry in split_words]
 
