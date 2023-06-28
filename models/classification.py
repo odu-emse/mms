@@ -212,13 +212,17 @@ class Classify:
 
         Encoder = LabelEncoder()
 
-        Train_Y = Encoder.fit_transform(Train_Y)
+        Encoder.fit(Train_Y)
 
-        Test_Y = Encoder.fit_transform(Test_Y)
+        Train_Y = Encoder.transform(Train_Y)
+
+        Test_Y = Encoder.transform(Test_Y)
 
         Tfidf_vect = TfidfVectorizer(max_features=5000)
 
-        Train_X_Tfidf = Tfidf_vect.fit_transform(Train_X)
+        Tfidf_vect.fit(self.data["target"])
+
+        Train_X_Tfidf = Tfidf_vect.transform(Train_X)
 
         Test_X_Tfidf = Tfidf_vect.transform(Test_X)
 
@@ -234,6 +238,20 @@ class Classify:
         self.__run_pca__(Train_X_Tfidf, train_df)
 
         self.logger.info(train_df.head())
+
+        self.__run_naive_bayes__(
+            X_train=Train_X_Tfidf,
+            Y_train=Train_Y,
+            X_test=Test_X_Tfidf,
+            Y_test=Test_Y,
+        )
+
+        self.__run_svm__(
+            X_train=Train_X_Tfidf,
+            Y_train=Train_Y,
+            X_test=Test_X_Tfidf,
+            Y_test=Test_Y,
+        )
 
         self.logger.info("Model created successfully")
 
@@ -288,6 +306,41 @@ class Classify:
 
         self.logger.info("PCA run successfully")
 
+    def __run_naive_bayes__(self, X_train, Y_train, X_test, Y_test):
+        """
+        Run the naive bayes classification model.
+        """
+        from sklearn.naive_bayes import MultinomialNB
+
+        Naive = MultinomialNB()
+
+        Naive.fit(X_train, Y_train)
+
+        predictions_NB = Naive.predict(X_test)
+
+        print(
+            "Naive Bayes Accuracy Score -> ",
+            accuracy_score(predictions_NB, Y_test) * 100,
+        )
+
+        self.logger.info("Naive Bayes run successfully")
+
+    def __run_svm__(self, X_train, Y_train, X_test, Y_test):
+        """
+        Run the svm classification model.
+        """
+        from sklearn import svm
+
+        SVM = svm.SVC(C=1.0, kernel="poly", degree=3, gamma="auto")
+
+        SVM.fit(X_train, Y_train)
+
+        predictions_SVM = SVM.predict(X_test)
+
+        print("SVM Accuracy Score -> ", accuracy_score(predictions_SVM, Y_test) * 100)
+
+        self.logger.info("SVM run successfully")
+
     def run(self) -> None:
         """
         Run the classification model.
@@ -297,9 +350,9 @@ class Classify:
         self.__evaluate_model__()
         self.__predict__()
         self.__save_model__()
-        self.generate_word_cloud(corpus=" ".join(list(self.data["target"])))
-        self.generate_scatter_plot(df)
-        # self.logger.info(self.data.head())
+        # self.generate_word_cloud(corpus=" ".join(list(self.data["target"])))
+        # self.generate_scatter_plot(df)
+
         # self.data.to_csv("output/603_processed.csv", index=False)
 
     def generate_word_cloud(self, corpus: str):
