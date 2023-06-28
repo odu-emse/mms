@@ -5,11 +5,7 @@ from nltk.tokenize import word_tokenize
 from nltk.stem import WordNetLemmatizer
 from nltk.tag import pos_tag
 from nltk.corpus import wordnet as wn
-from sklearn import model_selection, naive_bayes, svm
-from sklearn.cluster import KMeans
-from sklearn.decomposition import PCA
-from sklearn.preprocessing import LabelEncoder
-from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn import naive_bayes, svm
 from sklearn.metrics import accuracy_score
 
 
@@ -57,7 +53,7 @@ class Classify:
         else:
             self.logger.info("Library downloads skipped")
 
-    def read(self, sep="\t"):
+    def read(self, sep="\t") -> None:
         """
         Read the data from the file path. The default separator is tab.
         """
@@ -91,7 +87,7 @@ class Classify:
 
         return df
 
-    def __clean_text__(self, input: str):
+    def __clean_text__(self, input: str) -> str:
         """
         Clean the text by removing special characters.
         """
@@ -111,8 +107,6 @@ class Classify:
         """
         Split the words in the DataFrame column which are in camel case.
         """
-        import re
-
         lst = list(df[col])
 
         split_words = []
@@ -208,6 +202,9 @@ class Classify:
         """
         Create the classification model.
         """
+        from sklearn import model_selection
+        from sklearn.preprocessing import LabelEncoder
+        from sklearn.feature_extraction.text import TfidfVectorizer
 
         Train_X, Test_X, Train_Y, Test_Y = model_selection.train_test_split(
             self.data["target"], self.data["label"], test_size=size
@@ -221,19 +218,26 @@ class Classify:
 
         Tfidf_vect = TfidfVectorizer(max_features=5000)
 
-        Tfidf_vect.fit(self.data["target"])
-
-        Train_X_Tfidf = Tfidf_vect.transform(Train_X)
+        Train_X_Tfidf = Tfidf_vect.fit_transform(Train_X)
 
         Test_X_Tfidf = Tfidf_vect.transform(Test_X)
 
-        kmeans = KMeans(n_clusters=self.N_CLUSTER, random_state=0, n_init="auto").fit(
-            Train_X_Tfidf
+        train_df = pd.DataFrame(
+            Train_X, columns=["target", "label"], index=Train_X.index
         )
 
-        self.data["label"] = kmeans.predict(Tfidf_vect.transform(self.data["target"]))
+        self.__create_clusters__(
+            Train_X_Tfidf,
+            train_df,
+        )
+
+        self.__run_pca__(Train_X_Tfidf, train_df)
+
+        self.logger.info(train_df.head())
 
         self.logger.info("Model created successfully")
+
+        return train_df
 
     def __train_model__(self):
         """
@@ -259,17 +263,42 @@ class Classify:
         """
         pass
 
-    def run(self):
+    def __create_clusters__(self, X, df: DataFrame):
+        from sklearn.cluster import KMeans
+
+        kmeans = KMeans(n_clusters=self.N_CLUSTER, random_state=0, n_init="auto").fit(X)
+
+        df["label"] = kmeans.predict(X)
+
+        self.logger.info("Clusters created successfully")
+
+    def __run_pca__(self, X, df):
+        import numpy as np
+        from sklearn.decomposition import PCA
+
+        pca = PCA(n_components=int(np.sqrt(len(df))) // 2, random_state=42)
+
+        red_feat = pca.fit_transform(X.toarray())
+
+        x = red_feat[:, 0]
+        y = red_feat[:, 1]
+
+        df["x"] = x
+        df["y"] = y
+
+        self.logger.info("PCA run successfully")
+
+    def run(self) -> None:
         """
         Run the classification model.
         """
-        self.__create_model__()
+        df = self.__create_model__()
         self.__train_model__()
         self.__evaluate_model__()
         self.__predict__()
         self.__save_model__()
-        # self.generate_word_cloud(corpus=" ".join(list(self.data["target"])))
-        # self.generate_scatter_plot()
+        self.generate_word_cloud(corpus=" ".join(list(self.data["target"])))
+        self.generate_scatter_plot(df)
         # self.logger.info(self.data.head())
         # self.data.to_csv("output/603_processed.csv", index=False)
 
@@ -288,7 +317,7 @@ class Classify:
         plt.axis("off")
         plt.show()
 
-    def generate_scatter_plot(self):
+    def generate_scatter_plot(self, data):
         """
         Generate the scatter plot for the data.
         """
@@ -296,7 +325,7 @@ class Classify:
         from matplotlib import pyplot as plt
 
         sns.scatterplot(
-            data=self.data,
+            data=data,
             x="x",
             y="y",
             hue="label",
