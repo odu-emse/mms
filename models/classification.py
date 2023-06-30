@@ -387,6 +387,15 @@ class Classify:
 
         self.logger.info("SVM run successfully")
 
+    def __run_word_cloud_per_cluster__(self, df: DataFrame):
+        """
+        Run the word cloud per cluster.
+        """
+
+        for i in sorted(df["label"].array.unique()):
+            corpus = " ".join(list(df[df["label"] == i]["target"]))
+            self.generate_word_cloud(corpus=corpus)
+
     def run(self) -> None:
         """
         Run the classification model.
@@ -398,8 +407,7 @@ class Classify:
         self.__save_model__()
         # self.generate_word_cloud(corpus=" ".join(list(self.data["target"])))
         # self.generate_scatter_plot(df)
-
-        # self.data.to_csv("output/603_processed.csv", index=False)
+        self.__run_word_cloud_per_cluster__(df)
 
     def generate_word_cloud(self, corpus: str):
         """
