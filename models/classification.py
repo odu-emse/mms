@@ -10,6 +10,10 @@ from sklearn.metrics import accuracy_score
 
 
 class Classify:
+    """
+    Classify the data into different clusters based on text content using embedding techniques and K means clustering.
+    """
+
     def __init__(
         self,
         path: str = "input/603_num.tsv",
