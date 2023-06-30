@@ -83,7 +83,7 @@ class Classify:
             self.logger.info("Scalar values converted to string successfully")
             self.logger.info(df.head())
         else:
-            self.logger.info("Scalar values converted to string successfully")
+            self.logger.debug("Scalar values converted to string successfully")
 
         return df
 
@@ -363,7 +363,10 @@ class Classify:
         from matplotlib import pyplot as plt
 
         wordcloud = WordCloud(
-            max_font_size=80, max_words=300, background_color="white"
+            max_font_size=80,
+            max_words=700,
+            background_color="white",
+            stopwords=self.stop_words,
         ).generate(corpus)
         plt.figure(figsize=(10, 10))
         plt.imshow(wordcloud, interpolation="bilinear")
@@ -395,19 +398,21 @@ def main():
         "--path",
         "-p",
         type=str,
-        default="input/603_num.tsv",
+        default="input/603_trans.tsv",
         help="Path to the processed data",
     )
     parser.add_argument(
         "--download", "-d", type=bool, help="Download the required libraries"
     )
-    parser.add_argument("--verbose", "-v", type=bool, help="Print the logs")
+    parser.add_argument(
+        "--verbose", "-v", type=bool, help="Print the logs", default=True
+    )
     parser.add_argument(
         "--sep", "-s", type=str, default="\t", help="Separator for the data"
     )
     args = parser.parse_args()
 
-    classify = Classify(path=args.path, toDownload=False, verbose=False)
+    classify = Classify(path=args.path, toDownload=args.download, verbose=args.verbose)
     classify.read()
     classify.prepare(col="features")
     classify.run()
