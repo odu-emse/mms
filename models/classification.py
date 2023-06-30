@@ -231,6 +231,7 @@ class Classify:
         """
         import numpy as np
 
+        df = self.__merge_columns__(self.data, "features", "transcript")
         df = self.__preprocess_features__(col)
 
         df["label"] = ""
@@ -292,12 +293,12 @@ class Classify:
             Y_test=Test_Y,
         )
 
-        self.__run_svm__(
-            X_train=Train_X_Tfidf,
-            Y_train=Train_Y,
-            X_test=Test_X_Tfidf,
-            Y_test=Test_Y,
-        )
+        # self.__run_svm__(
+        #     X_train=Train_X_Tfidf,
+        #     Y_train=Train_Y,
+        #     X_test=Test_X_Tfidf,
+        #     Y_test=Test_Y,
+        # )
 
         self.logger.info("Model created successfully")
 
