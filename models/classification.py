@@ -109,6 +109,30 @@ class Classify:
             self.logger.debug("Columns merged successfully")
 
         return df
+
+    def __clean_transcript__(self, input: str) -> DataFrame:
+        """
+        Clean the transcript by removing special characters and numbers from text.
+        """
+        import re
+
+        if input == "nan":
+            return ""
+
+        return re.sub(
+            "([A-Z][a-z]+)",
+            r" \1",
+            re.sub(
+                "([A-Z]+)",
+                r" \1",
+                re.sub(
+                    r"[^a-zA-Z0-9]+",
+                    " ",
+                    input.replace("\\'", ""),
+                ),
+            ),
+        )
+
     def __clean_text__(self, input: str) -> str:
         """
         Clean the text by removing special characters.
