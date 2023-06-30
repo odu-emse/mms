@@ -413,19 +413,6 @@ class Classify:
             corpus = " ".join(list(df[df["label"] == i]["target"]))
             self.generate_word_cloud(corpus=corpus)
 
-    def run(self) -> None:
-        """
-        Run the classification model.
-        """
-        df = self.__create_model__()
-        self.__train_model__()
-        self.__evaluate_model__()
-        self.__predict__()
-        self.__save_model__()
-        # self.generate_word_cloud(corpus=" ".join(list(self.data["target"])))
-        # self.generate_scatter_plot(df)
-        self.__run_word_cloud_per_cluster__(df)
-
     def generate_word_cloud(self, corpus: str):
         """
         Generate the word cloud for the data.
@@ -459,6 +446,18 @@ class Classify:
             palette="tab10",
         )
         plt.show()
+
+    def run(self) -> None:
+        """
+        Run the classification model.
+        """
+        df = self.__create_model__()
+        self.__train_model__()
+        self.__evaluate_model__()
+        self.__predict__()
+        self.__save_model__()
+        self.generate_scatter_plot(df)
+        self.__run_word_cloud_per_cluster__(df)
 
 
 def main():
