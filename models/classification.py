@@ -87,6 +87,28 @@ class Classify:
 
         return df
 
+    def __merge_columns__(self, df: DataFrame, col1: str, col2: str) -> DataFrame:
+        """
+        Merge the values of the two DataFrame columns.
+        """
+        lst1 = list(df[col1])
+        lst2 = list(df[col2])
+
+        merged = []
+
+        for i in range(len(lst1)):
+            cleaned_transcript = self.__clean_transcript__(str(lst1[i]))
+            merged.append(lst1[i] + " " + cleaned_transcript)
+
+        df[col1] = merged
+
+        if self.verbose:
+            self.logger.info("Columns merged successfully")
+            self.logger.info(df.head())
+        else:
+            self.logger.debug("Columns merged successfully")
+
+        return df
     def __clean_text__(self, input: str) -> str:
         """
         Clean the text by removing special characters.
