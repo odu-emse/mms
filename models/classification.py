@@ -282,6 +282,9 @@ class Classify:
             train_df,
         )
 
+        self.logger.info("Top keywords per cluster in training set:")
+        self.__print_top_words_per_cluster__(Tfidf_vect, train_df, Train_X_Tfidf)
+
         self.__run_pca__(Train_X_Tfidf, train_df)
 
         print(train_df.head())
@@ -303,6 +306,19 @@ class Classify:
         self.logger.info("Model created successfully")
 
         return train_df
+
+    def __print_top_words_per_cluster__(self, vectorizer, df: DataFrame, X: list, n=10):
+        """
+        This function returns the keywords for each centroid of the KMeans
+        """
+        import numpy as np
+
+        data = pd.DataFrame(X.toarray()).groupby(df["label"]).mean()
+        terms = vectorizer.get_feature_names_out()
+
+        for i, r in data.iterrows():
+            print("\nCluster {}".format(i))
+            print(", ".join([terms[t] for t in np.argsort(r)[-n:]]))
 
     def __train_model__(self):
         """
