@@ -61,7 +61,7 @@ class Classify:
 
         if self.verbose:
             self.logger.info("Data read successfully")
-            self.logger.info(self.data.head())
+            print(self.data.head())
         else:
             self.logger.info("Data read successfully")
 
@@ -81,7 +81,7 @@ class Classify:
 
         if self.verbose:
             self.logger.info("Scalar values converted to string successfully")
-            self.logger.info(df.head())
+            print(df.head())
         else:
             self.logger.debug("Scalar values converted to string successfully")
 
@@ -104,7 +104,7 @@ class Classify:
 
         if self.verbose:
             self.logger.info("Columns merged successfully")
-            self.logger.info(df.head())
+            print(df.head())
         else:
             self.logger.debug("Columns merged successfully")
 
@@ -165,7 +165,7 @@ class Classify:
         df[col] = payload
         if self.verbose:
             self.logger.info("Camel case text split successfully")
-            self.logger.info(df.head())
+            print(df.head())
         else:
             self.logger.info("Camel case text split successfully")
 
@@ -238,7 +238,7 @@ class Classify:
 
         if self.verbose:
             self.logger.info("Data prepared successfully")
-            self.logger.info(df.head())
+            print(df.head())
         else:
             self.logger.info("Data prepared successfully")
 
@@ -284,7 +284,7 @@ class Classify:
 
         self.__run_pca__(Train_X_Tfidf, train_df)
 
-        self.logger.info(train_df.head())
+        print(train_df.head())
 
         self.__run_naive_bayes__(
             X_train=Train_X_Tfidf,
