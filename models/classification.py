@@ -5,7 +5,6 @@ from nltk.tokenize import word_tokenize
 from nltk.stem import WordNetLemmatizer
 from nltk.tag import pos_tag
 from nltk.corpus import wordnet as wn
-from sklearn import naive_bayes, svm
 from sklearn.metrics import accuracy_score
 
 
@@ -17,6 +16,7 @@ class Classify:
     def __init__(
         self,
         path: str = "input/603_num.tsv",
+        outputPath: str = "output/603_clean.csv",
         toDownload: bool = True,
         verbose: bool = True,
     ) -> None:
@@ -26,6 +26,7 @@ class Classify:
 
         self.logger = logging.getLogger(__name__)
         self.filePath = path
+        self.outputPath = outputPath
         self.toDownload = toDownload
         self.data = None
         self.verbose = verbose
@@ -248,6 +249,7 @@ class Classify:
 
         self.data = df
         self.N_CLUSTER = int(np.sqrt(len(df)))
+        self._save_data_frame(df)
 
     def __create_model__(self, size=0.3):
         """
@@ -484,9 +486,21 @@ def main():
     parser.add_argument(
         "--sep", "-s", type=str, default="\t", help="Separator for the data"
     )
+    parser.add_argument(
+        "--out",
+        "-o",
+        type=str,
+        default="output/603_clean.csv",
+        help="Path to the output file",
+    )
     args = parser.parse_args()
 
-    classify = Classify(path=args.path, toDownload=args.download, verbose=args.verbose)
+    classify = Classify(
+        path=args.path,
+        toDownload=args.download,
+        verbose=args.verbose,
+        outputPath=args.out,
+    )
     classify.read()
     classify.prepare(col="features")
     classify.run()
