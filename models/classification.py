@@ -34,9 +34,9 @@ class Classify:
         self.N_CLUSTER = 0
 
         self.download()
-        self.__configure__()
+        self._configure()
 
-    def __configure__(self) -> None:
+    def _configure(self) -> None:
         self.stop_words.add("module")
         self.stop_words.add("problem")
         self.stop_words.add("use")
@@ -70,7 +70,7 @@ class Classify:
         else:
             self.logger.info("Data read successfully")
 
-    def __scalar_to_string__(self, df: DataFrame, col: str) -> DataFrame:
+    def _scalar_to_string(self, df: DataFrame, col: str) -> DataFrame:
         """
         Convert the scalar values for each row of the DataFrame column to a string.
         """
@@ -92,7 +92,7 @@ class Classify:
 
         return df
 
-    def __merge_columns__(self, df: DataFrame, col1: str, col2: str) -> DataFrame:
+    def _merge_columns(self, df: DataFrame, col1: str, col2: str) -> DataFrame:
         """
         Merge the values of the two DataFrame columns.
         """
@@ -102,7 +102,7 @@ class Classify:
         merged = []
 
         for i in range(len(lst1)):
-            cleaned_transcript = self.__clean_transcript__(str(lst1[i]))
+            cleaned_transcript = self._clean_transcript(str(lst1[i]))
             merged.append(lst1[i] + " " + cleaned_transcript)
 
         df[col1] = merged
@@ -115,7 +115,7 @@ class Classify:
 
         return df
 
-    def __clean_transcript__(self, input: str) -> DataFrame:
+    def _clean_transcript(self, input: str) -> DataFrame:
         """
         Clean the transcript by removing special characters and numbers from text.
         """
@@ -138,7 +138,7 @@ class Classify:
             ),
         )
 
-    def __clean_text__(self, input: str) -> str:
+    def _clean_text(self, input: str) -> str:
         """
         Clean the text by removing special characters.
         """
@@ -154,7 +154,7 @@ class Classify:
             ),
         )
 
-    def __split_camel_case__(self, df: DataFrame, col: str) -> DataFrame:
+    def _split_camel_case(self, df: DataFrame, col: str) -> DataFrame:
         """
         Split the words in the DataFrame column which are in camel case.
         """
@@ -163,7 +163,7 @@ class Classify:
         split_words = []
 
         for obj in lst:
-            split_words.append(self.__clean_text__(obj).split())
+            split_words.append(self._clean_text(obj).split())
 
         payload = [" ".join(entry) for entry in split_words]
 
@@ -176,7 +176,7 @@ class Classify:
 
         return df
 
-    def __stemmer__(self, df: DataFrame, col: str) -> DataFrame:
+    def _stemmer(self, df: DataFrame, col: str) -> DataFrame:
         """
         Stem the words in the DataFrame column.
         """
@@ -207,7 +207,7 @@ class Classify:
 
         return data
 
-    def __preprocess_features__(self, col: str) -> DataFrame:
+    def _preprocess_features(self, col: str) -> DataFrame:
         """
         1. turn entries to lower case
         2. remove special characters
@@ -220,13 +220,13 @@ class Classify:
         df = self.data.copy()
 
         # convert camel case text to separate words
-        df = self.__split_camel_case__(df, col)
+        df = self._split_camel_case(df, col)
 
         # for each row of the feature column, turn text to lowercase
         df[col] = [entry.lower() for entry in df[col]]
 
         # tokenize entries, stem words and remove stop words
-        df = self.__stemmer__(df, col)
+        df = self._stemmer(df, col)
 
         return df
 
@@ -236,8 +236,8 @@ class Classify:
         """
         import numpy as np
 
-        df = self.__merge_columns__(self.data, "features", "transcript")
-        df = self.__preprocess_features__(col)
+        df = self._merge_columns(self.data, "features", "transcript")
+        df = self._preprocess_features(col)
 
         df["label"] = ""
 
@@ -313,7 +313,7 @@ class Classify:
 
         return train_df
 
-    def __print_top_words_per_cluster__(self, vectorizer, df: DataFrame, X: list, n=10):
+    def _print_top_words_per_cluster(self, vectorizer, df: DataFrame, X: list, n=10):
         """
         This function returns the keywords for each centroid of the KMeans
         """
@@ -326,40 +326,48 @@ class Classify:
             print("\nCluster {}".format(i))
             print(", ".join([terms[t] for t in np.argsort(r)[-n:]]))
 
-    def __train_model__(self):
+    def _train_model(self):
         """
         Train the classification model.
         """
         pass
 
-    def __evaluate_model__(self):
+    def _evaluate_model(self):
         """
         Evaluate the classification model.
         """
         pass
 
-    def __predict__(self):
+    def _predict(self):
         """
         Predict the classification model.
         """
         pass
 
-    def __save_model__(self):
+    def _save_model(self):
         """
         Save the classification model.
         """
         pass
 
-    def __create_clusters__(self, X, df: DataFrame):
+    def _create_clusters(self, X, df: DataFrame, y_true):
         from sklearn.cluster import KMeans
 
         kmeans = KMeans(n_clusters=self.N_CLUSTER, random_state=0, n_init="auto").fit(X)
 
         df["label"] = kmeans.predict(X)
 
-        self.logger.info("Clusters created successfully")
+        if self.verbose:
+            self.logger.info("Clusters created successfully")
+            # print(df.head())
+            print(
+                "K-Means Accuracy Score -> ",
+                accuracy_score(y_true, y_pred=kmeans.predict(X)) * 100,
+            )
+        else:
+            self.logger.debug("Clusters created successfully")
 
-    def __run_pca__(self, X, df):
+    def _run_pca(self, X, df):
         import numpy as np
         from sklearn.decomposition import PCA
 
@@ -375,7 +383,7 @@ class Classify:
 
         self.logger.info("PCA run successfully")
 
-    def __run_naive_bayes__(self, X_train, Y_train, X_test, Y_test):
+    def _run_naive_bayes(self, X_train, Y_train, X_test, Y_test):
         """
         Run the naive bayes classification model.
         """
@@ -394,7 +402,7 @@ class Classify:
 
         self.logger.info("Naive Bayes run successfully")
 
-    def __run_svm__(self, X_train, Y_train, X_test, Y_test):
+    def _run_svm(self, X_train, Y_train, X_test, Y_test):
         """
         Run the svm classification model.
         """
@@ -410,7 +418,7 @@ class Classify:
 
         self.logger.info("SVM run successfully")
 
-    def __run_word_cloud_per_cluster__(self, df: DataFrame):
+    def _run_word_cloud_per_cluster(self, df: DataFrame):
         """
         Run the word cloud per cluster.
         """
@@ -418,6 +426,12 @@ class Classify:
         for i in sorted(df["label"].array.unique()):
             corpus = " ".join(list(df[df["label"] == i]["target"]))
             self.generate_word_cloud(corpus=corpus)
+
+    def _save_data_frame(self, df: DataFrame):
+        """
+        Save the data frame.
+        """
+        df.to_csv(self.outputPath, index=False)
 
     def generate_word_cloud(self, corpus: str):
         """
@@ -453,17 +467,28 @@ class Classify:
         )
         plt.show()
 
+    def generate_bar_plot(self, data):
+        """
+        Generate a bar plot that shows the number of documents per cluster.
+        """
+        import seaborn as sns
+        from matplotlib import pyplot as plt
+
+        sns.countplot(x="label", data=data)
+        plt.show()
+
     def run(self) -> None:
         """
         Run the classification model.
         """
-        df = self.__create_model__()
-        self.__train_model__()
-        self.__evaluate_model__()
-        self.__predict__()
-        self.__save_model__()
+        df = self._create_model()
+        self._train_model()
+        self._evaluate_model()
+        self._predict()
+        self._save_model()
         self.generate_scatter_plot(df)
-        self.__run_word_cloud_per_cluster__(df)
+        self.generate_bar_plot(df)
+        # self.__run_word_cloud_per_cluster__(df)
 
 
 def main():
