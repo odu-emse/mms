@@ -251,51 +251,75 @@ class Classify:
         self.N_CLUSTER = int(np.sqrt(len(df)))
         self._save_data_frame(df)
 
-    def __create_model__(self, size=0.3):
+    def _data_transformer(self, df: DataFrame, size: float = 0.3) -> tuple:
         """
-        Create the classification model.
+        Splits, fits, and transforms the data for the classification.
         """
-        from sklearn import model_selection
-        from sklearn.preprocessing import LabelEncoder
         from sklearn.feature_extraction.text import TfidfVectorizer
+        from sklearn.preprocessing import LabelEncoder
+        from sklearn.model_selection import train_test_split
 
-        Train_X, Test_X, Train_Y, Test_Y = model_selection.train_test_split(
-            self.data["target"], self.data["label"], test_size=size
+        Train_X, Test_X, Train_Y, Test_Y = train_test_split(
+            df["target"], df["label"], test_size=size
         )
 
         Encoder = LabelEncoder()
 
-        Encoder.fit(Train_Y)
+        Train_Y = Encoder.fit_transform(Train_Y)
 
-        Train_Y = Encoder.transform(Train_Y)
-
-        Test_Y = Encoder.transform(Test_Y)
+        Test_Y = Encoder.fit_transform(Test_Y)
 
         Tfidf_vect = TfidfVectorizer(max_features=5000)
 
-        Tfidf_vect.fit(self.data["target"])
+        Tfidf_vect.fit(df["target"])
 
         Train_X_Tfidf = Tfidf_vect.transform(Train_X)
 
         Test_X_Tfidf = Tfidf_vect.transform(Test_X)
 
+        return (
+            Train_X_Tfidf,
+            Test_X_Tfidf,
+            Train_Y,
+            Test_Y,
+            Train_X,
+            Train_Y,
+            Tfidf_vect,
+        )
+
+    def _create_model(self):
+        """
+        Create the classification model.
+        """
+
+        (
+            Train_X_Tfidf,
+            Test_X_Tfidf,
+            Train_Y,
+            Test_Y,
+            Train_X,
+            Train_Y,
+            Tfidf_vect,
+        ) = self._data_transformer(self.data)
+
         train_df = pd.DataFrame(
             Train_X, columns=["target", "label"], index=Train_X.index
         )
 
-        self.__create_clusters__(
+        self._create_clusters(
             Train_X_Tfidf,
             train_df,
+            y_true=Train_Y,
         )
 
         self.logger.info("Top keywords per cluster in training set:")
-        self.__print_top_words_per_cluster__(Tfidf_vect, train_df, Train_X_Tfidf)
+        self._print_top_words_per_cluster(Tfidf_vect, train_df, Train_X_Tfidf)
 
-        self.__run_pca__(Train_X_Tfidf, train_df)
+        self._run_pca(Train_X_Tfidf, train_df)
 
         print(train_df.head())
 
-        self.__run_naive_bayes__(
+        self._run_naive_bayes(
             X_train=Train_X_Tfidf,
             Y_train=Train_Y,
             X_test=Test_X_Tfidf,
@@ -395,12 +419,14 @@ class Classify:
 
         predictions_NB = Naive.predict(X_test)
 
-        print(
-            "Naive Bayes Accuracy Score -> ",
-            accuracy_score(predictions_NB, Y_test) * 100,
-        )
-
-        self.logger.info("Naive Bayes run successfully")
+        if self.verbose:
+            self.logger.info("Naive Bayes run successfully")
+            print(
+                "Naive Bayes Accuracy Score -> ",
+                accuracy_score(predictions_NB, Y_test) * 100,
+            )
+        else:
+            self.logger.debug("Naive Bayes run successfully")
 
     def _run_svm(self, X_train, Y_train, X_test, Y_test):
         """
@@ -416,7 +442,11 @@ class Classify:
 
         print("SVM Accuracy Score -> ", accuracy_score(predictions_SVM, Y_test) * 100)
 
-        self.logger.info("SVM run successfully")
+        if self.verbose:
+            self.logger.info("SVM run successfully")
+            print(predictions_SVM)
+        else:
+            self.logger.debug("SVM run successfully")
 
     def _run_word_cloud_per_cluster(self, df: DataFrame):
         """
