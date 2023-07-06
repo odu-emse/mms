@@ -15,7 +15,7 @@ class Classify:
 
     def __init__(
         self,
-        path: str = "input/603_num.tsv",
+        path: str = "input/603_trans_3.tsv",
         outputPath: str = "output/603_clean.csv",
         toDownload: bool = True,
         verbose: bool = True,
@@ -44,6 +44,20 @@ class Classify:
         self.stop_words.add("solution")
         self.stop_words.add("solve")
         self.stop_words.add("analyze")
+        self.stop_words.add("example")
+        self.stop_words.add("application")
+        self.stop_words.add("computer")
+        self.stop_words.add("computers")
+        self.stop_words.add("one")
+        self.stop_words.add("two")
+        self.stop_words.add("three")
+        self.stop_words.add("four")
+        self.stop_words.add("five")
+        self.stop_words.add("six")
+        self.stop_words.add("seven")
+        self.stop_words.add("eight")
+        self.stop_words.add("x")
+        self.stop_words.add("c")
 
     def download(self):
         """
@@ -66,7 +80,8 @@ class Classify:
 
         if self.verbose:
             self.logger.info("Data read successfully")
-            print(self.data.head())
+            row, col = self.data.shape
+            self.logger.info(f"Rows: {row}, Columns: {col}")
         else:
             self.logger.info("Data read successfully")
 
@@ -102,7 +117,7 @@ class Classify:
         merged = []
 
         for i in range(len(lst1)):
-            cleaned_transcript = self._clean_transcript(str(lst1[i]))
+            cleaned_transcript = self._clean_transcript(str(lst2[i]))
             merged.append(lst1[i] + " " + cleaned_transcript)
 
         df[col1] = merged
@@ -120,38 +135,42 @@ class Classify:
         Clean the transcript by removing special characters and numbers from text.
         """
         import re
+        from string import digits
 
         if input == "nan":
             return ""
 
-        return re.sub(
-            "([A-Z][a-z]+)",
-            r" \1",
-            re.sub(
-                "([A-Z]+)",
+        else:
+            cleaned = re.sub(
+                "([A-Z][a-z]+)",
                 r" \1",
                 re.sub(
-                    r"[^a-zA-Z0-9]+",
-                    " ",
-                    input.replace("\\'", ""),
+                    "([A-Z]+)",
+                    r" \1",
+                    re.sub(
+                        r"[^a-zA-Z0-9]+",
+                        " ",
+                        input.replace("\\'", ""),
+                    ),
                 ),
-            ),
-        )
+            )
+
+            remove_digits = str.maketrans("", "", digits)
+
+            return cleaned.translate(remove_digits)
 
     def _clean_text(self, input: str) -> str:
         """
-        Clean the text by removing special characters.
+        Clean the text by removing special characters, and digits from the input string.
         """
         import re
 
+        if input == "nan":
+            return ""
         return re.sub(
-            "([A-Z][a-z]+)",
-            r" \1",
-            re.sub(
-                "([A-Z]+)",
-                r" \1",
-                input.replace("\\'", ""),
-            ),
+            r"[^a-zA-Z]+",
+            " ",
+            input.replace("\\'", ""),
         )
 
     def _split_camel_case(self, df: DataFrame, col: str) -> DataFrame:
@@ -518,7 +537,7 @@ class Classify:
         self._save_model()
         self.generate_scatter_plot(df)
         self.generate_bar_plot(df)
-        # self.__run_word_cloud_per_cluster__(df)
+        self._run_word_cloud_per_cluster(df)
 
 
 def main():
@@ -529,7 +548,7 @@ def main():
         "--path",
         "-p",
         type=str,
-        default="input/603_trans.tsv",
+        default="input/603_trans_3.tsv",
         help="Path to the processed data",
     )
     parser.add_argument(
