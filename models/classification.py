@@ -268,6 +268,7 @@ class Classify:
 
         self.data = df
         self.N_CLUSTER = int(np.sqrt(len(df)))
+        self.generate_count_plot(data=df)
         self._save_data_frame(df)
 
     def _data_transformer(self, df: DataFrame, size: float = 0.3) -> tuple:
@@ -324,6 +325,8 @@ class Classify:
         train_df = pd.DataFrame(
             Train_X, columns=["target", "label"], index=Train_X.index
         )
+
+        self.generate_elbow_plot(X=Train_X_Tfidf)
 
         self._create_clusters(
             Train_X_Tfidf,
@@ -524,6 +527,37 @@ class Classify:
         from matplotlib import pyplot as plt
 
         sns.countplot(x="label", data=data)
+        plt.show()
+
+    def generate_elbow_plot(self, X):
+        """
+        Generate the elbow plot for the data that shows the most optimal number of clusters that should be used based on sum of squared distances.
+        """
+        import matplotlib.pyplot as plt
+        from sklearn.cluster import KMeans
+
+        Sum_of_squared_distances = []
+        K = range(2, self.N_CLUSTER * 2)
+
+        for k in K:
+            km = KMeans(n_clusters=k, max_iter=200, n_init=10)
+            km = km.fit(X)
+            Sum_of_squared_distances.append(km.inertia_)
+
+        plt.plot(K, Sum_of_squared_distances, "bx-")
+        plt.xlabel("k")
+        plt.ylabel("Sum_of_squared_distances")
+        plt.title("Elbow Method For Optimal k")
+        plt.show()
+
+    def generate_count_plot(self, data):
+        """
+        Generate a bar plot that sums the number of rows that share the same prefix value.
+        """
+        import seaborn as sns
+        from matplotlib import pyplot as plt
+
+        sns.countplot(x="prefix", data=data)
         plt.show()
 
     def run(self) -> None:
