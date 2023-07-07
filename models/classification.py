@@ -340,21 +340,12 @@ class Classify:
 
         self._run_pca(Train_X_Tfidf, train_df)
 
-        print(train_df.head())
-
         self._run_naive_bayes(
             X_train=Train_X_Tfidf,
             Y_train=Train_Y,
             X_test=Test_X_Tfidf,
             Y_test=Test_Y,
         )
-
-        # self.__run_svm__(
-        #     X_train=Train_X_Tfidf,
-        #     Y_train=Train_Y,
-        #     X_test=Test_X_Tfidf,
-        #     Y_test=Test_Y,
-        # )
 
         self.logger.info("Model created successfully")
 
@@ -482,7 +473,7 @@ class Classify:
 
     def _save_data_frame(self, df: DataFrame):
         """
-        Save the data frame.
+        Save the data frame as a CSV file.
         """
         df.to_csv(self.outputPath, index=False)
 
