@@ -58,6 +58,8 @@ class Classify:
         self.stop_words.add("eight")
         self.stop_words.add("x")
         self.stop_words.add("c")
+        self.stop_words.add("go")
+        self.stop_words.add("constraint")
 
     def download(self):
         """
@@ -211,10 +213,9 @@ class Classify:
 
         data["tokens"] = [word_tokenize(entry) for entry in data[col]]
 
+        stemmer = WordNetLemmatizer()
         for index, entry in enumerate(data["tokens"]):
             final_words = []
-            stemmer = WordNetLemmatizer()
-
             for word, tag in pos_tag(entry):
                 word_final = stemmer.lemmatize(word, tag_map[tag[0]])
                 if word_final not in self.stop_words and word_final.isalpha():
