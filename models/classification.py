@@ -290,13 +290,15 @@ class Classify:
 
         Test_Y = Encoder.fit_transform(Test_Y)
 
-        Tfidf_vect = TfidfVectorizer(max_features=5000)
+        Tfidf_vect = TfidfVectorizer(max_features=10000)
 
         Tfidf_vect.fit(df["target"])
 
         Train_X_Tfidf = Tfidf_vect.transform(Train_X)
 
         Test_X_Tfidf = Tfidf_vect.transform(Test_X)
+
+        self._predict_clusters(Tfidf_vect.transform(df["target"]), df)
 
         return (
             Train_X_Tfidf,
@@ -388,16 +390,39 @@ class Classify:
         """
         pass
 
+    def _predict_clusters(self, X, df: DataFrame):
+        from sklearn.cluster import KMeans
+
+        kmeans = KMeans(
+            n_clusters=7, random_state=0, n_init="auto", init="k-means++", max_iter=500
+        ).fit(X)
+
+        title = df["name"]
+        labels = kmeans.labels_
+
+        wiki_cl = pd.DataFrame(list(zip(title, labels)), columns=["title", "cluster"])
+
+        print(wiki_cl.sort_values(by=["cluster"]))
+        print(
+            "K-Means Accuracy Score -> ",
+            accuracy_score(y_true=df["prefix"], y_pred=kmeans.predict(X)) * 100,
+        )
+
     def _create_clusters(self, X, df: DataFrame, y_true):
         from sklearn.cluster import KMeans
 
-        kmeans = KMeans(n_clusters=self.N_CLUSTER, random_state=0, n_init="auto").fit(X)
+        kmeans = KMeans(
+            n_clusters=self.N_CLUSTER,
+            random_state=0,
+            n_init="auto",
+            init="k-means++",
+            max_iter=500,
+        ).fit(X)
 
         df["label"] = kmeans.predict(X)
 
         if self.verbose:
             self.logger.info("Clusters created successfully")
-            # print(df.head())
             print(
                 "K-Means Accuracy Score -> ",
                 accuracy_score(y_true, y_pred=kmeans.predict(X)) * 100,
