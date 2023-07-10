@@ -97,7 +97,7 @@ class Classify:
         if self.verbose:
             self.logger.info("Data read successfully")
             row, col = self.data.shape
-            self.logger.info(f"Rows: {row}, Columns: {col}")
+            self.logger.info(f"Shape of data read \nRows: {row}, Columns: {col}")
         else:
             self.logger.info("Data read successfully")
 
@@ -303,13 +303,11 @@ class Classify:
 
         Test_Y = Encoder.fit_transform(Test_Y)
 
-        Tfidf_vect = self.vectorizer
+        self.vectorizer.fit(df["target"])
 
-        Tfidf_vect.fit(df["target"])
+        Train_X_Tfidf = self.vectorizer.transform(Train_X)
 
-        Train_X_Tfidf = Tfidf_vect.transform(Train_X)
-
-        Test_X_Tfidf = Tfidf_vect.transform(Test_X)
+        Test_X_Tfidf = self.vectorizer.transform(Test_X)
 
         self.train_x = Train_X
         self.test_x = Test_X
@@ -370,6 +368,7 @@ class Classify:
         for i, r in data.iterrows():
             print("\nCluster {}".format(i))
             print(", ".join([terms[t] for t in np.argsort(r)[-n:]]))
+        print("\n")
 
     def _train_model(self):
         """
@@ -432,6 +431,7 @@ class Classify:
                 "K-Means Accuracy Score -> ",
                 accuracy_score(self.train_y, y_pred=kmeans.predict(X)) * 100,
             )
+            print("\n")
         else:
             self.logger.debug("Clusters created successfully")
 
