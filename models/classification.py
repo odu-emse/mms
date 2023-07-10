@@ -320,11 +320,15 @@ class Classify:
 
         # self._predict_clusters(Tfidf_vect.transform(df["target"]), df)
 
-        # self.generate_heat_map(X=Train_X_Tfidf, df=)
+        (sim_array, mask) = self._calculate_similarity(Train_X_Tfidf)
+
+        self._print_sorted_similarities(sim_arr=sim_array, threshold=0.4)
+
+        self.generate_heat_map(sim_array, mask)
 
         # self.generate_elbow_plot(X=Train_X_Tfidf)
 
-        return Tfidf_vect
+        return self.vectorizer
 
     def _create_model(self):
         """
@@ -578,22 +582,35 @@ class Classify:
         sns.countplot(x="prefix", data=data)
         plt.show()
 
-    def generate_heat_map(self, X, df: DataFrame):
+    def _calculate_similarity(self, X):
+        import numpy as np
+        from sklearn.metrics.pairwise import cosine_similarity
+
+        sim_arr = cosine_similarity(X.toarray())
+
+        mask = np.triu(np.ones_like(sim_arr, dtype=bool))
+
+        return sim_arr, mask
+
+    def generate_heat_map(self, arr, mask):
         """
         Generate a heat map that shows the correlation between the documents, using the name column of the data frame as the tick label.
         """
         import seaborn as sns
         from matplotlib import pyplot as plt
-        from sklearn.metrics.pairwise import cosine_similarity
 
-        sim_arr = cosine_similarity(X.toarray())
-
-        self._print_sorted_similarities(sim_arr)
-
-        sns.heatmap(sim_arr, xticklabels=df["name"], yticklabels=df["name"])
+        sns.heatmap(
+            arr,
+            mask=mask,
+            square=True,
+            robust=True,
+            annot=True,
+            cmap="YlGnBu",
+            fmt=".2f",
+        )
         plt.show()
 
-    def _print_sorted_similarities(self, sim_arr):
+    def _print_sorted_similarities(self, sim_arr, threshold=0) -> DataFrame:
         """
         Store the similarities between the documents in a data frame that is sorted by the similarity score in descending order. Removing the diagonal values.
         """
@@ -603,7 +620,12 @@ class Classify:
         df = df.stack().reset_index()
         df.columns = ["Document 1", "Document 2", "Similarity Score"]
         df = df.sort_values(by=["Similarity Score"], ascending=False)
-        print(df[df["Document 1"] != df["Document 2"]])
+        filtered_df = df[df["Document 1"] != df["Document 2"]]
+        top = filtered_df[filtered_df["Similarity Score"] > threshold]
+
+        print(top.head(15))
+
+        return top
 
     def run(self) -> None:
         """
