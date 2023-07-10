@@ -6,6 +6,8 @@ from nltk.stem import WordNetLemmatizer
 from nltk.tag import pos_tag
 from nltk.corpus import wordnet as wn
 from sklearn.metrics import accuracy_score
+from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.preprocessing import LabelEncoder
 
 
 class Classify:
@@ -32,6 +34,13 @@ class Classify:
         self.verbose = verbose
         self.stop_words = set(stopwords.words("english"))
         self.N_CLUSTER = 0
+        self.train_x = None
+        self.train_y = None
+        self.test_x = None
+        self.test_y = None
+        self.lemmatizer = WordNetLemmatizer()
+        self.vectorizer = TfidfVectorizer(max_features=10000)
+        self.encoder = LabelEncoder()
 
         self.download()
         self._configure()
@@ -60,6 +69,7 @@ class Classify:
         self.stop_words.add("c")
         self.stop_words.add("go")
         self.stop_words.add("constraint")
+        self.stop_words.add("get")
 
     def download(self):
         """
@@ -213,7 +223,7 @@ class Classify:
 
         data["tokens"] = [word_tokenize(entry) for entry in data[col]]
 
-        stemmer = WordNetLemmatizer()
+        stemmer = self.lemmatizer
         for index, entry in enumerate(data["tokens"]):
             final_words = []
             for word, tag in pos_tag(entry):
@@ -276,21 +286,24 @@ class Classify:
         """
         Splits, fits, and transforms the data for the classification.
         """
-        from sklearn.feature_extraction.text import TfidfVectorizer
-        from sklearn.preprocessing import LabelEncoder
         from sklearn.model_selection import train_test_split
 
         Train_X, Test_X, Train_Y, Test_Y = train_test_split(
             df["target"], df["label"], test_size=size
         )
 
-        Encoder = LabelEncoder()
+        self.train_x = Train_X
+        self.test_x = Test_X
+        self.train_y = Train_Y
+        self.test_y = Test_Y
+
+        Encoder = self.encoder
 
         Train_Y = Encoder.fit_transform(Train_Y)
 
         Test_Y = Encoder.fit_transform(Test_Y)
 
-        Tfidf_vect = TfidfVectorizer(max_features=10000)
+        Tfidf_vect = self.vectorizer
 
         Tfidf_vect.fit(df["target"])
 
@@ -303,10 +316,6 @@ class Classify:
         return (
             Train_X_Tfidf,
             Test_X_Tfidf,
-            Train_Y,
-            Test_Y,
-            Train_X,
-            Train_Y,
             Tfidf_vect,
         )
 
@@ -318,15 +327,11 @@ class Classify:
         (
             Train_X_Tfidf,
             Test_X_Tfidf,
-            Train_Y,
-            Test_Y,
-            Train_X,
-            Train_Y,
             Tfidf_vect,
         ) = self._data_transformer(self.data)
 
         train_df = pd.DataFrame(
-            Train_X, columns=["target", "label"], index=Train_X.index
+            self.train_x, columns=["target", "label"], index=self.train_x.index
         )
 
         self.generate_elbow_plot(X=Train_X_Tfidf)
@@ -334,7 +339,6 @@ class Classify:
         self._create_clusters(
             Train_X_Tfidf,
             train_df,
-            y_true=Train_Y,
         )
 
         self.logger.info("Top keywords per cluster in training set:")
@@ -344,9 +348,9 @@ class Classify:
 
         self._run_naive_bayes(
             X_train=Train_X_Tfidf,
-            Y_train=Train_Y,
+            Y_train=self.train_y,
             X_test=Test_X_Tfidf,
-            Y_test=Test_Y,
+            Y_test=self.test_y,
         )
 
         self.logger.info("Model created successfully")
@@ -408,7 +412,7 @@ class Classify:
             accuracy_score(y_true=df["prefix"], y_pred=kmeans.predict(X)) * 100,
         )
 
-    def _create_clusters(self, X, df: DataFrame, y_true):
+    def _create_clusters(self, X, df: DataFrame):
         from sklearn.cluster import KMeans
 
         kmeans = KMeans(
@@ -425,7 +429,7 @@ class Classify:
             self.logger.info("Clusters created successfully")
             print(
                 "K-Means Accuracy Score -> ",
-                accuracy_score(y_true, y_pred=kmeans.predict(X)) * 100,
+                accuracy_score(self.train_y, y_pred=kmeans.predict(X)) * 100,
             )
         else:
             self.logger.debug("Clusters created successfully")
