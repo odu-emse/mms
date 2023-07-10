@@ -281,7 +281,7 @@ class Classify:
 
         self.data = df
         self.N_CLUSTER = int(np.sqrt(len(df)))
-        self.generate_count_plot(data=df)
+        # self.generate_count_plot(data=df)
         self._save_data_frame(df)
 
     def _data_transformer(self, df: DataFrame, size: float = 0.3) -> tuple:
@@ -575,6 +575,33 @@ class Classify:
         sns.countplot(x="prefix", data=data)
         plt.show()
 
+    def generate_heat_map(self, X, df: DataFrame):
+        """
+        Generate a heat map that shows the correlation between the documents, using the name column of the data frame as the tick label.
+        """
+        import seaborn as sns
+        from matplotlib import pyplot as plt
+        from sklearn.metrics.pairwise import cosine_similarity
+
+        sim_arr = cosine_similarity(X.toarray())
+
+        self._print_sorted_similarities(sim_arr)
+
+        sns.heatmap(sim_arr, xticklabels=df["name"], yticklabels=df["name"])
+        plt.show()
+
+    def _print_sorted_similarities(self, sim_arr):
+        """
+        Store the similarities between the documents in a data frame that is sorted by the similarity score in descending order. Removing the diagonal values.
+        """
+        import pandas as pd
+
+        df = pd.DataFrame(sim_arr)
+        df = df.stack().reset_index()
+        df.columns = ["Document 1", "Document 2", "Similarity Score"]
+        df = df.sort_values(by=["Similarity Score"], ascending=False)
+        print(df[df["Document 1"] != df["Document 2"]])
+
     def run(self) -> None:
         """
         Run the classification model.
@@ -585,8 +612,8 @@ class Classify:
         self._predict()
         self._save_model()
         self.generate_scatter_plot(df)
-        self.generate_bar_plot(df)
-        self._run_word_cloud_per_cluster(df)
+        # self.generate_bar_plot(df)
+        # self._run_word_cloud_per_cluster(df)
 
 
 def main():
