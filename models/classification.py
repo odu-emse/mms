@@ -21,6 +21,7 @@ class Classify:
         outputPath: str = "output/603_clean.csv",
         toDownload: bool = True,
         verbose: bool = True,
+        visualize: bool = True,
     ) -> None:
         import logging
 
@@ -32,6 +33,7 @@ class Classify:
         self.toDownload = toDownload
         self.data = None
         self.verbose = verbose
+        self.viz = visualize
         self.stop_words = set(stopwords.words("english"))
         self.N_CLUSTER = 0
         self.train_x = None
@@ -281,10 +283,11 @@ class Classify:
 
         self.data = df
         self.N_CLUSTER = int(np.sqrt(len(df)))
-        # self.generate_count_plot(data=df)
+        if self.viz == True:
+            self.generate_count_plot(data=df)
         self._save_data_frame(df)
 
-    def _data_transformer(self, df: DataFrame, size: float = 0.3) -> tuple:
+    def _data_transformer(self, df: DataFrame, size: float = 0.3):
         """
         Splits, fits, and transforms the data for the classification.
         """
@@ -611,9 +614,10 @@ class Classify:
         self._evaluate_model()
         self._predict()
         self._save_model()
-        self.generate_scatter_plot(df)
-        # self.generate_bar_plot(df)
-        # self._run_word_cloud_per_cluster(df)
+        if self.viz == True:
+            self.generate_scatter_plot(df)
+            self.generate_bar_plot(df)
+            self._run_word_cloud_per_cluster(df)
 
 
 def main():
@@ -650,6 +654,7 @@ def main():
         toDownload=args.download,
         verbose=args.verbose,
         outputPath=args.out,
+        visualize=True,
     )
     classify.read()
     classify.prepare(col="features")
