@@ -38,6 +38,8 @@ class Classify:
         self.train_y = None
         self.test_x = None
         self.test_y = None
+        self.train_x_vector = None
+        self.test_x_vector = None
         self.lemmatizer = WordNetLemmatizer()
         self.vectorizer = TfidfVectorizer(max_features=10000)
         self.encoder = LabelEncoder()
@@ -292,11 +294,6 @@ class Classify:
             df["target"], df["label"], test_size=size
         )
 
-        self.train_x = Train_X
-        self.test_x = Test_X
-        self.train_y = Train_Y
-        self.test_y = Test_Y
-
         Encoder = self.encoder
 
         Train_Y = Encoder.fit_transform(Train_Y)
@@ -311,47 +308,42 @@ class Classify:
 
         Test_X_Tfidf = Tfidf_vect.transform(Test_X)
 
-        self._predict_clusters(Tfidf_vect.transform(df["target"]), df)
+        self.train_x = Train_X
+        self.test_x = Test_X
+        self.train_y = Train_Y
+        self.test_y = Test_Y
+        self.train_x_vector = Train_X_Tfidf
+        self.test_x_vector = Test_X_Tfidf
 
-        return (
-            Train_X_Tfidf,
-            Test_X_Tfidf,
-            Tfidf_vect,
-        )
+        # self._predict_clusters(Tfidf_vect.transform(df["target"]), df)
+
+        # self.generate_heat_map(X=Train_X_Tfidf, df=)
+
+        # self.generate_elbow_plot(X=Train_X_Tfidf)
+
+        return Tfidf_vect
 
     def _create_model(self):
         """
         Create the classification model.
         """
 
-        (
-            Train_X_Tfidf,
-            Test_X_Tfidf,
-            Tfidf_vect,
-        ) = self._data_transformer(self.data)
+        Tfidf_vect = self._data_transformer(self.data)
 
         train_df = pd.DataFrame(
             self.train_x, columns=["target", "label"], index=self.train_x.index
         )
 
-        self.generate_elbow_plot(X=Train_X_Tfidf)
-
         self._create_clusters(
-            Train_X_Tfidf,
+            self.train_x_vector,
             train_df,
         )
 
-        self.logger.info("Top keywords per cluster in training set:")
-        self._print_top_words_per_cluster(Tfidf_vect, train_df, Train_X_Tfidf)
+        self._print_top_words_per_cluster(Tfidf_vect, train_df, self.train_x_vector)
 
-        self._run_pca(Train_X_Tfidf, train_df)
+        self._run_pca(self.train_x_vector, train_df)
 
-        self._run_naive_bayes(
-            X_train=Train_X_Tfidf,
-            Y_train=self.train_y,
-            X_test=Test_X_Tfidf,
-            Y_test=self.test_y,
-        )
+        self._run_naive_bayes()
 
         self.logger.info("Model created successfully")
 
@@ -365,6 +357,8 @@ class Classify:
 
         data = pd.DataFrame(X.toarray()).groupby(df["label"]).mean()
         terms = vectorizer.get_feature_names_out()
+
+        self.logger.info("Top keywords per cluster in training set:")
 
         for i, r in data.iterrows():
             print("\nCluster {}".format(i))
@@ -450,7 +444,7 @@ class Classify:
 
         self.logger.info("PCA run successfully")
 
-    def _run_naive_bayes(self, X_train, Y_train, X_test, Y_test):
+    def _run_naive_bayes(self):
         """
         Run the naive bayes classification model.
         """
@@ -458,15 +452,15 @@ class Classify:
 
         Naive = MultinomialNB()
 
-        Naive.fit(X_train, Y_train)
+        Naive.fit(self.train_x_vector, self.train_y)
 
-        predictions_NB = Naive.predict(X_test)
+        predictions_NB = Naive.predict(self.test_x_vector)
 
         if self.verbose:
             self.logger.info("Naive Bayes run successfully")
             print(
                 "Naive Bayes Accuracy Score -> ",
-                accuracy_score(predictions_NB, Y_test) * 100,
+                accuracy_score(predictions_NB, self.test_y) * 100,
             )
         else:
             self.logger.debug("Naive Bayes run successfully")
