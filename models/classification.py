@@ -439,7 +439,7 @@ class Classify:
         import numpy as np
         from sklearn.decomposition import PCA
 
-        pca = PCA(n_components=int(np.sqrt(len(df))) // 2, random_state=42)
+        pca = PCA(n_components=2, random_state=42)
 
         red_feat = pca.fit_transform(X.toarray())
 
@@ -448,6 +448,8 @@ class Classify:
 
         df["x"] = x
         df["y"] = y
+
+        self.generate_scatter_plot(df)
 
         self.logger.info("PCA run successfully")
 
@@ -532,13 +534,7 @@ class Classify:
         import seaborn as sns
         from matplotlib import pyplot as plt
 
-        sns.scatterplot(
-            data=data,
-            x="x",
-            y="y",
-            hue="label",
-            palette="tab10",
-        )
+        sns.scatterplot(data=data, x="x", y="y", hue="label", palette="tab10")
         plt.show()
 
     def generate_bar_plot(self, data):
@@ -676,7 +672,7 @@ def main():
         toDownload=args.download,
         verbose=args.verbose,
         outputPath=args.out,
-        visualize=True,
+        visualize=False,
     )
     classify.read()
     classify.prepare(col="features")
