@@ -316,43 +316,55 @@ class Classify:
         self.train_x_vector = Train_X_Tfidf
         self.test_x_vector = Test_X_Tfidf
 
-        # self._predict_clusters(Tfidf_vect.transform(df["target"]), df)
+        if self.verbose:
+            self.logger.info("Data transformed successfully")
+            print(df.head())
+        else:
+            self.logger.info("Data transformed successfully")
 
-        (sim_array, mask) = self._calculate_similarity(Train_X_Tfidf)
+    def _data_encoder(self, df: DataFrame, col: str = "cluster") -> DataFrame:
+        """
+        Encode the data for the classification.
+        """
+        from sklearn.preprocessing import LabelEncoder
 
-        self._print_sorted_similarities(sim_arr=sim_array, threshold=0.4)
+        df[col] = self.encoder.fit_transform(df[col])
 
-        self.generate_heat_map(sim_array, mask)
-
-        # self.generate_elbow_plot(X=Train_X_Tfidf)
-
-        return self.vectorizer
+        return df
 
     def _create_model(self):
         """
         Create the classification model.
         """
 
-        Tfidf_vect = self._data_transformer(self.data)
+        self._data_transformer()
 
-        train_df = pd.DataFrame(
-            self.train_x, columns=["target", "label"], index=self.train_x.index
+        self._run_nearest_neighbors(
+            Train_X_Tfidf=self.train_x_vector,
+            Test_X_Tfidf=self.test_x_vector,
+            Train_Y=self.train_y,
+            Test_Y=self.test_y,
+            algo="brute",
+            metric="cosine",
+            weights="distance",
         )
 
-        self._create_clusters(
-            self.train_x_vector,
-            train_df,
+        # self._create_clusters(
+        #     self.train_x_vector,
+        #     train_df,
+        # )
+
+        self._print_top_words_per_cluster(
+            self.vectorizer, self.data, self.train_x_vector
         )
 
-        self._print_top_words_per_cluster(Tfidf_vect, train_df, self.train_x_vector)
+        # self._run_pca(self.train_x_vector, train_df)
 
-        self._run_pca(self.train_x_vector, train_df)
-
-        self._run_naive_bayes()
+        # self._run_naive_bayes()
 
         self.logger.info("Model created successfully")
 
-        return train_df
+        # return train_df
 
     def _print_top_words_per_cluster(self, vectorizer, df: DataFrame, X: list, n=10):
         """
@@ -394,23 +406,51 @@ class Classify:
         """
         pass
 
-    def _predict_clusters(self, X, df: DataFrame):
-        from sklearn.cluster import KMeans
+    def _run_nearest_neighbors(
+        self,
+        Train_X_Tfidf,
+        Test_X_Tfidf,
+        Train_Y,
+        Test_Y,
+        algo: str,
+        metric: str,
+        weights: str,
+    ):
+        """
+        Run the nearest neighbors algorithm.
+        """
+        from sklearn.neighbors import KNeighborsClassifier
+        from sklearn.metrics import accuracy_score
+        from sklearn.model_selection import cross_val_score
 
-        kmeans = KMeans(
-            n_clusters=7, random_state=0, n_init="auto", init="k-means++", max_iter=500
-        ).fit(X)
-
-        title = df["name"]
-        labels = kmeans.labels_
-
-        wiki_cl = pd.DataFrame(list(zip(title, labels)), columns=["title", "cluster"])
-
-        print(wiki_cl.sort_values(by=["cluster"]))
-        print(
-            "K-Means Accuracy Score -> ",
-            accuracy_score(y_true=df["prefix"], y_pred=kmeans.predict(X)) * 100,
+        knn = KNeighborsClassifier(
+            n_neighbors=5,
+            weights=weights,
+            algorithm=algo,
+            metric=metric,
+            n_jobs=1,
+            metric_params=None,
+            leaf_size=30,
+            p=2,
         )
+
+        knn.fit(Train_X_Tfidf, Train_Y)
+
+        predicted = knn.predict(Test_X_Tfidf)
+
+        acc = accuracy_score(Test_Y, predicted)
+
+        print("Accuracy: ", str(acc * 100) + "%")
+
+        scores = cross_val_score(knn, Train_X_Tfidf, Train_Y, cv=3)
+
+        print(
+            "Cross Validation Accuracy: %0.2f (+/- %0.2f)"
+            % (scores.mean(), scores.std() * 2)
+        )
+
+        print(predicted)
+        print(scores)
 
     def _create_clusters(self, X, df: DataFrame):
         from sklearn.cluster import KMeans
