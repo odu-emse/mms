@@ -8,6 +8,7 @@ from nltk.corpus import wordnet as wn
 from sklearn.metrics import accuracy_score
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.preprocessing import LabelEncoder
+from typing import Union
 
 
 class Classify:
@@ -18,7 +19,7 @@ class Classify:
     def __init__(
         self,
         path: str = "input/603_trans_3.tsv",
-        testPath: str | None = None,
+        testPath: Union[str, None] = None,
         outputPath: str = "output/",
         toDownload: bool = True,
         verbose: bool = True,
