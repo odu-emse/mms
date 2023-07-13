@@ -18,7 +18,8 @@ class Classify:
     def __init__(
         self,
         path: str = "input/603_trans_3.tsv",
-        outputPath: str = "output/603_clean.csv",
+        testPath=None,
+        outputPath: str = "output/",
         toDownload: bool = True,
         verbose: bool = True,
         visualize: bool = True,
@@ -29,9 +30,11 @@ class Classify:
 
         self.logger = logging.getLogger(__name__)
         self.filePath = path
+        self.testPath = testPath
         self.outputPath = outputPath
         self.toDownload = toDownload
         self.data = None
+        self.testData = None
         self.verbose = verbose
         self.viz = visualize
         self.stop_words = set(stopwords.words("english"))
@@ -667,15 +670,13 @@ class Classify:
         """
         Run the classification model.
         """
-        df = self._create_model()
-        self._train_model()
-        self._evaluate_model()
-        self._predict()
-        self._save_model()
+        self.read()
+        self.prepare(col="features")
+        self._create_model()
         if self.viz == True:
-            self.generate_scatter_plot(df)
-            self.generate_bar_plot(df)
-            self._run_word_cloud_per_cluster(df)
+            self._run_word_cloud_per_cluster(df=self.data)
+            if self.testPath is not None:
+                self.generate_scatter_plot(data=self.testData)
 
 
 def main():
@@ -713,9 +714,8 @@ def main():
         verbose=args.verbose,
         outputPath=args.out,
         visualize=False,
+        testPath="input/614_trans.tsv",
     )
-    classify.read()
-    classify.prepare(col="features")
     classify.run()
 
 
