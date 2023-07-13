@@ -77,6 +77,8 @@ class Classify:
         self.stop_words.add("go")
         self.stop_words.add("constraint")
         self.stop_words.add("get")
+        self.stop_words.add("ok")
+        self.stop_words.add("shift")
 
     def download(self):
         """
