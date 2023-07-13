@@ -18,7 +18,7 @@ class Classify:
     def __init__(
         self,
         path: str = "input/603_trans_3.tsv",
-        testPath=None,
+        testPath: str | None = None,
         outputPath: str = "output/",
         toDownload: bool = True,
         verbose: bool = True,
@@ -78,6 +78,7 @@ class Classify:
         self.stop_words.add("constraint")
         self.stop_words.add("get")
         self.stop_words.add("ok")
+        self.stop_words.add("uh")
         self.stop_words.add("shift")
 
     def download(self):
@@ -291,7 +292,7 @@ class Classify:
             df = self._merge_columns(
                 self.data, destinationCol="features", originCol="transcript"
             )
-            df = self._preprocess_features(col)
+            df = self._preprocess_features(col, self.data)
             df = df.drop(
                 ["features", "tokens", "hours", "prefix", "transcript", "number"],
                 axis=1,
@@ -409,9 +410,11 @@ class Classify:
 
         if self.verbose:
             self.logger.info("Data transformed successfully")
-            print(dfTrain.head())
             if self.testPath is not None:
+                print(dfTrain.head())
                 print(dfTest.head())
+            else:
+                print(df.head())
         else:
             self.logger.info("Data transformed successfully")
 
@@ -446,12 +449,13 @@ class Classify:
             vectorizer=self.vectorizer, df=self.data, X=self.train_x_vector
         )
 
-        self._print_top_words_per_cluster(
-            vectorizer=self.vectorizer,
-            df=self.testData,
-            X=self.test_x_vector,
-            train=False,
-        )
+        if self.testPath is not None:
+            self._print_top_words_per_cluster(
+                vectorizer=self.vectorizer,
+                df=self.testData,
+                X=self.test_x_vector,
+                train=False,
+            )
 
         # self._run_pca(self.train_x_vector, self.data)
 
@@ -560,8 +564,12 @@ class Classify:
         best_cv_index = 0
         y = []
         x = []
+        max_range: int = 10
 
-        for i in range(2, 10):
+        if self.testPath is None:
+            max_range = 7
+
+        for i in range(2, max_range):
             scores = cross_val_score(knn, Train_X_Tfidf, Train_Y, cv=i)
 
             self.logger.info(
@@ -799,6 +807,8 @@ class Classify:
             self._run_word_cloud_per_cluster(df=self.data)
             if self.testPath is not None:
                 self.generate_scatter_plot(data=self.testData)
+        if self.verbose == True:
+            self.logger.info("Successfully ran the classification model")
 
 
 def main():
@@ -835,7 +845,7 @@ def main():
         toDownload=args.download,
         verbose=args.verbose,
         outputPath=args.out,
-        visualize=False,
+        visualize=True,
         testPath="input/614_trans.tsv",
     )
     classify.run()
