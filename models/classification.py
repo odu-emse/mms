@@ -97,12 +97,22 @@ class Classify:
         """
         self.data = pd.read_csv(self.filePath, sep=sep)
 
+        if self.testPath is not None:
+            self.testData = pd.read_csv(self.testPath, sep=sep)
+
         if self.verbose:
-            self.logger.info("Data read successfully")
             row, col = self.data.shape
-            self.logger.info(f"Shape of data read \nRows: {row}, Columns: {col}")
+            self.logger.info(f"Shape of train data read \nRows: {row}, Columns: {col}")
+            if self.testPath is not None:
+                row, col = self.testData.shape
+                self.logger.info(
+                    f"Shape of test data read \nRows: {row}, Columns: {col}"
+                )
+            self.logger.info("Data read successfully")
         else:
             self.logger.info("Data read successfully")
+            if self.testPath is not None:
+                self.logger.info("Test data read successfully")
 
     def _scalar_to_string(self, df: DataFrame, col: str) -> DataFrame:
         """
@@ -126,12 +136,14 @@ class Classify:
 
         return df
 
-    def _merge_columns(self, df: DataFrame, col1: str, col2: str) -> DataFrame:
+    def _merge_columns(
+        self, df: DataFrame, destinationCol: str, originCol: str
+    ) -> DataFrame:
         """
         Merge the values of the two DataFrame columns.
         """
-        lst1 = list(df[col1])
-        lst2 = list(df[col2])
+        lst1 = list(df[destinationCol])
+        lst2 = list(df[originCol])
 
         merged = []
 
@@ -139,7 +151,7 @@ class Classify:
             cleaned_transcript = self._clean_transcript(str(lst2[i]))
             merged.append(lst1[i] + " " + cleaned_transcript)
 
-        df[col1] = merged
+        df[destinationCol] = merged
 
         if self.verbose:
             self.logger.info("Columns merged successfully")
@@ -244,7 +256,7 @@ class Classify:
 
         return data
 
-    def _preprocess_features(self, col: str) -> DataFrame:
+    def _preprocess_features(self, col: str, data: DataFrame) -> DataFrame:
         """
         1. turn entries to lower case
         2. remove special characters
@@ -254,7 +266,7 @@ class Classify:
         7. return feature column
         """
         # create a copy of the data
-        df = self.data.copy()
+        df = data.copy()
 
         # convert camel case text to separate words
         df = self._split_camel_case(df, col)
@@ -273,55 +285,131 @@ class Classify:
         """
         import numpy as np
 
-        df = self._merge_columns(self.data, "features", "transcript")
-        df = self._preprocess_features(col)
+        if self.testPath is None:
+            df = self._merge_columns(
+                self.data, destinationCol="features", originCol="transcript"
+            )
+            df = self._preprocess_features(col)
+            df = df.drop(
+                ["features", "tokens", "hours", "prefix", "transcript", "number"],
+                axis=1,
+            )
 
-        df["label"] = ""
+            if self.verbose:
+                self.logger.info("Data prepared successfully")
+                print(df.head())
+            else:
+                self.logger.info("Data prepared successfully")
 
-        if self.verbose:
-            self.logger.info("Data prepared successfully")
-            print(df.head())
+            self.data = df
+            self.N_CLUSTER = int(np.sqrt(len(df)))
+            if self.viz == True:
+                self.generate_count_plot(data=df)
+            self._save_data_frame(df, fileName="603_clean.csv")
+
         else:
-            self.logger.info("Data prepared successfully")
+            dfTrain = self._merge_columns(
+                self.data, destinationCol="features", originCol="transcript"
+            )
+            dfTrain = self._preprocess_features(col, self.data)
+            dfTrain = dfTrain.drop(
+                ["features", "tokens", "hours", "prefix", "transcript", "number"],
+                axis=1,
+            )
 
-        self.data = df
-        self.N_CLUSTER = int(np.sqrt(len(df)))
-        if self.viz == True:
-            self.generate_count_plot(data=df)
-        self._save_data_frame(df)
+            dfTest = self._merge_columns(
+                self.testData, destinationCol="features", originCol="transcript"
+            )
+            dfTest = self._preprocess_features(col, self.testData)
+            dfTest = dfTest.drop(
+                ["features", "tokens", "hours", "prefix", "transcript", "number"],
+                axis=1,
+            )
 
-    def _data_transformer(self, df: DataFrame, size: float = 0.3):
+            if self.verbose:
+                self.logger.info("Train data prepared successfully")
+                print(dfTrain.head())
+                self.logger.info("Test data prepared successfully")
+                print(dfTest.head())
+            else:
+                self.logger.info("Data prepared successfully")
+
+            self.data = dfTrain
+            self.testData = dfTest
+            self.N_CLUSTER = int(np.sqrt(len(dfTrain)))
+            if self.viz == True:
+                self.generate_count_plot(data=dfTrain)
+                self.generate_count_plot(data=dfTest)
+            self._save_data_frame(dfTrain, fileName="603_clean.csv")
+            self._save_data_frame(dfTest, fileName="603_clean_test.csv")
+
+    def _create_tf_idf(self, train, test) -> tuple:
+        """
+        Create the TF-IDF vectorizer.
+        """
+        from sklearn.feature_extraction.text import TfidfVectorizer
+
+        self.vectorizer = TfidfVectorizer(
+            analyzer="word",
+            max_features=10000,
+            stop_words=list(self.stop_words),
+        )
+
+        tfidf_train = self.vectorizer.fit_transform(train).toarray()
+        tfidf_test = self.vectorizer.transform(test).toarray()
+
+        return (tfidf_train, tfidf_test)
+
+    def _data_transformer(self, size: float = 0.3):
         """
         Splits, fits, and transforms the data for the classification.
         """
         from sklearn.model_selection import train_test_split
 
-        Train_X, Test_X, Train_Y, Test_Y = train_test_split(
-            df["target"], df["label"], test_size=size
-        )
+        if self.testPath is None:
+            df = self._data_encoder(df=self.data, col="cluster")
 
-        Encoder = self.encoder
+            Train_X, Test_X, Train_Y, Test_Y = train_test_split(
+                df["target"],
+                df["cluster"],
+                test_size=size,
+                random_state=42,
+                shuffle=True,
+                stratify=None,
+            )
 
-        Train_Y = Encoder.fit_transform(Train_Y)
+            Train_X_Tfidf, Test_X_Tfidf = self._create_tf_idf(Train_X, Test_X)
 
-        Test_Y = Encoder.fit_transform(Test_Y)
+            self.data = df
+            self.train_x = Train_X
+            self.test_x = Test_X
+            self.train_y = Train_Y
+            self.test_y = Test_Y
+            self.train_x_vector = Train_X_Tfidf
+            self.test_x_vector = Test_X_Tfidf
 
-        self.vectorizer.fit(df["target"])
+        else:
+            dfTrain = self._data_encoder(df=self.data, col="cluster")
+            dfTest = self._data_encoder(df=self.testData, col="cluster")
 
-        Train_X_Tfidf = self.vectorizer.transform(Train_X)
+            Train_X_Tfidf, Test_X_Tfidf = self._create_tf_idf(
+                dfTrain["target"], dfTest["target"]
+            )
 
-        Test_X_Tfidf = self.vectorizer.transform(Test_X)
-
-        self.train_x = Train_X
-        self.test_x = Test_X
-        self.train_y = Train_Y
-        self.test_y = Test_Y
-        self.train_x_vector = Train_X_Tfidf
-        self.test_x_vector = Test_X_Tfidf
+            self.data = dfTrain
+            self.testData = dfTest
+            self.train_x = dfTrain["target"]
+            self.test_x = dfTest["target"]
+            self.train_y = dfTrain["cluster"]
+            self.test_y = dfTest["cluster"]
+            self.train_x_vector = Train_X_Tfidf
+            self.test_x_vector = Test_X_Tfidf
 
         if self.verbose:
             self.logger.info("Data transformed successfully")
-            print(df.head())
+            print(dfTrain.head())
+            if self.testPath is not None:
+                print(dfTest.head())
         else:
             self.logger.info("Data transformed successfully")
 
@@ -352,16 +440,18 @@ class Classify:
             weights="distance",
         )
 
-        # self._create_clusters(
-        #     self.train_x_vector,
-        #     train_df,
-        # )
-
         self._print_top_words_per_cluster(
-            self.vectorizer, self.data, self.train_x_vector
+            vectorizer=self.vectorizer, df=self.data, X=self.train_x_vector
         )
 
-        # self._run_pca(self.train_x_vector, train_df)
+        self._print_top_words_per_cluster(
+            vectorizer=self.vectorizer,
+            df=self.testData,
+            X=self.test_x_vector,
+            train=False,
+        )
+
+        # self._run_pca(self.train_x_vector, self.data)
 
         # self._run_naive_bayes()
 
@@ -369,16 +459,34 @@ class Classify:
 
         # return train_df
 
-    def _print_top_words_per_cluster(self, vectorizer, df: DataFrame, X: list, n=10):
+    def _print_top_words_per_cluster(
+        self, vectorizer, df: DataFrame, X: list, n=10, train: bool = True
+    ):
         """
-        This function returns the keywords for each centroid of the KMeans
+        This function returns the keywords for each centroid of the KNN clustering algorithm.
+
+        Parameters
+        ----------
+        vectorizer : TfidfVectorizer
+            The TF-IDF vectorizer.
+        df : DataFrame
+            The data frame.
+        X : list
+            The list of TF-IDF vectors.
+        n : int, optional
+            The number of keywords to return, by default 10
+        train : bool, optional
+            Whether the data is training or test data, by default True
         """
         import numpy as np
 
-        data = pd.DataFrame(X.toarray()).groupby(df["label"]).mean()
+        data = pd.DataFrame(X).groupby(df["cluster"]).mean()
         terms = vectorizer.get_feature_names_out()
 
-        self.logger.info("Top keywords per cluster in training set:")
+        if train:
+            self.logger.info("Top keywords per cluster in training set:")
+        else:
+            self.logger.info("Top keywords per cluster in test set:")
 
         for i, r in data.iterrows():
             print("\nCluster {}".format(i))
@@ -445,38 +553,37 @@ class Classify:
 
         print("Accuracy: ", str(acc * 100) + "%")
 
-        scores = cross_val_score(knn, Train_X_Tfidf, Train_Y, cv=3)
+        best_cv = 2
+        best_score = 0
+        best_cv_index = 0
+        y = []
+        x = []
 
-        print(
-            "Cross Validation Accuracy: %0.2f (+/- %0.2f)"
-            % (scores.mean(), scores.std() * 2)
-        )
+        for i in range(2, 10):
+            scores = cross_val_score(knn, Train_X_Tfidf, Train_Y, cv=i)
 
-        print(predicted)
-        print(scores)
-
-    def _create_clusters(self, X, df: DataFrame):
-        from sklearn.cluster import KMeans
-
-        kmeans = KMeans(
-            n_clusters=self.N_CLUSTER,
-            random_state=0,
-            n_init="auto",
-            init="k-means++",
-            max_iter=500,
-        ).fit(X)
-
-        df["label"] = kmeans.predict(X)
-
-        if self.verbose:
-            self.logger.info("Clusters created successfully")
-            print(
-                "K-Means Accuracy Score -> ",
-                accuracy_score(self.train_y, y_pred=kmeans.predict(X)) * 100,
+            self.logger.info(
+                "Cross Validation Accuracy: %0.2f (+/- %0.2f)"
+                % (scores.mean(), scores.std() * 2)
             )
-            print("\n")
-        else:
-            self.logger.debug("Clusters created successfully")
+
+            self.logger.info("Number of predicted classes -> %s" % len(predicted))
+
+            if scores.mean() > best_score:
+                best_cv = i
+                best_score = scores.mean()
+                best_cv_index = scores
+
+            y.append(scores.mean())
+            x.append(i)
+
+        self.logger.info(
+            "Best Cross Validation Accuracy: %0.2f (+/- %0.2f)"
+            % (best_score, best_cv_index.std() * 2)
+        )
+        self.logger.info("Best Cross Validation Number of Folds: %s" % best_cv)
+
+        self.generate_cross_validation_plot(x, y)
 
     def _run_pca(self, X, df):
         import numpy as np
@@ -484,7 +591,7 @@ class Classify:
 
         pca = PCA(n_components=2, random_state=42)
 
-        red_feat = pca.fit_transform(X.toarray())
+        red_feat = pca.fit_transform(X)
 
         x = red_feat[:, 0]
         y = red_feat[:, 1]
@@ -542,15 +649,15 @@ class Classify:
         Run the word cloud per cluster.
         """
 
-        for i in sorted(df["label"].array.unique()):
-            corpus = " ".join(list(df[df["label"] == i]["target"]))
+        for i in sorted(df["cluster"].array.unique()):
+            corpus = " ".join(list(df[df["cluster"] == i]["target"]))
             self.generate_word_cloud(corpus=corpus)
 
-    def _save_data_frame(self, df: DataFrame):
+    def _save_data_frame(self, df: DataFrame, fileName: str):
         """
         Save the data frame as a CSV file.
         """
-        df.to_csv(self.outputPath, index=False)
+        df.to_csv(str(self.outputPath + fileName), index=False)
 
     def generate_word_cloud(self, corpus: str):
         """
@@ -577,17 +684,7 @@ class Classify:
         import seaborn as sns
         from matplotlib import pyplot as plt
 
-        sns.scatterplot(data=data, x="x", y="y", hue="label", palette="tab10")
-        plt.show()
-
-    def generate_bar_plot(self, data):
-        """
-        Generate a bar plot that shows the number of documents per cluster.
-        """
-        import seaborn as sns
-        from matplotlib import pyplot as plt
-
-        sns.countplot(x="label", data=data)
+        sns.scatterplot(data=data, x="x", y="y", hue="cluster", palette="tab10")
         plt.show()
 
     def generate_elbow_plot(self, X):
@@ -611,14 +708,37 @@ class Classify:
         plt.title("Elbow Method For Optimal k")
         plt.show()
 
-    def generate_count_plot(self, data):
+    def generate_count_plot(self, data, countCol: str = "cluster"):
         """
         Generate a bar plot that sums the number of rows that share the same prefix value.
+
+        Parameters
+        ----------
+            data: DataFrame
+                The data to plot.
+            countCol: str, optional
+                The name of the column to count. Defaults to "cluster".
         """
         import seaborn as sns
         from matplotlib import pyplot as plt
 
-        sns.countplot(x="prefix", data=data)
+        sns.countplot(x=countCol, data=data)
+        plt.show()
+
+    def generate_cross_validation_plot(self, x, y):
+        """
+        Generate a cross validation plot that shows the accuracy of the model.
+
+        Args:
+            x (list): The list of x values.
+            y (list): The list of y values.
+        """
+        import matplotlib.pyplot as plt
+
+        plt.plot(x, y, "bx-")
+        plt.xlabel("fold")
+        plt.ylabel("Accuracy")
+        plt.title("Cross Validation Accuracy over 10 folds")
         plt.show()
 
     def _calculate_similarity(self, X):
