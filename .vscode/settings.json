@@ -4,8 +4,12 @@
   },
   "python.formatting.provider": "none",
   "cSpell.words": [
+    "ndarray",
     "nltk",
     "stopwords",
+    "Tfidf",
+    "toarray",
+    "vectorizer",
     "wordnet"
   ]
 }
