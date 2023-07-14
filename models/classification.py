@@ -897,7 +897,14 @@ def main():
         "-p",
         type=str,
         default="input/603_trans_3.tsv",
-        help="Path to the processed data",
+        help="Path to the training dataset",
+    )
+    parser.add_argument(
+        "--test",
+        "-t",
+        type=str,
+        default="input/614_trans.tsv",
+        help="Path to the testing dataset",
     )
     parser.add_argument(
         "--download", "-d", type=bool, help="Download the required libraries"
@@ -912,18 +919,28 @@ def main():
         "--out",
         "-o",
         type=str,
-        default="output/603_clean.csv",
-        help="Path to the output file",
+        default="/603_clean.csv",
+        help="File name of the output file",
     )
+    parser.add_argument(
+        "--visualize",
+        "-viz",
+        type=bool,
+        default=True,
+        help="Decide whether to visualize the EDA process and display classification visualization.",
+    )
+
     args = parser.parse_args()
+
+    print(args)
 
     classify = Classify(
         path=args.path,
         toDownload=args.download,
         verbose=args.verbose,
         outputPath=args.out,
-        visualize=True,
-        testPath="input/614_trans.tsv",
+        visualize=args.visualize,
+        testPath=args.test,
     )
     classify.run()
 
