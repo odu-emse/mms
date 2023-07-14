@@ -15,7 +15,15 @@ from pandas.core.series import Series
 
 class Classify:
     """
-    Classify the data into different clusters based on text content using embedding techniques and K means clustering.
+    Predict the class for the given Module dataset based on TF-IDF vectorization and KNN (supervised) clustering algorithm.
+
+    Args:
+        path (str): Path to the training dataset.
+        testPath (str, None): Path to the test dataset.
+        outputPath (str): Path to the output directory.
+        toDownload (bool): Whether to download the nltk corpus or not.
+        verbose (bool): Whether to print the logs or not.
+        visualize (bool): Whether to show EDA visualizations or not.
     """
 
     def __init__(
@@ -32,16 +40,17 @@ class Classify:
         logging.basicConfig(level=logging.INFO)
 
         self.logger = logging.getLogger(__name__)
-        self.filePath = path
-        self.testPath = testPath
-        self.outputPath = outputPath
-        self.toDownload = toDownload
+        self.filePath: str = path
+        self.testPath: str = testPath
+        self.outputPath: str = outputPath
+        self.toDownload: bool = toDownload
         self.data: Union[DataFrame, None] = None
         self.testData: Union[DataFrame, None] = None
-        self.verbose = verbose
-        self.viz = visualize
+        self.verbose: bool = verbose
+        self.viz: bool = visualize
         self.stop_words = set(stopwords.words("english"))
-        self.N_CLUSTER = 0
+        self.N_CLUSTER: int = 0
+        self.N_TEST_CLUSTER: int = 0
         self.train_x: Union[Series, None] = None
         self.train_y: Union[Series, None] = None
         self.test_x: Union[Series, None] = None
@@ -56,6 +65,9 @@ class Classify:
         self._configure()
 
     def _configure(self) -> None:
+        """
+        Configure the logger and the stop words set
+        """
         self.stop_words.add("module")
         self.stop_words.add("problem")
         self.stop_words.add("use")
@@ -343,6 +355,7 @@ class Classify:
             self.data = dfTrain
             self.testData = dfTest
             self.N_CLUSTER = int(np.sqrt(len(dfTrain)))
+            self.N_TEST_CLUSTER = int(np.sqrt(len(dfTest)))
             if self.viz == True:
                 self.generate_count_plot(data=dfTrain)
                 self.generate_count_plot(data=dfTest)
@@ -452,6 +465,26 @@ class Classify:
             vectorizer=self.vectorizer, df=self.data, X=self.train_x_vector
         )
 
+        sim, mask = self._calculate_similarity(
+            X=self.train_x_vector,
+        )
+
+        self.generate_heat_map(
+            arr=sim,
+            mask=mask,
+        )
+
+        self._print_sorted_similarities(sim_arr=sim)
+
+        self._run_pca(X=self.train_x_vector, df=self.data)
+
+        self._run_naive_bayes(
+            X_vector=self.train_x_vector,
+            X_test_vector=self.test_x_vector,
+            Y_test=self.test_y,
+            Y_train=self.train_y,
+        )
+
         if self.testPath is not None:
             self._print_top_words_per_cluster(
                 vectorizer=self.vectorizer,
@@ -460,17 +493,20 @@ class Classify:
                 train=False,
             )
 
-        print(
-            type(self.train_x),
-        )
+            simTest, maskTest = self._calculate_similarity(
+                X=self.test_x_vector,
+            )
 
-        self._run_pca(X=self.train_x_vector, df=self.data)
+            self.generate_heat_map(
+                arr=simTest,
+                mask=maskTest,
+            )
 
-        self._run_naive_bayes()
+            self._print_sorted_similarities(sim_arr=simTest)
+
+            self._run_pca(X=self.test_x_vector, df=self.testData)
 
         self.logger.info("Model created successfully")
-
-        # return train_df
 
     def _print_top_words_per_cluster(
         self, vectorizer, df: DataFrame, X: list, n=10, train: bool = True
@@ -496,6 +532,8 @@ class Classify:
         data = pd.DataFrame(X).groupby(df["cluster"]).mean()
         terms = vectorizer.get_feature_names_out()
 
+        print("\n")
+
         if train:
             self.logger.info("Top keywords per cluster in training set:")
         else:
@@ -504,6 +542,7 @@ class Classify:
         for i, r in data.iterrows():
             print("\nCluster {}".format(i))
             print(", ".join([terms[t] for t in np.argsort(r)[-n:]]))
+            print("Mean TF-IDF score -> %0.4f" % np.max(r))
         print("\n")
 
     def _train_model(self):
@@ -539,6 +578,7 @@ class Classify:
         algo: str,
         metric: str,
         weights: str,
+        n_neighbors: int = 5,
     ):
         """
         Run the nearest neighbors algorithm.
@@ -548,7 +588,7 @@ class Classify:
         from sklearn.model_selection import cross_val_score
 
         knn = KNeighborsClassifier(
-            n_neighbors=5,
+            n_neighbors=n_neighbors,
             weights=weights,
             algorithm=algo,
             metric=metric,
@@ -564,7 +604,8 @@ class Classify:
 
         acc = accuracy_score(Test_Y, predicted)
 
-        print("Accuracy: ", str(acc * 100) + "%")
+        self.logger.info("KNN Accuracy -> %0.4f" % (acc * 100))
+        print("\n")
 
         best_cv = 2
         best_score = 0
@@ -585,6 +626,8 @@ class Classify:
             )
 
             self.logger.info("Number of predicted classes -> %s" % len(predicted))
+
+            print("\n")
 
             if scores.mean() > best_score:
                 best_cv = i
@@ -630,7 +673,7 @@ class Classify:
 
         self.logger.info("PCA run successfully")
 
-    def _run_naive_bayes(self):
+    def _run_naive_bayes(self, X_vector, Y_train, X_test_vector, Y_test):
         """
         Run the naive bayes classification model.
         """
@@ -638,16 +681,17 @@ class Classify:
 
         Naive = MultinomialNB()
 
-        Naive.fit(self.train_x_vector, self.train_y)
+        Naive.fit(X_vector, Y_train)
 
-        predictions_NB = Naive.predict(self.test_x_vector)
+        predictions_NB = Naive.predict(X_test_vector)
 
         if self.verbose:
             self.logger.info("Naive Bayes run successfully")
             print(
                 "Naive Bayes Accuracy Score -> ",
-                accuracy_score(predictions_NB, self.test_y) * 100,
+                accuracy_score(predictions_NB, Y_test) * 100,
             )
+            print("\n")
         else:
             self.logger.debug("Naive Bayes run successfully")
 
@@ -765,11 +809,20 @@ class Classify:
         plt.title("Cross Validation Accuracy over 10 folds")
         plt.show()
 
-    def _calculate_similarity(self, X):
+    def _calculate_similarity(self, X) -> tuple[numpy.ndarray, list]:
+        """
+        Calculate the similarity between the documents.
+
+        Args:
+            X (numpy.ndarray): The array of documents.
+
+        Returns:
+            tuple: The similarity array and the mask to apply to the array.
+        """
         import numpy as np
         from sklearn.metrics.pairwise import cosine_similarity
 
-        sim_arr = cosine_similarity(X.toarray())
+        sim_arr = cosine_similarity(X)
 
         mask = np.triu(np.ones_like(sim_arr, dtype=bool))
 
@@ -778,6 +831,10 @@ class Classify:
     def generate_heat_map(self, arr: numpy.ndarray, mask: list):
         """
         Generate a heat map that shows the correlation between the documents, using the name column of the data frame as the tick label.
+
+        Args:
+            arr (numpy.ndarray): The similarity array.
+            mask (list): The mask to apply to the array. This is used to remove the diagonal and upper duplicate values.
         """
         import seaborn as sns
         from matplotlib import pyplot as plt
@@ -785,7 +842,7 @@ class Classify:
         sns.heatmap(
             arr,
             mask=mask,
-            square=True,
+            square=False,
             robust=True,
             annot=True,
             cmap="YlGnBu",
@@ -796,6 +853,10 @@ class Classify:
     def _print_sorted_similarities(self, sim_arr, threshold=0) -> DataFrame:
         """
         Store the similarities between the documents in a data frame that is sorted by the similarity score in descending order. Removing the diagonal values.
+
+        Args:
+            sim_arr (numpy.ndarray): The similarity array.
+            threshold (int, optional): The threshold to filter the similarity scores by. Defaults to 0.
         """
         import pandas as pd
 
@@ -806,7 +867,7 @@ class Classify:
         filtered_df = df[df["Document 1"] != df["Document 2"]]
         top = filtered_df[filtered_df["Similarity Score"] > threshold]
 
-        print(top.head(15))
+        print(top.head(10))
 
         return top
 
