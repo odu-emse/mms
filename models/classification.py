@@ -9,6 +9,8 @@ from sklearn.metrics import accuracy_score
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.preprocessing import LabelEncoder
 from typing import Union
+import numpy
+from pandas.core.series import Series
 
 
 class Classify:
@@ -34,18 +36,18 @@ class Classify:
         self.testPath = testPath
         self.outputPath = outputPath
         self.toDownload = toDownload
-        self.data = None
-        self.testData = None
+        self.data: Union[DataFrame, None] = None
+        self.testData: Union[DataFrame, None] = None
         self.verbose = verbose
         self.viz = visualize
         self.stop_words = set(stopwords.words("english"))
         self.N_CLUSTER = 0
-        self.train_x = None
-        self.train_y = None
-        self.test_x = None
-        self.test_y = None
-        self.train_x_vector = None
-        self.test_x_vector = None
+        self.train_x: Union[Series, None] = None
+        self.train_y: Union[Series, None] = None
+        self.test_x: Union[Series, None] = None
+        self.test_y: Union[Series, None] = None
+        self.train_x_vector: Union[None, numpy.ndarray] = None
+        self.test_x_vector: Union[None, numpy.ndarray] = None
         self.lemmatizer = WordNetLemmatizer()
         self.vectorizer = TfidfVectorizer(max_features=10000)
         self.encoder = LabelEncoder()
@@ -458,9 +460,13 @@ class Classify:
                 train=False,
             )
 
-        # self._run_pca(self.train_x_vector, self.data)
+        print(
+            type(self.train_x),
+        )
 
-        # self._run_naive_bayes()
+        self._run_pca(X=self.train_x_vector, df=self.data)
+
+        self._run_naive_bayes()
 
         self.logger.info("Model created successfully")
 
@@ -526,10 +532,10 @@ class Classify:
 
     def _run_nearest_neighbors(
         self,
-        Train_X_Tfidf,
-        Test_X_Tfidf,
-        Train_Y,
-        Test_Y,
+        Train_X_Tfidf: numpy.ndarray,
+        Test_X_Tfidf: numpy.ndarray,
+        Train_Y: Series,
+        Test_Y: Series,
         algo: str,
         metric: str,
         weights: str,
@@ -596,7 +602,17 @@ class Classify:
 
         self.generate_cross_validation_plot(x, y)
 
-    def _run_pca(self, X, df):
+    def _run_pca(self, X: numpy.ndarray, df: DataFrame):
+        """
+        Applies Principal Component Analysis (PCA) to the input data X and generates a scatter plot of the reduced features.
+
+        Args:
+            X (numpy.ndarray): The input data to be reduced.
+            df (pandas.DataFrame): The dataframe containing the data to be plotted.
+
+        Returns:
+            None
+        """
         import numpy as np
         from sklearn.decomposition import PCA
 
@@ -610,7 +626,7 @@ class Classify:
         df["x"] = x
         df["y"] = y
 
-        self.generate_scatter_plot(df)
+        self.generate_scatter_plot(data=df)
 
         self.logger.info("PCA run successfully")
 
@@ -688,7 +704,7 @@ class Classify:
         plt.axis("off")
         plt.show()
 
-    def generate_scatter_plot(self, data):
+    def generate_scatter_plot(self, data: DataFrame):
         """
         Generate the scatter plot for the data.
         """
@@ -698,7 +714,7 @@ class Classify:
         sns.scatterplot(data=data, x="x", y="y", hue="cluster", palette="tab10")
         plt.show()
 
-    def generate_elbow_plot(self, X):
+    def generate_elbow_plot(self, X: numpy.ndarray):
         """
         Generate the elbow plot for the data that shows the most optimal number of clusters that should be used based on sum of squared distances.
         """
@@ -719,16 +735,13 @@ class Classify:
         plt.title("Elbow Method For Optimal k")
         plt.show()
 
-    def generate_count_plot(self, data, countCol: str = "cluster"):
+    def generate_count_plot(self, data: DataFrame, countCol: str = "cluster"):
         """
         Generate a bar plot that sums the number of rows that share the same prefix value.
 
-        Parameters
-        ----------
-            data: DataFrame
-                The data to plot.
-            countCol: str, optional
-                The name of the column to count. Defaults to "cluster".
+        Args:
+            data (DataFrame): The data to plot.
+            countCol (str, optional): The name of the column to count. Defaults to "cluster".
         """
         import seaborn as sns
         from matplotlib import pyplot as plt
@@ -736,7 +749,7 @@ class Classify:
         sns.countplot(x=countCol, data=data)
         plt.show()
 
-    def generate_cross_validation_plot(self, x, y):
+    def generate_cross_validation_plot(self, x: list, y: list):
         """
         Generate a cross validation plot that shows the accuracy of the model.
 
@@ -762,7 +775,7 @@ class Classify:
 
         return sim_arr, mask
 
-    def generate_heat_map(self, arr, mask):
+    def generate_heat_map(self, arr: numpy.ndarray, mask: list):
         """
         Generate a heat map that shows the correlation between the documents, using the name column of the data frame as the tick label.
         """
@@ -807,7 +820,9 @@ class Classify:
         if self.viz == True:
             self._run_word_cloud_per_cluster(df=self.data)
             if self.testPath is not None:
-                self.generate_scatter_plot(data=self.testData)
+                # TODO: Fix test data not having x and y columns
+                # self.generate_scatter_plot(data=self.testData)
+                pass
         if self.verbose == True:
             self.logger.info("Successfully ran the classification model")
 
