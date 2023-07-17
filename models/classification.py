@@ -721,7 +721,7 @@ class Classify:
 
         for i in sorted(df["cluster"].array.unique()):
             corpus = " ".join(list(df[df["cluster"] == i]["target"]))
-            self.generate_word_cloud(corpus=corpus)
+            self.generate_word_cloud(corpus=corpus, fileName="cluster_%s.png" % i)
 
     def _save_data_frame(self, df: DataFrame, fileName: str):
         """
@@ -729,7 +729,7 @@ class Classify:
         """
         df.to_csv(str(self.outputPath + fileName), index=False)
 
-    def generate_word_cloud(self, corpus: str):
+    def generate_word_cloud(self, corpus: str, fileName: str = "word_cloud.png"):
         """
         Generate the word cloud for the data.
         """
@@ -745,7 +745,10 @@ class Classify:
         plt.figure(figsize=(10, 10))
         plt.imshow(wordcloud, interpolation="bilinear")
         plt.axis("off")
-        plt.show()
+        if self.viz:
+            plt.show()
+        else:
+            plt.savefig(str(self.outputPath + fileName))
 
     def generate_scatter_plot(self, data: DataFrame):
         """
@@ -755,7 +758,10 @@ class Classify:
         from matplotlib import pyplot as plt
 
         sns.scatterplot(data=data, x="x", y="y", hue="cluster", palette="tab10")
-        plt.show()
+        if self.viz:
+            plt.show()
+        else:
+            plt.savefig(str(self.outputPath + "scatter_plot.png"))
 
     def generate_elbow_plot(self, X: numpy.ndarray):
         """
@@ -776,7 +782,10 @@ class Classify:
         plt.xlabel("k")
         plt.ylabel("Sum_of_squared_distances")
         plt.title("Elbow Method For Optimal k")
-        plt.show()
+        if self.viz:
+            plt.show()
+        else:
+            plt.savefig(str(self.outputPath + "kmeans_elbow_plot.png"))
 
     def generate_count_plot(self, data: DataFrame, countCol: str = "cluster"):
         """
@@ -790,7 +799,10 @@ class Classify:
         from matplotlib import pyplot as plt
 
         sns.countplot(x=countCol, data=data)
-        plt.show()
+        if self.viz:
+            plt.show()
+        else:
+            plt.savefig(str(self.outputPath + "count_plot.png"))
 
     def generate_cross_validation_plot(self, x: list, y: list):
         """
@@ -806,7 +818,10 @@ class Classify:
         plt.xlabel("fold")
         plt.ylabel("Accuracy")
         plt.title("Cross Validation Accuracy over 10 folds")
-        plt.show()
+        if self.viz:
+            plt.show()
+        else:
+            plt.savefig(str(self.outputPath + "cross_validation_plot.png"))
 
     def _calculate_similarity(self, X) -> tuple[numpy.ndarray, list]:
         """
@@ -847,7 +862,10 @@ class Classify:
             cmap="YlGnBu",
             fmt=".2f",
         )
-        plt.show()
+        if self.viz:
+            plt.show()
+        else:
+            plt.savefig(str(self.outputPath + "heat_map.png"))
 
     def _print_sorted_similarities(self, sim_arr, threshold=0) -> DataFrame:
         """
