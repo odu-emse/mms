@@ -41,7 +41,7 @@ class Classify:
         self.filePath: str = path
         self.testPath: str = testPath
         self.outputPath: str = outputPath
-        self.logPath: str = "logs/"
+        self.logPath: str = "logs/classification.log"
         self.toDownload: bool = toDownload
         self.data: Union[DataFrame, None] = None
         self.testData: Union[DataFrame, None] = None
@@ -59,6 +59,11 @@ class Classify:
         self.lemmatizer = WordNetLemmatizer()
         self.vectorizer = TfidfVectorizer(max_features=10000)
         self.encoder = LabelEncoder()
+
+        if self.verbose:
+            logging.basicConfig(level=logging.INFO)
+        else:
+            logging.basicConfig(level=logging.DEBUG)
 
         self.download()
         self._configure()
@@ -105,8 +110,9 @@ class Classify:
             nltk.download("stopwords", quiet=not self.verbose)
             nltk.download("wordnet", quiet=not self.verbose)
             nltk.download("omw-1.4", quiet=not self.verbose)
+            self._log("Library downloads complete")
         else:
-            self.logger.info("Library downloads skipped")
+            self._log("Library downloads skipped")
 
     def read(self, sep="\t") -> None:
         """
@@ -119,17 +125,15 @@ class Classify:
 
         if self.verbose:
             row, col = self.data.shape
-            self.logger.info(f"Shape of train data read \nRows: {row}, Columns: {col}")
+            self._log(f"Shape of train data read \nRows: {row}, Columns: {col}")
             if self.testPath is not None:
                 row, col = self.testData.shape
-                self.logger.info(
-                    f"Shape of test data read \nRows: {row}, Columns: {col}"
-                )
-            self.logger.info("Data read successfully")
+                self._log(f"Shape of test data read \nRows: {row}, Columns: {col}")
+            self._log("Data read successfully")
         else:
-            self.logger.info("Data read successfully")
+            self._log("Data read successfully")
             if self.testPath is not None:
-                self.logger.info("Test data read successfully")
+                self._log("Test data read successfully")
 
     def _scalar_to_string(self, df: DataFrame, col: str) -> DataFrame:
         """
@@ -146,10 +150,10 @@ class Classify:
         df[col] = scalar_to_string
 
         if self.verbose:
-            self.logger.info("Scalar values converted to string successfully")
+            self._log("Scalar values converted to string successfully")
             print(df.head())
         else:
-            self.logger.debug("Scalar values converted to string successfully")
+            self._log("Scalar values converted to string successfully")
 
         return df
 
@@ -171,10 +175,10 @@ class Classify:
         df[destinationCol] = merged
 
         if self.verbose:
-            self.logger.info("Columns merged successfully")
+            self._log("Columns merged successfully")
             print(df.head())
         else:
-            self.logger.debug("Columns merged successfully")
+            self._log("Columns merged successfully")
 
         return df
 
@@ -236,10 +240,10 @@ class Classify:
 
         df[col] = payload
         if self.verbose:
-            self.logger.info("Camel case text split successfully")
+            self._log("Camel case text split successfully")
             print(df.head())
         else:
-            self.logger.info("Camel case text split successfully")
+            self._log("Camel case text split successfully")
 
         return df
 
@@ -266,8 +270,6 @@ class Classify:
                 word_final = stemmer.lemmatize(word, tag_map[tag[0]])
                 if word_final not in self.stop_words and word_final.isalpha():
                     final_words.append(word_final)
-                else:
-                    self.logger.debug("Removed word from corpus: " + word)
 
             data.loc[index, "target"] = " ".join(final_words)
 
@@ -313,10 +315,10 @@ class Classify:
             )
 
             if self.verbose:
-                self.logger.info("Data prepared successfully")
+                self._log("Data prepared successfully")
                 print(df.head())
             else:
-                self.logger.info("Data prepared successfully")
+                self._log("Data prepared successfully")
 
             self.data = df
             self.N_CLUSTER = int(np.sqrt(len(df)))
@@ -344,12 +346,12 @@ class Classify:
             )
 
             if self.verbose:
-                self.logger.info("Train data prepared successfully")
+                self._log("Train data prepared successfully")
                 print(dfTrain.head())
-                self.logger.info("Test data prepared successfully")
+                self._log("Test data prepared successfully")
                 print(dfTest.head())
             else:
-                self.logger.info("Data prepared successfully")
+                self._log("Data prepared successfully")
 
             self.data = dfTrain
             self.testData = dfTest
@@ -424,14 +426,14 @@ class Classify:
             self.test_x_vector = Test_X_Tfidf
 
         if self.verbose:
-            self.logger.info("Data transformed successfully")
+            self._log("Data transformed successfully")
             if self.testPath is not None:
                 print(dfTrain.head())
                 print(dfTest.head())
             else:
                 print(df.head())
         else:
-            self.logger.info("Data transformed successfully")
+            self._log("Data transformed successfully")
 
     def _data_encoder(self, df: DataFrame, col: str = "cluster") -> DataFrame:
         """
@@ -505,7 +507,7 @@ class Classify:
 
             self._run_pca(X=self.test_x_vector, df=self.testData)
 
-        self.logger.info("Model created successfully")
+        self._log("Model created successfully")
 
     def _print_top_words_per_cluster(
         self, vectorizer, df: DataFrame, X: list, n=10, train: bool = True
@@ -534,14 +536,17 @@ class Classify:
         print("\n")
 
         if train:
-            self.logger.info("Top keywords per cluster in training set:")
+            self._log("Top keywords per cluster in training set:")
         else:
-            self.logger.info("Top keywords per cluster in test set:")
+            self._log("Top keywords per cluster in test set:")
 
         for i, r in data.iterrows():
-            print("\nCluster {}".format(i))
-            print(", ".join([terms[t] for t in np.argsort(r)[-n:]]))
-            print("Mean TF-IDF score -> %0.4f" % np.max(r))
+            self._log(
+                "Cluster {} keywords: {}".format(
+                    i, ", ".join([terms[t] for t in np.argsort(r)[-n:]])
+                )
+            )
+            self._log("Mean TF-IDF score -> %0.4f" % np.max(r))
         print("\n")
 
     def _train_model(self):
@@ -601,9 +606,18 @@ class Classify:
 
         predicted = knn.predict(Test_X_Tfidf)
 
+        self._log("KNN Predictions -> %s" % predicted)
+
+        self.testData["cluster"] = predicted
+
+        self._save_data_frame(
+            df=self.testData,
+            fileName="614_pred.csv",
+        )
+
         acc = accuracy_score(Test_Y, predicted)
 
-        self.logger.info("KNN Accuracy -> %0.4f" % (acc * 100))
+        self._log("KNN Accuracy -> %0.4f" % (acc * 100))
         print("\n")
 
         best_cv = 2
@@ -619,12 +633,12 @@ class Classify:
         for i in range(2, max_range):
             scores = cross_val_score(knn, Train_X_Tfidf, Train_Y, cv=i)
 
-            self.logger.info(
+            self._log(
                 "Cross Validation Accuracy: %0.2f (+/- %0.2f)"
                 % (scores.mean(), scores.std() * 2)
             )
 
-            self.logger.info("Number of predicted classes -> %s" % len(predicted))
+            self._log("Number of predicted classes -> %s" % len(predicted))
 
             print("\n")
 
@@ -636,11 +650,11 @@ class Classify:
             y.append(scores.mean())
             x.append(i)
 
-        self.logger.info(
+        self._log(
             "Best Cross Validation Accuracy: %0.2f (+/- %0.2f)"
             % (best_score, best_cv_index.std() * 2)
         )
-        self.logger.info("Best Cross Validation Number of Folds: %s" % best_cv)
+        self._log("Best Cross Validation Number of Folds: %s" % best_cv)
 
         self.generate_cross_validation_plot(x, y)
 
@@ -670,7 +684,7 @@ class Classify:
 
         self.generate_scatter_plot(data=df)
 
-        self.logger.info("PCA run successfully")
+        self._log("PCA run successfully")
 
     def _run_naive_bayes(self, X_vector, Y_train, X_test_vector, Y_test):
         """
@@ -685,14 +699,14 @@ class Classify:
         predictions_NB = Naive.predict(X_test_vector)
 
         if self.verbose:
-            self.logger.info("Naive Bayes run successfully")
+            self._log("Naive Bayes run successfully")
             print(
                 "Naive Bayes Accuracy Score -> ",
                 accuracy_score(predictions_NB, Y_test) * 100,
             )
             print("\n")
         else:
-            self.logger.debug("Naive Bayes run successfully")
+            self._log("Naive Bayes run successfully")
 
     def _run_svm(self, X_train, Y_train, X_test, Y_test):
         """
@@ -709,10 +723,10 @@ class Classify:
         print("SVM Accuracy Score -> ", accuracy_score(predictions_SVM, Y_test) * 100)
 
         if self.verbose:
-            self.logger.info("SVM run successfully")
+            self._log("SVM run successfully")
             print(predictions_SVM)
         else:
-            self.logger.debug("SVM run successfully")
+            self._log("SVM run successfully")
 
     def _run_word_cloud_per_cluster(self, df: DataFrame):
         """
@@ -888,6 +902,26 @@ class Classify:
 
         return top
 
+    def _log(self, text: str):
+        """
+        Append the text to the log file.
+
+        Args:
+            text (str): The text to append to the log file.
+        """
+        import time
+
+        t = time.localtime()
+        current_time = time.strftime("%H:%M:%S", t)
+
+        if self.verbose:
+            self.logger.info(f"\n[{current_time}]: {text}")
+        else:
+            self.logger.debug(f"\n[{current_time}]: {text}")
+
+        with open(self.logPath, "a") as f:
+            f.write(f"\n[{current_time}]: {text}")
+
     def run(self) -> None:
         """
         Run the classification model.
@@ -902,7 +936,7 @@ class Classify:
                 # self.generate_scatter_plot(data=self.testData)
                 pass
         if self.verbose == True:
-            self.logger.info("Successfully ran the classification model")
+            self._log("Successfully ran the classification model")
 
 
 def main():
