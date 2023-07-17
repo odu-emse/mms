@@ -473,11 +473,12 @@ class Classify:
         self.generate_heat_map(
             arr=sim,
             mask=mask,
+            fileName="heatmap_train.png",
         )
 
         self._print_sorted_similarities(sim_arr=sim)
 
-        self._run_pca(X=self.train_x_vector, df=self.data)
+        self._run_pca(X=self.train_x_vector, df=self.data, fileName="pca_train.png")
 
         self._run_naive_bayes(
             X_vector=self.train_x_vector,
@@ -501,11 +502,14 @@ class Classify:
             self.generate_heat_map(
                 arr=simTest,
                 mask=maskTest,
+                fileName="heatmap_test.png",
             )
 
             self._print_sorted_similarities(sim_arr=simTest)
 
-            self._run_pca(X=self.test_x_vector, df=self.testData)
+            self._run_pca(
+                X=self.test_x_vector, df=self.testData, fileName="pca_test.png"
+            )
 
         self._log("Model created successfully")
 
@@ -658,7 +662,9 @@ class Classify:
 
         self.generate_cross_validation_plot(x, y)
 
-    def _run_pca(self, X: numpy.ndarray, df: DataFrame):
+    def _run_pca(
+        self, X: numpy.ndarray, df: DataFrame, fileName: str = "pca_scatter.png"
+    ):
         """
         Applies Principal Component Analysis (PCA) to the input data X and generates a scatter plot of the reduced features.
 
@@ -682,7 +688,7 @@ class Classify:
         df["x"] = x
         df["y"] = y
 
-        self.generate_scatter_plot(data=df)
+        self.generate_scatter_plot(data=df, fileName=fileName)
 
         self._log("PCA run successfully")
 
@@ -764,18 +770,21 @@ class Classify:
         else:
             plt.savefig(str(self.outputPath + fileName))
 
-    def generate_scatter_plot(self, data: DataFrame):
+    def generate_scatter_plot(
+        self, data: DataFrame, fileName: str = "scatter_plot.png"
+    ):
         """
         Generate the scatter plot for the data.
         """
         import seaborn as sns
         from matplotlib import pyplot as plt
 
+        plt.figure(figsize=(10, 10))
         sns.scatterplot(data=data, x="x", y="y", hue="cluster", palette="tab10")
         if self.viz:
             plt.show()
         else:
-            plt.savefig(str(self.outputPath + "scatter_plot.png"))
+            plt.savefig(str(self.outputPath + fileName))
 
     def generate_elbow_plot(self, X: numpy.ndarray):
         """
@@ -791,7 +800,7 @@ class Classify:
             km = KMeans(n_clusters=k, max_iter=200, n_init=10)
             km = km.fit(X)
             Sum_of_squared_distances.append(km.inertia_)
-
+        plt.figure(figsize=(10, 10))
         plt.plot(K, Sum_of_squared_distances, "bx-")
         plt.xlabel("k")
         plt.ylabel("Sum_of_squared_distances")
@@ -856,7 +865,9 @@ class Classify:
 
         return sim_arr, mask
 
-    def generate_heat_map(self, arr: numpy.ndarray, mask: list):
+    def generate_heat_map(
+        self, arr: numpy.ndarray, mask: list, fileName: str = "heat_map.png"
+    ):
         """
         Generate a heat map that shows the correlation between the documents, using the name column of the data frame as the tick label.
 
@@ -867,6 +878,7 @@ class Classify:
         import seaborn as sns
         from matplotlib import pyplot as plt
 
+        plt.figure(figsize=(20, 20))
         sns.heatmap(
             arr,
             mask=mask,
@@ -879,7 +891,7 @@ class Classify:
         if self.viz:
             plt.show()
         else:
-            plt.savefig(str(self.outputPath + "heat_map.png"))
+            plt.savefig(str(self.outputPath + fileName))
 
     def _print_sorted_similarities(self, sim_arr, threshold=0) -> DataFrame:
         """
