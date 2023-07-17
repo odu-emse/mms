@@ -1,0 +1,67 @@
+
+[13:03:48]: Library downloads skipped
+[13:03:48]: Shape of train data read 
+Rows: 65, Columns: 7
+[13:03:48]: Shape of test data read 
+Rows: 13, Columns: 7
+[13:03:48]: Data read successfully
+[13:03:48]: Columns merged successfully
+[13:03:48]: Camel case text split successfully
+[13:03:52]: Columns merged successfully
+[13:03:52]: Camel case text split successfully
+[13:03:55]: Train data prepared successfully
+[13:03:55]: Test data prepared successfully
+[13:03:55]: Data transformed successfully
+[13:03:55]: KNN Predictions -> [0 2 2 2 9 9 2 0 0 0 0 0 0]
+[13:03:55]: KNN Accuracy -> 15.3846
+[13:03:55]: Cross Validation Accuracy: 0.60 (+/- 0.14)
+[13:03:55]: Number of predicted classes -> 13
+[13:03:55]: Cross Validation Accuracy: 0.69 (+/- 0.13)
+[13:03:55]: Number of predicted classes -> 13
+[13:03:55]: Cross Validation Accuracy: 0.71 (+/- 0.20)
+[13:03:55]: Number of predicted classes -> 13
+[13:03:55]: Cross Validation Accuracy: 0.77 (+/- 0.32)
+[13:03:55]: Number of predicted classes -> 13
+[13:03:55]: Cross Validation Accuracy: 0.78 (+/- 0.27)
+[13:03:55]: Number of predicted classes -> 13
+[13:03:55]: Cross Validation Accuracy: 0.70 (+/- 0.48)
+[13:03:55]: Number of predicted classes -> 13
+[13:03:55]: Cross Validation Accuracy: 0.75 (+/- 0.50)
+[13:03:55]: Number of predicted classes -> 13
+[13:03:55]: Cross Validation Accuracy: 0.74 (+/- 0.28)
+[13:03:55]: Number of predicted classes -> 13
+[13:03:55]: Best Cross Validation Accuracy: 0.78 (+/- 0.27)
+[13:03:55]: Best Cross Validation Number of Folds: 6
+[13:03:56]: Top keywords per cluster in training set:
+[13:03:56]: Cluster 0 keywords: definition, build, cost, produce, minute, material, operation, plan, research, profit
+[13:03:56]: Mean TF-IDF score -> 0.1267
+[13:03:56]: Cluster 1 keywords: variable, optimal, programming, region, profit, degree, objective, feasible, function, linear
+[13:03:56]: Mean TF-IDF score -> 0.1735
+[13:03:56]: Cluster 2 keywords: interviewer, analysis, point, optimal, change, rotate, personal, coefficient, sensitivity, interview
+[13:03:56]: Mean TF-IDF score -> 0.2566
+[13:03:56]: Cluster 3 keywords: equal, ad, premium, commercial, cost, grade, investment, regular, period, component
+[13:03:56]: Mean TF-IDF score -> 0.1012
+[13:03:56]: Cluster 4 keywords: conventional, comparable, weight, organization, loan, unit, efficiency, input, output, branch
+[13:03:56]: Mean TF-IDF score -> 0.4208
+[13:03:56]: Cluster 5 keywords: item, city, hub, cost, equal, knapsack, program, select, project, integer
+[13:03:56]: Mean TF-IDF score -> 0.1987
+[13:03:56]: Cluster 6 keywords: capacity, integer, equal, source, intermediate, supply, destination, demand, node, ship
+[13:03:56]: Mean TF-IDF score -> 0.2788
+[13:03:56]: Cluster 7 keywords: distance, capacity, send, city, short, permanent, flow, connect, network, node
+[13:03:56]: Mean TF-IDF score -> 0.3373
+[13:03:56]: Cluster 8 keywords: profit, server, global, point, nonlinear, facility, price, linear, non, queue
+[13:03:56]: Mean TF-IDF score -> 0.1518
+[13:03:56]: Cluster 9 keywords: due, city, non, date, schedule, processing, completion, time, machine, job
+[13:03:56]: Mean TF-IDF score -> 0.4480
+[13:04:00]: PCA run successfully
+[13:04:00]: Naive Bayes run successfully
+[13:04:00]: Top keywords per cluster in test set:
+[13:04:00]: Cluster 0 keywords: control, right, level, plus, effect, minus, experiment, factor, design, quality
+[13:04:00]: Mean TF-IDF score -> 0.2486
+[13:04:00]: Cluster 2 keywords: estimate, zero, cause, point, statistical, limit, process, distribution, chart, control
+[13:04:00]: Mean TF-IDF score -> 0.5597
+[13:04:00]: Cluster 9 keywords: right, event, supplier, zero, distribution, process, specification, chart, control, probability
+[13:04:00]: Mean TF-IDF score -> 0.3419
+[13:04:03]: PCA run successfully
+[13:04:03]: Model created successfully
+[13:04:03]: Successfully ran the classification model
