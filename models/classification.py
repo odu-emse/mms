@@ -31,18 +31,17 @@ class Classify:
         path: str = "input/603_trans_3.tsv",
         testPath: Union[str, None] = None,
         outputPath: str = "output/",
-        toDownload: bool = True,
-        verbose: bool = True,
-        visualize: bool = True,
+        toDownload: bool = False,
+        verbose: bool = False,
+        visualize: bool = False,
     ) -> None:
         import logging
-
-        logging.basicConfig(level=logging.INFO)
 
         self.logger = logging.getLogger(__name__)
         self.filePath: str = path
         self.testPath: str = testPath
         self.outputPath: str = outputPath
+        self.logPath: str = "logs/"
         self.toDownload: bool = toDownload
         self.data: Union[DataFrame, None] = None
         self.testData: Union[DataFrame, None] = None
@@ -360,7 +359,7 @@ class Classify:
                 self.generate_count_plot(data=dfTrain)
                 self.generate_count_plot(data=dfTest)
             self._save_data_frame(dfTrain, fileName="603_clean.csv")
-            self._save_data_frame(dfTest, fileName="603_clean_test.csv")
+            self._save_data_frame(dfTest, fileName="614_test.csv")
 
     def _create_tf_idf(self, train, test) -> tuple:
         """
@@ -898,6 +897,7 @@ def main():
         type=str,
         default="input/603_trans_3.tsv",
         help="Path to the training dataset",
+        required=True,
     )
     parser.add_argument(
         "--test",
@@ -907,10 +907,16 @@ def main():
         help="Path to the testing dataset",
     )
     parser.add_argument(
-        "--download", "-d", type=bool, help="Download the required libraries"
+        "--download",
+        help="Download the required libraries",
+        required=True,
+        action=argparse.BooleanOptionalAction,
     )
     parser.add_argument(
-        "--verbose", "-v", type=bool, help="Print the logs", default=True
+        "--verbose",
+        help="Print the logs",
+        required=True,
+        action=argparse.BooleanOptionalAction,
     )
     parser.add_argument(
         "--sep", "-s", type=str, default="\t", help="Separator for the data"
@@ -919,27 +925,24 @@ def main():
         "--out",
         "-o",
         type=str,
-        default="/603_clean.csv",
+        default="output/",
         help="File name of the output file",
     )
     parser.add_argument(
-        "--visualize",
-        "-viz",
-        type=bool,
-        default=True,
+        "--viz",
         help="Decide whether to visualize the EDA process and display classification visualization.",
+        required=True,
+        action=argparse.BooleanOptionalAction,
     )
 
     args = parser.parse_args()
-
-    print(args)
 
     classify = Classify(
         path=args.path,
         toDownload=args.download,
         verbose=args.verbose,
         outputPath=args.out,
-        visualize=args.visualize,
+        visualize=args.viz,
         testPath=args.test,
     )
     classify.run()
