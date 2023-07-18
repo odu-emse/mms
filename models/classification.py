@@ -993,7 +993,13 @@ class Classify:
             self._log("Successfully ran the classification model")
 
 
-def main():
+def configure_arguments():
+    """
+    Configure the command-line arguments for the classification model.
+
+    Returns:
+        argparse.Namespace: The parsed command-line arguments.
+    """
     import argparse
 
     parser = argparse.ArgumentParser(description="Classification of text")
@@ -1054,7 +1060,11 @@ def main():
 
     args = parser.parse_args()
 
-    print(args)
+    return args
+
+
+def main():
+    args = configure_arguments()
 
     classify = Classify(
         path=args.path,
