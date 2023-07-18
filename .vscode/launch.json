@@ -1,0 +1,30 @@
+{
+  // Use IntelliSense to learn about possible attributes.
+  // Hover to view descriptions of existing attributes.
+  // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "MMS: Simple",
+      "type": "python",
+      "request": "launch",
+      "program": "${file}",
+      "console": "integratedTerminal",
+      "justMyCode": true,
+      "args": [
+        "-p", "input/603_trans_3.tsv", "-t", "input/604_trans.tsv", "--no-download", "--verbose", "--no-viz", "--no-concat"
+      ]
+    },
+    {
+      "name": "MMS: Complex",
+      "type": "python",
+      "request": "launch",
+      "program": "${file}",
+      "console": "integratedTerminal",
+      "justMyCode": true,
+      "args": [
+        "-t", "input/604_trans.tsv", "--no-download", "--verbose", "--no-viz", "--concat", "-tf", "input/603_trans_3.tsv", "input/614_trans.tsv"
+      ]
+    }
+  ]
+}
