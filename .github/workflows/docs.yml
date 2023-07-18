@@ -2,7 +2,7 @@ name: Build and Deploy Docs
 
 on:
   push:
-    branches: [ 'dev', 'master', 'ALMP-**' ]
+    branches: [ 'dev', 'main', 'ALMP-**' ]
 
 jobs:
   docs:
