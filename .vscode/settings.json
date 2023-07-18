@@ -4,12 +4,24 @@
   },
   "python.formatting.provider": "none",
   "cSpell.words": [
+    "dataframe",
+    "figsize",
+    "imshow",
+    "lemmatize",
+    "Lemmatizer",
+    "matplotlib",
+    "Multinomial",
     "ndarray",
     "nltk",
+    "pyplot",
+    "savefig",
+    "scatterplot",
+    "seaborn",
     "stopwords",
     "Tfidf",
     "toarray",
     "vectorizer",
+    "wordcloud",
     "wordnet"
   ]
 }
