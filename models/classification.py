@@ -618,7 +618,20 @@ class Classify:
         n_neighbors: int = 5,
     ):
         """
-        Run the nearest neighbors algorithm.
+        Runs the nearest neighbors algorithm on the input data.
+
+        Args:
+            Train_X_Tfidf (numpy.ndarray): The training data to be used for fitting the model.
+            Test_X_Tfidf (numpy.ndarray): The test data to be used for predicting the model.
+            Train_Y (pandas.Series): The target values for the training data.
+            Test_Y (pandas.Series): The target values for the test data.
+            algo (str): The algorithm to be used for computing the nearest neighbors.
+            metric (str): The distance metric to be used for computing the nearest neighbors.
+            weights (str): The weight function to be used for computing the nearest neighbors.
+            n_neighbors (int): The number of neighbors to be used for computing the nearest neighbors.
+
+        Returns:
+            None
         """
         from sklearn.neighbors import KNeighborsClassifier
         from sklearn.metrics import accuracy_score
@@ -786,18 +799,18 @@ class Classify:
         from matplotlib import pyplot as plt
 
         wordcloud = WordCloud(
-            max_font_size=80,
             max_words=700,
             background_color="white",
             stopwords=self.stop_words,
         ).generate(corpus)
         plt.figure(figsize=(10, 10))
-        plt.imshow(wordcloud, interpolation="bilinear")
         plt.axis("off")
         if self.viz:
+            plt.imshow(wordcloud, interpolation="bilinear")
             plt.show()
         else:
-            plt.savefig(str(self.outputPath + fileName))
+            # plt.savefig(str(self.outputPath + fileName))
+            wordcloud.to_file(str(self.outputPath + fileName))
 
     def generate_scatter_plot(
         self, data: DataFrame, fileName: str = "scatter_plot.png"
@@ -907,7 +920,7 @@ class Classify:
         import seaborn as sns
         from matplotlib import pyplot as plt
 
-        plt.figure(figsize=(20, 20))
+        plt.figure(figsize=(25, 15))
         sns.heatmap(
             arr,
             mask=mask,
@@ -916,6 +929,7 @@ class Classify:
             annot=True,
             cmap="YlGnBu",
             fmt=".2f",
+            cbar=False,
         )
         if self.viz:
             plt.show()
