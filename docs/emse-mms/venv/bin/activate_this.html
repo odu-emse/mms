@@ -4,8 +4,8 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
 <meta name="generator" content="pdoc 0.10.0" />
-<title>emse-mms API documentation</title>
-<meta name="description" content="" />
+<title>emse-mms.venv.bin.activate_this API documentation</title>
+<meta name="description" content="Activate virtualenv for current interpreter: …" />
 <link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/sanitize.min.css" integrity="sha256-PK9q560IAAa6WVRRh76LtCaI8pjTJ2z11v0miyNNjrs=" crossorigin>
 <link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/typography.min.css" integrity="sha256-7l/o7C8jubJiy74VsKTidCy1yBkRtiUGbVkYBylBqUg=" crossorigin>
 <link rel="stylesheet preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/styles/github.min.css" crossorigin>
@@ -19,42 +19,50 @@
 <main>
 <article id="content">
 <header>
-<h1 class="title">Namespace <code>emse-mms</code></h1>
+<h1 class="title">Module <code>emse-mms.venv.bin.activate_this</code></h1>
 </header>
 <section id="section-intro">
+<p>Activate virtualenv for current interpreter:</p>
+<p>Use exec(open(this_file).read(), {'<strong>file</strong>': this_file}).</p>
+<p>This can be used when you must use an existing Python interpreter, not the virtualenv bin/python.</p>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">&#34;&#34;&#34;Activate virtualenv for current interpreter:
+
+Use exec(open(this_file).read(), {&#39;__file__&#39;: this_file}).
+
+This can be used when you must use an existing Python interpreter, not the virtualenv bin/python.
+&#34;&#34;&#34;
+import os
+import site
+import sys
+
+try:
+    abs_file = os.path.abspath(__file__)
+except NameError:
+    raise AssertionError(&#34;You must use exec(open(this_file).read(), {&#39;__file__&#39;: this_file}))&#34;)
+
+bin_dir = os.path.dirname(abs_file)
+base = bin_dir[: -len(&#34;bin&#34;) - 1]  # strip away the bin part from the __file__, plus the path separator
+
+# prepend bin to PATH (this file is inside the bin directory)
+os.environ[&#34;PATH&#34;] = os.pathsep.join([bin_dir] + os.environ.get(&#34;PATH&#34;, &#34;&#34;).split(os.pathsep))
+os.environ[&#34;VIRTUAL_ENV&#34;] = base  # virtual env is right above bin directory
+
+# add the virtual environments libraries to the host python import mechanism
+prev_length = len(sys.path)
+for lib in &#34;../lib/python3.10/site-packages&#34;.split(os.pathsep):
+    path = os.path.realpath(os.path.join(bin_dir, lib))
+    site.addsitedir(path.decode(&#34;utf-8&#34;) if &#34;&#34; else path)
+sys.path[:] = sys.path[prev_length:] + sys.path[0:prev_length]
+
+sys.real_prefix = sys.prefix
+sys.prefix = base</code></pre>
+</details>
 </section>
 <section>
-<h2 class="section-title" id="header-submodules">Sub-modules</h2>
-<dl>
-<dt><code class="name"><a title="emse-mms.api" href="api.html">emse-mms.api</a></code></dt>
-<dd>
-<div class="desc"></div>
-</dd>
-<dt><code class="name"><a title="emse-mms.app" href="app.html">emse-mms.app</a></code></dt>
-<dd>
-<div class="desc"></div>
-</dd>
-<dt><code class="name"><a title="emse-mms.keys" href="keys.html">emse-mms.keys</a></code></dt>
-<dd>
-<div class="desc"></div>
-</dd>
-<dt><code class="name"><a title="emse-mms.models" href="models/index.html">emse-mms.models</a></code></dt>
-<dd>
-<div class="desc"></div>
-</dd>
-<dt><code class="name"><a title="emse-mms.recommend" href="recommend.html">emse-mms.recommend</a></code></dt>
-<dd>
-<div class="desc"></div>
-</dd>
-<dt><code class="name"><a title="emse-mms.utils" href="utils/index.html">emse-mms.utils</a></code></dt>
-<dd>
-<div class="desc"></div>
-</dd>
-<dt><code class="name"><a title="emse-mms.venv" href="venv/index.html">emse-mms.venv</a></code></dt>
-<dd>
-<div class="desc"></div>
-</dd>
-</dl>
 </section>
 <section>
 </section>
@@ -69,15 +77,9 @@
 <ul></ul>
 </div>
 <ul id="index">
-<li><h3><a href="#header-submodules">Sub-modules</a></h3>
+<li><h3>Super-module</h3>
 <ul>
-<li><code><a title="emse-mms.api" href="api.html">emse-mms.api</a></code></li>
-<li><code><a title="emse-mms.app" href="app.html">emse-mms.app</a></code></li>
-<li><code><a title="emse-mms.keys" href="keys.html">emse-mms.keys</a></code></li>
-<li><code><a title="emse-mms.models" href="models/index.html">emse-mms.models</a></code></li>
-<li><code><a title="emse-mms.recommend" href="recommend.html">emse-mms.recommend</a></code></li>
-<li><code><a title="emse-mms.utils" href="utils/index.html">emse-mms.utils</a></code></li>
-<li><code><a title="emse-mms.venv" href="venv/index.html">emse-mms.venv</a></code></li>
+<li><code><a title="emse-mms.venv.bin" href="index.html">emse-mms.venv.bin</a></code></li>
 </ul>
 </li>
 </ul>
