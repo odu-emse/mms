@@ -34,6 +34,8 @@ class Classify:
         toDownload: bool = False,
         verbose: bool = False,
         visualize: bool = False,
+        concat: bool = False,
+        trainFiles: list[str] = [],
     ) -> None:
         import logging
 
@@ -43,7 +45,9 @@ class Classify:
         self.outputPath: str = outputPath
         self.logPath: str = "logs/classification.log"
         self.toDownload: bool = toDownload
+        self.concat: bool = concat
         self.data: Union[DataFrame, None] = None
+        self.trainFiles: list[str] = trainFiles
         self.testData: Union[DataFrame, None] = None
         self.verbose: bool = verbose
         self.viz: bool = visualize
@@ -118,7 +122,18 @@ class Classify:
         """
         Read the data from the file path. The default separator is tab.
         """
-        self.data = pd.read_csv(self.filePath, sep=sep)
+        data = None
+
+        if self.concat:
+            for file in self.trainFiles:
+                data = self._merge_frames(data, pd.read_csv(file, sep=sep))
+        else:
+            data = pd.read_csv(self.filePath, sep=sep)
+
+        self.data = data
+
+        if self.data is None:
+            raise Exception("Data is empty")
 
         if self.testPath is not None:
             self.testData = pd.read_csv(self.testPath, sep=sep)
@@ -154,6 +169,20 @@ class Classify:
             print(df.head())
         else:
             self._log("Scalar values converted to string successfully")
+
+        return df
+
+    def _merge_frames(self, df1: DataFrame, df2: DataFrame) -> DataFrame:
+        """
+        Merge the two DataFrames.
+        """
+        df = pd.concat([df1, df2], ignore_index=True)
+
+        if self.verbose:
+            self._log("DataFrames merged successfully")
+            print(df.head())
+        else:
+            self._log("DataFrames merged successfully")
 
         return df
 
@@ -959,15 +988,12 @@ def main():
         "--path",
         "-p",
         type=str,
-        default="input/603_trans_3.tsv",
         help="Path to the training dataset",
-        required=True,
     )
     parser.add_argument(
         "--test",
         "-t",
         type=str,
-        default="input/614_trans.tsv",
         help="Path to the testing dataset",
     )
     parser.add_argument(
@@ -999,7 +1025,23 @@ def main():
         action=argparse.BooleanOptionalAction,
     )
 
+    parser.add_argument(
+        "--concat",
+        help="Concatenate the training data with the test data",
+        required=True,
+        action=argparse.BooleanOptionalAction,
+    )
+
+    parser.add_argument(
+        "--trainFiles",
+        "-tf",
+        nargs="+",
+        help="List of training files to concatenate",
+    )
+
     args = parser.parse_args()
+
+    print(args)
 
     classify = Classify(
         path=args.path,
@@ -1008,6 +1050,8 @@ def main():
         outputPath=args.out,
         visualize=args.viz,
         testPath=args.test,
+        concat=args.concat,
+        trainFiles=args.trainFiles,
     )
     classify.run()
 
