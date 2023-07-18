@@ -1,7 +1,13 @@
 {
   "[python]": {
-    "editor.defaultFormatter": "ms-python.black-formatter"
+    "editor.defaultFormatter": "ms-python.black-formatter",
   },
+  "python.linting.flake8Args": [
+  "--max-line-length=150"
+  ],
+  "flake8.interpreter": [
+    "venv/bin/python3"
+  ],
   "python.formatting.provider": "none",
   "cSpell.words": [
     "dataframe",

@@ -351,7 +351,7 @@ class Classify:
 
             self.data = df
             self.N_CLUSTER = int(np.sqrt(len(df)))
-            if self.viz == True:
+            if self.viz:
                 self.generate_count_plot(data=df)
             self._save_data_frame(df, fileName="603_clean.csv")
 
@@ -386,7 +386,7 @@ class Classify:
             self.testData = dfTest
             self.N_CLUSTER = int(np.sqrt(len(dfTrain)))
             self.N_TEST_CLUSTER = int(np.sqrt(len(dfTest)))
-            if self.viz == True:
+            if self.viz:
                 self.generate_count_plot(data=dfTrain)
                 self.generate_count_plot(data=dfTest)
             self._save_data_frame(dfTrain, fileName="603_clean.csv")
@@ -468,7 +468,6 @@ class Classify:
         """
         Encode the data for the classification.
         """
-        from sklearn.preprocessing import LabelEncoder
 
         df[col] = self.encoder.fit_transform(df[col])
 
@@ -717,7 +716,6 @@ class Classify:
         Returns:
             None
         """
-        import numpy as np
         from sklearn.decomposition import PCA
 
         pca = PCA(n_components=2, random_state=42)
@@ -938,7 +936,8 @@ class Classify:
 
     def _print_sorted_similarities(self, sim_arr, threshold=0) -> DataFrame:
         """
-        Store the similarities between the documents in a data frame that is sorted by the similarity score in descending order. Removing the diagonal values.
+        Store the similarities between the documents in a data frame that is sorted by the similarity score in descending order.
+        Removing the diagonal values.
 
         Args:
             sim_arr (numpy.ndarray): The similarity array.
@@ -984,13 +983,13 @@ class Classify:
         self.read()
         self.prepare(col="features")
         self._create_model()
-        if self.viz == True:
+        if self.viz:
             self._run_word_cloud_per_cluster(df=self.data)
             if self.testPath is not None:
                 # TODO: Fix test data not having x and y columns
                 # self.generate_scatter_plot(data=self.testData)
                 pass
-        if self.verbose == True:
+        if self.verbose:
             self._log("Successfully ran the classification model")
 
 
