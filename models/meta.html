@@ -26,27 +26,24 @@
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">import nltk
-import pandas as pd
+<pre><code class="python">import pandas as pd
 from nltk.corpus import stopwords
 from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
 
 
-&#34;&#34;&#34;
-This class is used to recommend modules based on the module name, description, keywords and objectives. This is commonly 
-referred to as a Meta-Based Recommender System. The class takes in a path to a json file, a target module name and a 
-size of the recommendation list. The class will then return a list of 
-recommended modules based on the target module name.
-&#34;&#34;&#34;
-
-
 class MetaRecommender:
+    &#34;&#34;&#34;
+    This class is used to recommend modules based on the module name, description, keywords and objectives. This is commonly
+    referred to as a Meta-Based Recommender System. The class takes in a path to a json file, a target module name and a
+    size of the recommendation list. The class will then return a list of
+    recommended modules based on the target module name.
+    &#34;&#34;&#34;
+
     def __init__(self, path: str, target: str, size: int = 10):
         self.df = pd.read_json(path)
         self.featureDf = pd.DataFrame()
         self.target = target
-        nltk.download(&#34;stopwords&#34;)
         self.stop = stopwords.words(&#34;english&#34;)
         self.cv = CountVectorizer()
         self.similarity = None
@@ -54,6 +51,11 @@ class MetaRecommender:
 
     @staticmethod
     def _convert_module_id(df: pd.DataFrame()):
+        &#34;&#34;&#34;
+        This function is used to convert the module id from a mongo Object ID to a string.
+        :param df: the dataframe to be modified by the apply function
+        :return: the modified dataframe
+        &#34;&#34;&#34;
         temp_id = df[&#34;id&#34;]
         temp_id = dict(temp_id)
         temp_id = temp_id[&#34;$oid&#34;]
@@ -152,6 +154,17 @@ class MetaRecommender:
             return {&#34;error&#34;: &#34;Module not found&#34;}
 
     def run(self):
+        &#34;&#34;&#34;
+        This function is used to run the recommender system. It recommends modules based on the
+        target module name passed in. The list will be sorted by the cosine similarity score.
+        The list will be in the format of
+
+        *[{&#34;title&#34;: module_title, &#34;id&#34;: module_oid, &#34;score&#34;: cosine_similarity_score}, ...]*
+
+        .. todo:: Add a check to see if the target module name is in the database.
+
+        .. return:: a list of recommended modules or a dictionary an error message
+        &#34;&#34;&#34;
         self._clean_data(self._convert_module_id, self._scalar_to_str)
         self._create_features()
         self.featureDf = self.df[[&#34;id&#34;, &#34;features&#34;]]
@@ -178,17 +191,26 @@ class MetaRecommender:
 <span>(</span><span>path: str, target: str, size: int = 10)</span>
 </code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>This class is used to recommend modules based on the module name, description, keywords and objectives. This is commonly
+referred to as a Meta-Based Recommender System. The class takes in a path to a json file, a target module name and a
+size of the recommendation list. The class will then return a list of
+recommended modules based on the target module name.</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">class MetaRecommender:
+    &#34;&#34;&#34;
+    This class is used to recommend modules based on the module name, description, keywords and objectives. This is commonly
+    referred to as a Meta-Based Recommender System. The class takes in a path to a json file, a target module name and a
+    size of the recommendation list. The class will then return a list of
+    recommended modules based on the target module name.
+    &#34;&#34;&#34;
+
     def __init__(self, path: str, target: str, size: int = 10):
         self.df = pd.read_json(path)
         self.featureDf = pd.DataFrame()
         self.target = target
-        nltk.download(&#34;stopwords&#34;)
         self.stop = stopwords.words(&#34;english&#34;)
         self.cv = CountVectorizer()
         self.similarity = None
@@ -196,6 +218,11 @@ class MetaRecommender:
 
     @staticmethod
     def _convert_module_id(df: pd.DataFrame()):
+        &#34;&#34;&#34;
+        This function is used to convert the module id from a mongo Object ID to a string.
+        :param df: the dataframe to be modified by the apply function
+        :return: the modified dataframe
+        &#34;&#34;&#34;
         temp_id = df[&#34;id&#34;]
         temp_id = dict(temp_id)
         temp_id = temp_id[&#34;$oid&#34;]
@@ -294,6 +321,17 @@ class MetaRecommender:
             return {&#34;error&#34;: &#34;Module not found&#34;}
 
     def run(self):
+        &#34;&#34;&#34;
+        This function is used to run the recommender system. It recommends modules based on the
+        target module name passed in. The list will be sorted by the cosine similarity score.
+        The list will be in the format of
+
+        *[{&#34;title&#34;: module_title, &#34;id&#34;: module_oid, &#34;score&#34;: cosine_similarity_score}, ...]*
+
+        .. todo:: Add a check to see if the target module name is in the database.
+
+        .. return:: a list of recommended modules or a dictionary an error message
+        &#34;&#34;&#34;
         self._clean_data(self._convert_module_id, self._scalar_to_str)
         self._create_features()
         self.featureDf = self.df[[&#34;id&#34;, &#34;features&#34;]]
@@ -311,12 +349,33 @@ class MetaRecommender:
 <span>def <span class="ident">run</span></span>(<span>self)</span>
 </code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>This function is used to run the recommender system. It recommends modules based on the
+target module name passed in. The list will be sorted by the cosine similarity score.
+The list will be in the format of</p>
+<p><em>[{"title": module_title, "id": module_oid, "score": cosine_similarity_score}, &hellip;]</em></p>
+<div class="admonition todo">
+<p class="admonition-title">TODO</p>
+<p>Add a check to see if the target module name is in the database.</p>
+</div>
+<div class="admonition return">
+<p class="admonition-title">Return:&ensp;a list of recommended modules or a dictionary an error message</p>
+</div></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">def run(self):
+    &#34;&#34;&#34;
+    This function is used to run the recommender system. It recommends modules based on the
+    target module name passed in. The list will be sorted by the cosine similarity score.
+    The list will be in the format of
+
+    *[{&#34;title&#34;: module_title, &#34;id&#34;: module_oid, &#34;score&#34;: cosine_similarity_score}, ...]*
+
+    .. todo:: Add a check to see if the target module name is in the database.
+
+    .. return:: a list of recommended modules or a dictionary an error message
+    &#34;&#34;&#34;
     self._clean_data(self._convert_module_id, self._scalar_to_str)
     self._create_features()
     self.featureDf = self.df[[&#34;id&#34;, &#34;features&#34;]]

@@ -26,15 +26,18 @@
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">from enum import Enum
+<pre><code class="python">import asyncio
+import csv
+from enum import Enum
 import os
 from typing import Union
+from string import Template
 
+import numpy as np
 from essential_generators import DocumentGenerator
-from numpy import random
 from prisma import Prisma
 import logging
-from requests import post
+from requests import post, Response
 
 
 def getModuleFeedback():
@@ -72,7 +75,8 @@ class Seeder:
     database and the essential_generators library to create document templates.
     &#34;&#34;&#34;
 
-    def __init__(self, skip: [Skipper] = None, cleanup: [Skipper] = None, iterations: int = 25, target: Union[str, None] = None):
+    def __init__(self, skip: [Skipper] = None, cleanup: [Skipper] = None, iterations: int = 25,
+                 target: Union[str, None] = None):
         self.gen = DocumentGenerator()
         self.gen.init_word_cache(5000)
         self.gen.init_sentence_cache(5000)
@@ -106,11 +110,11 @@ class Seeder:
         Creates a target user for testing purposes.
         &#34;&#34;&#34;
         account = await self.prisma.user.create(data={
-                &#39;firstName&#39;: &#39;Test User&#39;,
-                &#39;lastName&#39;: &#39;Test User&#39;,
-                &#39;email&#39;: &#39;&#39;,
-                &#39;openID&#39;: &#39;&#39;
-            })
+            &#39;firstName&#39;: &#39;Test User&#39;,
+            &#39;lastName&#39;: &#39;Test User&#39;,
+            &#39;email&#39;: &#39;&#39;,
+            &#39;openID&#39;: &#39;&#39;
+        })
 
         self.logger.info(&#39;Created target user: %s&#39; % account.id)
         return account.id
@@ -239,6 +243,141 @@ class Seeder:
         self.modules = modules
         self.logger.info(&#39;Module model seeded successfully with %d documents!&#39; % module_res)
 
+    def _is_float_(self, num: str):
+        try:
+            if float(num).is_integer():
+                return False
+            return True
+        except ValueError:
+            return False
+
+    # function to create acronym
+    def fxn(self, stng: str):
+        # add first letter
+        oupt = stng[0]
+        # iterate over string
+        for i in range(1, len(stng)):
+            if stng[i - 1] == &#39; &#39;:
+                # add letter next to space
+                oupt += stng[i]
+        # uppercase oupt
+        oupt = oupt.upper()
+        return oupt
+
+    async def seedModuleFromFile(self, path: str):
+        &#34;&#34;&#34;
+        Seeds the module model with data from a csv file. The structure of the files must be as follows:
+            - the first two rows should be ignored as they contain the column names and data types
+            - column 1: module number - if it is an integer, we will need to create a unique prefix for it. if it is a float, the prefix will be the integer part of the number and the decimal number will be the module number
+            - column 2: module name
+            - column 3: module description
+            - column 4: module objectives - this will be a list of strings separated by a semicolon
+            - column 5: module keywords - this will be a list of strings separated by a semicolon
+            - column 6: module hours - this will be an float number representing the number of hours the module will take to complete
+
+        :return: Boolean
+        &#34;&#34;&#34;
+        self.logger.info(&#39;Seeding module model from file...&#39;)
+
+        modules = list()
+
+        with open(path, &#39;r&#39;) as csvFile:
+            parsedFile = csv.reader(csvFile, delimiter=&#39;\t&#39;, quotechar=&#39;|&#39;)
+            next(parsedFile)
+            prefix = &#39;&#39;
+
+            for row in parsedFile:
+                document = dict()
+
+                if float(row[0]).is_integer():
+                    prefix = self.fxn(row[1])
+                    document[&#39;number&#39;] = 0
+                else:
+                    dec = row[0].split(&#39;.&#39;)
+                    document[&#39;number&#39;] = dec[1]
+
+                document[&#39;name&#39;] = row[1]
+                document[&#39;prefix&#39;] = prefix
+                document[&#39;description&#39;] = row[2]
+                document[&#39;objectives&#39;] = row[3].split(&#39;;&#39;)
+                document[&#39;keywords&#39;] = row[4].split(&#39;;&#39;)
+
+                if row[5] == &#39; &#39; or row[5] == &#39;&#39;:
+                    document[&#39;hours&#39;] = np.random.uniform(0.25, 2)
+                else:
+                    document[&#39;hours&#39;] = float(row[5])
+
+                modules.append(document)
+
+        message = Template(&#39;Successfully parsed $number documents from file $name!&#39;)
+
+        self.logger.info(message.substitute(number=len(modules), name=path.split(&#39;/&#39;)[-1]))
+
+        # send each element in the array to the GraphQL API endpoint without using Prisma
+
+        for module in modules:
+            query = Template(&#34;&#34;&#34;
+                mutation {
+                    createModule(input: {
+                        name: &#34;$name&#34;
+                        number: $number
+                        prefix: &#34;$prefix&#34;
+                        description: &#34;$description&#34;
+                        objectives: [$objectives]
+                        keywords: [$keywords]
+                        hours: $hours
+                    }) {
+                        id
+                    }
+                }
+            &#34;&#34;&#34;)
+
+            cleanedObjectives = &#34;&#34;
+
+            for obj in module[&#39;objectives&#39;]:
+                curr = obj.split(&#39;;&#39;)[0]
+                if len(curr) == 0:
+                    continue
+                if curr[0] == &#39;&#34;&#39; and curr[-1] == &#39;&#34;&#39;:
+                    cleanedObjectives += &#39;&#39; + obj.split(&#39;;&#39;)[0] + &#39;,&#39;
+                elif curr[0] == &#39;&#34;&#39; and curr[-1] != &#39;&#34;&#39;:
+                    cleanedObjectives += &#39;&#39; + obj.split(&#39;;&#39;)[0] + &#39;&#34;,&#39;
+                else:
+                    cleanedObjectives += &#39;&#34;&#39; + obj.split(&#39;;&#39;)[0] + &#39;&#34;,&#39;
+
+            cleanedKeys = &#34;&#34;
+            for key in module[&#39;keywords&#39;]:
+                if len(key) == 0:
+                    continue
+                if key[0] == &#39;&#34;&#39; and key[-1] == &#39;&#34;&#39;:
+                    cleanedKeys += &#39;&#39; + key + &#39;,&#39;
+                elif key[0] == &#39;&#34;&#39; and key[-1] != &#39;&#34;&#39;:
+                    cleanedKeys += &#39;&#39; + key + &#39;&#34;,&#39;
+                else:
+                    cleanedKeys += &#39;&#34;&#39; + key + &#39;&#34;,&#39;
+
+            finalizedQuery = query.substitute(
+                name=module[&#39;name&#39;],
+                number=module[&#39;number&#39;],
+                prefix=module[&#39;prefix&#39;],
+                description=module[&#39;description&#39;],
+                objectives=cleanedObjectives,
+                keywords=cleanedKeys.strip(&#39;,&#39;),
+                hours=module[&#39;hours&#39;]
+            )
+
+            # print(finalizedQuery)
+
+            res: Response = post(&#34;http://localhost:4000/graphql&#34;, json={&#39;query&#39;: finalizedQuery})
+
+            # print(res.text)
+
+            if res.status_code != 200:
+                self.logger.error(&#39;Failed to seed module model from file!&#39;)
+                return False
+
+        return True
+
     async def _seedPlanOfStudyDB(self):
         &#34;&#34;&#34;
         Seeds the plan of study model with dummy data for each account already present in the DB.
@@ -276,7 +415,7 @@ class Seeder:
                 enrollments.append({
                     &#39;planID&#39;: pos[&#39;id&#39;],
                     &#39;moduleId&#39;: module[&#39;id&#39;],
-                    &#39;role&#39;: random.choice(list(EnrollmentRole)).name
+                    &#39;role&#39;: np.random.choice(list(EnrollmentRole)).name
                 })
 
         enrollment_res = await self.prisma.moduleenrollment.create_many(data=enrollments)
@@ -299,9 +438,10 @@ class Seeder:
         for enrollment in self.enrollments:
             feedbacks.append({
                 &#39;moduleId&#39;: enrollment[&#39;moduleId&#39;],
-                &#39;rating&#39;: random.randint(1, 6),
+                &#39;rating&#39;: np.random.randint(1, 6),
                 &#39;feedback&#39;: self.gen.sentence(),
-                &#39;studentId&#39;: list(map(lambda x: x[&#39;studentID&#39;], filter(lambda x: x[&#39;id&#39;] == enrollment[&#39;planID&#39;], plans))).pop()
+                &#39;studentId&#39;: list(
+                    map(lambda x: x[&#39;studentID&#39;], filter(lambda x: x[&#39;id&#39;] == enrollment[&#39;planID&#39;], plans))).pop()
             })
 
         feedback_res = await self.prisma.modulefeedback.create_many(data=feedbacks)
@@ -418,7 +558,37 @@ class Seeder:
 
     async def _cleanupEnrollmentDB(self):
         count = await self.prisma.moduleenrollment.delete_many()
-        self.logger.info(&#39;Enrollment model cleaned up successfully! (%d documents deleted)&#39; % count)</code></pre>
+        self.logger.info(&#39;Enrollment model cleaned up successfully! (%d documents deleted)&#39; % count)
+
+
+async def main():
+    seeder = Seeder(
+        skip=[Skipper.all],
+        cleanup=[Skipper.all],
+    )
+    modules = [
+        # &#39;../input/ENMA603_1.txt&#39;,
+        # &#39;../input/ENMA603_2.txt&#39;,
+        # &#39;../input/ENMA603_3.txt&#39;,
+        # &#39;../input/ENMA603_4.txt&#39;,
+        # &#39;../input/ENMA603_5.txt&#39;,
+        # &#39;../input/ENMA603_6.txt&#39;,
+        # &#39;../input/ENMA603_7.txt&#39;,
+        # &#39;../input/ENMA603_8.txt&#39;,
+        # &#39;../input/ENMA603_9.txt&#39;,
+        # &#39;../input/ENMA603_10.txt&#39;,
+        # &#39;../input/ENMA603_11.txt&#39;,
+        # &#39;../input/ENMA603_12.txt&#39;,
+        # &#39;../input/ENMA603_13.txt&#39;,
+        # &#39;../input/ENMA603_14.txt&#39;,
+    ]
+
+    for module in modules:
+        await seeder.seedModuleFromFile(path=module)
+
+
+if __name__ == &#39;__main__&#39;:
+    asyncio.run(main())</code></pre>
 </details>
 </section>
 <section>
@@ -457,6 +627,41 @@ class Seeder:
     return mods.json()[&#39;data&#39;]</code></pre>
 </details>
 </dd>
+<dt id="emse-mms.utils.seed.main"><code class="name flex">
+<span>async def <span class="ident">main</span></span>(<span>)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">async def main():
+    seeder = Seeder(
+        skip=[Skipper.all],
+        cleanup=[Skipper.all],
+    )
+    modules = [
+        # &#39;../input/ENMA603_1.txt&#39;,
+        # &#39;../input/ENMA603_2.txt&#39;,
+        # &#39;../input/ENMA603_3.txt&#39;,
+        # &#39;../input/ENMA603_4.txt&#39;,
+        # &#39;../input/ENMA603_5.txt&#39;,
+        # &#39;../input/ENMA603_6.txt&#39;,
+        # &#39;../input/ENMA603_7.txt&#39;,
+        # &#39;../input/ENMA603_8.txt&#39;,
+        # &#39;../input/ENMA603_9.txt&#39;,
+        # &#39;../input/ENMA603_10.txt&#39;,
+        # &#39;../input/ENMA603_11.txt&#39;,
+        # &#39;../input/ENMA603_12.txt&#39;,
+        # &#39;../input/ENMA603_13.txt&#39;,
+        # &#39;../input/ENMA603_14.txt&#39;,
+    ]
+
+    for module in modules:
+        await seeder.seedModuleFromFile(path=module)</code></pre>
+</details>
+</dd>
 </dl>
 </section>
 <section>
@@ -479,7 +684,8 @@ database and the essential_generators library to create document templates.</p><
     database and the essential_generators library to create document templates.
     &#34;&#34;&#34;
 
-    def __init__(self, skip: [Skipper] = None, cleanup: [Skipper] = None, iterations: int = 25, target: Union[str, None] = None):
+    def __init__(self, skip: [Skipper] = None, cleanup: [Skipper] = None, iterations: int = 25,
+                 target: Union[str, None] = None):
         self.gen = DocumentGenerator()
         self.gen.init_word_cache(5000)
         self.gen.init_sentence_cache(5000)
@@ -513,11 +719,11 @@ database and the essential_generators library to create document templates.</p><
         Creates a target user for testing purposes.
         &#34;&#34;&#34;
         account = await self.prisma.user.create(data={
-                &#39;firstName&#39;: &#39;Test User&#39;,
-                &#39;lastName&#39;: &#39;Test User&#39;,
-                &#39;email&#39;: &#39;&#39;,
-                &#39;openID&#39;: &#39;&#39;
-            })
+            &#39;firstName&#39;: &#39;Test User&#39;,
+            &#39;lastName&#39;: &#39;Test User&#39;,
+            &#39;email&#39;: &#39;&#39;,
+            &#39;openID&#39;: &#39;&#39;
+        })
 
         self.logger.info(&#39;Created target user: %s&#39; % account.id)
         return account.id
@@ -646,6 +852,141 @@ database and the essential_generators library to create document templates.</p><
         self.modules = modules
         self.logger.info(&#39;Module model seeded successfully with %d documents!&#39; % module_res)
 
+    def _is_float_(self, num: str):
+        try:
+            if float(num).is_integer():
+                return False
+            return True
+        except ValueError:
+            return False
+
+    # function to create acronym
+    def fxn(self, stng: str):
+        # add first letter
+        oupt = stng[0]
+        # iterate over string
+        for i in range(1, len(stng)):
+            if stng[i - 1] == &#39; &#39;:
+                # add letter next to space
+                oupt += stng[i]
+        # uppercase oupt
+        oupt = oupt.upper()
+        return oupt
+
+    async def seedModuleFromFile(self, path: str):
+        &#34;&#34;&#34;
+        Seeds the module model with data from a csv file. The structure of the files must be as follows:
+            - the first two rows should be ignored as they contain the column names and data types
+            - column 1: module number - if it is an integer, we will need to create a unique prefix for it. if it is a float, the prefix will be the integer part of the number and the decimal number will be the module number
+            - column 2: module name
+            - column 3: module description
+            - column 4: module objectives - this will be a list of strings separated by a semicolon
+            - column 5: module keywords - this will be a list of strings separated by a semicolon
+            - column 6: module hours - this will be an float number representing the number of hours the module will take to complete
+
+        :return: Boolean
+        &#34;&#34;&#34;
+        self.logger.info(&#39;Seeding module model from file...&#39;)
+
+        modules = list()
+
+        with open(path, &#39;r&#39;) as csvFile:
+            parsedFile = csv.reader(csvFile, delimiter=&#39;\t&#39;, quotechar=&#39;|&#39;)
+            next(parsedFile)
+            prefix = &#39;&#39;
+
+            for row in parsedFile:
+                document = dict()
+
+                if float(row[0]).is_integer():
+                    prefix = self.fxn(row[1])
+                    document[&#39;number&#39;] = 0
+                else:
+                    dec = row[0].split(&#39;.&#39;)
+                    document[&#39;number&#39;] = dec[1]
+
+                document[&#39;name&#39;] = row[1]
+                document[&#39;prefix&#39;] = prefix
+                document[&#39;description&#39;] = row[2]
+                document[&#39;objectives&#39;] = row[3].split(&#39;;&#39;)
+                document[&#39;keywords&#39;] = row[4].split(&#39;;&#39;)
+
+                if row[5] == &#39; &#39; or row[5] == &#39;&#39;:
+                    document[&#39;hours&#39;] = np.random.uniform(0.25, 2)
+                else:
+                    document[&#39;hours&#39;] = float(row[5])
+
+                modules.append(document)
+
+        message = Template(&#39;Successfully parsed $number documents from file $name!&#39;)
+
+        self.logger.info(message.substitute(number=len(modules), name=path.split(&#39;/&#39;)[-1]))
+
+        # send each element in the array to the GraphQL API endpoint without using Prisma
+
+        for module in modules:
+            query = Template(&#34;&#34;&#34;
+                mutation {
+                    createModule(input: {
+                        name: &#34;$name&#34;
+                        number: $number
+                        prefix: &#34;$prefix&#34;
+                        description: &#34;$description&#34;
+                        objectives: [$objectives]
+                        keywords: [$keywords]
+                        hours: $hours
+                    }) {
+                        id
+                    }
+                }
+            &#34;&#34;&#34;)
+
+            cleanedObjectives = &#34;&#34;
+
+            for obj in module[&#39;objectives&#39;]:
+                curr = obj.split(&#39;;&#39;)[0]
+                if len(curr) == 0:
+                    continue
+                if curr[0] == &#39;&#34;&#39; and curr[-1] == &#39;&#34;&#39;:
+                    cleanedObjectives += &#39;&#39; + obj.split(&#39;;&#39;)[0] + &#39;,&#39;
+                elif curr[0] == &#39;&#34;&#39; and curr[-1] != &#39;&#34;&#39;:
+                    cleanedObjectives += &#39;&#39; + obj.split(&#39;;&#39;)[0] + &#39;&#34;,&#39;
+                else:
+                    cleanedObjectives += &#39;&#34;&#39; + obj.split(&#39;;&#39;)[0] + &#39;&#34;,&#39;
+
+            cleanedKeys = &#34;&#34;
+            for key in module[&#39;keywords&#39;]:
+                if len(key) == 0:
+                    continue
+                if key[0] == &#39;&#34;&#39; and key[-1] == &#39;&#34;&#39;:
+                    cleanedKeys += &#39;&#39; + key + &#39;,&#39;
+                elif key[0] == &#39;&#34;&#39; and key[-1] != &#39;&#34;&#39;:
+                    cleanedKeys += &#39;&#39; + key + &#39;&#34;,&#39;
+                else:
+                    cleanedKeys += &#39;&#34;&#39; + key + &#39;&#34;,&#39;
+
+            finalizedQuery = query.substitute(
+                name=module[&#39;name&#39;],
+                number=module[&#39;number&#39;],
+                prefix=module[&#39;prefix&#39;],
+                description=module[&#39;description&#39;],
+                objectives=cleanedObjectives,
+                keywords=cleanedKeys.strip(&#39;,&#39;),
+                hours=module[&#39;hours&#39;]
+            )
+
+            # print(finalizedQuery)
+
+            res: Response = post(&#34;http://localhost:4000/graphql&#34;, json={&#39;query&#39;: finalizedQuery})
+
+            # print(res.text)
+
+            if res.status_code != 200:
+                self.logger.error(&#39;Failed to seed module model from file!&#39;)
+                return False
+
+        return True
+
     async def _seedPlanOfStudyDB(self):
         &#34;&#34;&#34;
         Seeds the plan of study model with dummy data for each account already present in the DB.
@@ -683,7 +1024,7 @@ database and the essential_generators library to create document templates.</p><
                 enrollments.append({
                     &#39;planID&#39;: pos[&#39;id&#39;],
                     &#39;moduleId&#39;: module[&#39;id&#39;],
-                    &#39;role&#39;: random.choice(list(EnrollmentRole)).name
+                    &#39;role&#39;: np.random.choice(list(EnrollmentRole)).name
                 })
 
         enrollment_res = await self.prisma.moduleenrollment.create_many(data=enrollments)
@@ -706,9 +1047,10 @@ database and the essential_generators library to create document templates.</p><
         for enrollment in self.enrollments:
             feedbacks.append({
                 &#39;moduleId&#39;: enrollment[&#39;moduleId&#39;],
-                &#39;rating&#39;: random.randint(1, 6),
+                &#39;rating&#39;: np.random.randint(1, 6),
                 &#39;feedback&#39;: self.gen.sentence(),
-                &#39;studentId&#39;: list(map(lambda x: x[&#39;studentID&#39;], filter(lambda x: x[&#39;id&#39;] == enrollment[&#39;planID&#39;], plans))).pop()
+                &#39;studentId&#39;: list(
+                    map(lambda x: x[&#39;studentID&#39;], filter(lambda x: x[&#39;id&#39;] == enrollment[&#39;planID&#39;], plans))).pop()
             })
 
         feedback_res = await self.prisma.modulefeedback.create_many(data=feedbacks)
@@ -919,11 +1261,11 @@ model cleanup will be skipped.
     Creates a target user for testing purposes.
     &#34;&#34;&#34;
     account = await self.prisma.user.create(data={
-            &#39;firstName&#39;: &#39;Test User&#39;,
-            &#39;lastName&#39;: &#39;Test User&#39;,
-            &#39;email&#39;: &#39;&#39;,
-            &#39;openID&#39;: &#39;&#39;
-        })
+        &#39;firstName&#39;: &#39;Test User&#39;,
+        &#39;lastName&#39;: &#39;Test User&#39;,
+        &#39;email&#39;: &#39;&#39;,
+        &#39;openID&#39;: &#39;&#39;
+    })
 
     self.logger.info(&#39;Created target user: %s&#39; % account.id)
     return account.id</code></pre>
@@ -943,6 +1285,28 @@ model cleanup will be skipped.
     Disconnects from the database using prisma client.
     &#34;&#34;&#34;
     await self.prisma.disconnect()</code></pre>
+</details>
+</dd>
+<dt id="emse-mms.utils.seed.Seeder.fxn"><code class="name flex">
+<span>def <span class="ident">fxn</span></span>(<span>self, stng: str)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def fxn(self, stng: str):
+    # add first letter
+    oupt = stng[0]
+    # iterate over string
+    for i in range(1, len(stng)):
+        if stng[i - 1] == &#39; &#39;:
+            # add letter next to space
+            oupt += stng[i]
+    # uppercase oupt
+    oupt = oupt.upper()
+    return oupt</code></pre>
 </details>
 </dd>
 <dt id="emse-mms.utils.seed.Seeder.seedAll"><code class="name flex">
@@ -1001,6 +1365,138 @@ will be skipped.
 
         self.logger.info(&#39;All models seeded successfully!&#39;)
     await self.disconnect()</code></pre>
+</details>
+</dd>
+<dt id="emse-mms.utils.seed.Seeder.seedModuleFromFile"><code class="name flex">
+<span>async def <span class="ident">seedModuleFromFile</span></span>(<span>self, path: str)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Seeds the module model with data from a csv file. The structure of the files must be as follows:
+- the first two rows should be ignored as they contain the column names and data types
+- column 1: module number - if it is an integer, we will need to create a unique prefix for it. if it is a float, the prefix will be the integer part of the number and the decimal number will be the module number
+- column 2: module name
+- column 3: module description
+- column 4: module objectives - this will be a list of strings separated by a semicolon
+- column 5: module keywords - this will be a list of strings separated by a semicolon
+- column 6: module hours - this will be an float number representing the number of hours the module will take to complete</p>
+<p>:return: Boolean</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">async def seedModuleFromFile(self, path: str):
+    &#34;&#34;&#34;
+    Seeds the module model with data from a csv file. The structure of the files must be as follows:
+        - the first two rows should be ignored as they contain the column names and data types
+        - column 1: module number - if it is an integer, we will need to create a unique prefix for it. if it is a float, the prefix will be the integer part of the number and the decimal number will be the module number
+        - column 2: module name
+        - column 3: module description
+        - column 4: module objectives - this will be a list of strings separated by a semicolon
+        - column 5: module keywords - this will be a list of strings separated by a semicolon
+        - column 6: module hours - this will be an float number representing the number of hours the module will take to complete
+
+    :return: Boolean
+    &#34;&#34;&#34;
+    self.logger.info(&#39;Seeding module model from file...&#39;)
+
+    modules = list()
+
+    with open(path, &#39;r&#39;) as csvFile:
+        parsedFile = csv.reader(csvFile, delimiter=&#39;\t&#39;, quotechar=&#39;|&#39;)
+        next(parsedFile)
+        prefix = &#39;&#39;
+
+        for row in parsedFile:
+            document = dict()
+
+            if float(row[0]).is_integer():
+                prefix = self.fxn(row[1])
+                document[&#39;number&#39;] = 0
+            else:
+                dec = row[0].split(&#39;.&#39;)
+                document[&#39;number&#39;] = dec[1]
+
+            document[&#39;name&#39;] = row[1]
+            document[&#39;prefix&#39;] = prefix
+            document[&#39;description&#39;] = row[2]
+            document[&#39;objectives&#39;] = row[3].split(&#39;;&#39;)
+            document[&#39;keywords&#39;] = row[4].split(&#39;;&#39;)
+
+            if row[5] == &#39; &#39; or row[5] == &#39;&#39;:
+                document[&#39;hours&#39;] = np.random.uniform(0.25, 2)
+            else:
+                document[&#39;hours&#39;] = float(row[5])
+
+            modules.append(document)
+
+    message = Template(&#39;Successfully parsed $number documents from file $name!&#39;)
+
+    self.logger.info(message.substitute(number=len(modules), name=path.split(&#39;/&#39;)[-1]))
+
+    # send each element in the array to the GraphQL API endpoint without using Prisma
+
+    for module in modules:
+        query = Template(&#34;&#34;&#34;
+            mutation {
+                createModule(input: {
+                    name: &#34;$name&#34;
+                    number: $number
+                    prefix: &#34;$prefix&#34;
+                    description: &#34;$description&#34;
+                    objectives: [$objectives]
+                    keywords: [$keywords]
+                    hours: $hours
+                }) {
+                    id
+                }
+            }
+        &#34;&#34;&#34;)
+
+        cleanedObjectives = &#34;&#34;
+
+        for obj in module[&#39;objectives&#39;]:
+            curr = obj.split(&#39;;&#39;)[0]
+            if len(curr) == 0:
+                continue
+            if curr[0] == &#39;&#34;&#39; and curr[-1] == &#39;&#34;&#39;:
+                cleanedObjectives += &#39;&#39; + obj.split(&#39;;&#39;)[0] + &#39;,&#39;
+            elif curr[0] == &#39;&#34;&#39; and curr[-1] != &#39;&#34;&#39;:
+                cleanedObjectives += &#39;&#39; + obj.split(&#39;;&#39;)[0] + &#39;&#34;,&#39;
+            else:
+                cleanedObjectives += &#39;&#34;&#39; + obj.split(&#39;;&#39;)[0] + &#39;&#34;,&#39;
+
+        cleanedKeys = &#34;&#34;
+        for key in module[&#39;keywords&#39;]:
+            if len(key) == 0:
+                continue
+            if key[0] == &#39;&#34;&#39; and key[-1] == &#39;&#34;&#39;:
+                cleanedKeys += &#39;&#39; + key + &#39;,&#39;
+            elif key[0] == &#39;&#34;&#39; and key[-1] != &#39;&#34;&#39;:
+                cleanedKeys += &#39;&#39; + key + &#39;&#34;,&#39;
+            else:
+                cleanedKeys += &#39;&#34;&#39; + key + &#39;&#34;,&#39;
+
+        finalizedQuery = query.substitute(
+            name=module[&#39;name&#39;],
+            number=module[&#39;number&#39;],
+            prefix=module[&#39;prefix&#39;],
+            description=module[&#39;description&#39;],
+            objectives=cleanedObjectives,
+            keywords=cleanedKeys.strip(&#39;,&#39;),
+            hours=module[&#39;hours&#39;]
+        )
+
+        # print(finalizedQuery)
+
+        res: Response = post(&#34;http://localhost:4000/graphql&#34;, json={&#39;query&#39;: finalizedQuery})
+
+        # print(res.text)
+
+        if res.status_code != 200:
+            self.logger.error(&#39;Failed to seed module model from file!&#39;)
+            return False
+
+    return True</code></pre>
 </details>
 </dd>
 </dl>
@@ -1072,18 +1568,21 @@ will be skipped.
 <li><h3><a href="#header-functions">Functions</a></h3>
 <ul class="">
 <li><code><a title="emse-mms.utils.seed.getModuleFeedback" href="#emse-mms.utils.seed.getModuleFeedback">getModuleFeedback</a></code></li>
+<li><code><a title="emse-mms.utils.seed.main" href="#emse-mms.utils.seed.main">main</a></code></li>
 </ul>
 </li>
 <li><h3><a href="#header-classes">Classes</a></h3>
 <ul>
 <li>
 <h4><code><a title="emse-mms.utils.seed.Seeder" href="#emse-mms.utils.seed.Seeder">Seeder</a></code></h4>
-<ul class="">
+<ul class="two-column">
 <li><code><a title="emse-mms.utils.seed.Seeder.cleanupAll" href="#emse-mms.utils.seed.Seeder.cleanupAll">cleanupAll</a></code></li>
 <li><code><a title="emse-mms.utils.seed.Seeder.connect" href="#emse-mms.utils.seed.Seeder.connect">connect</a></code></li>
 <li><code><a title="emse-mms.utils.seed.Seeder.createTargetUser" href="#emse-mms.utils.seed.Seeder.createTargetUser">createTargetUser</a></code></li>
 <li><code><a title="emse-mms.utils.seed.Seeder.disconnect" href="#emse-mms.utils.seed.Seeder.disconnect">disconnect</a></code></li>
+<li><code><a title="emse-mms.utils.seed.Seeder.fxn" href="#emse-mms.utils.seed.Seeder.fxn">fxn</a></code></li>
 <li><code><a title="emse-mms.utils.seed.Seeder.seedAll" href="#emse-mms.utils.seed.Seeder.seedAll">seedAll</a></code></li>
+<li><code><a title="emse-mms.utils.seed.Seeder.seedModuleFromFile" href="#emse-mms.utils.seed.Seeder.seedModuleFromFile">seedModuleFromFile</a></code></li>
 </ul>
 </li>
 <li>

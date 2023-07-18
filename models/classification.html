@@ -1,0 +1,2628 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
+<meta name="generator" content="pdoc 0.10.0" />
+<title>emse-mms.models.classification API documentation</title>
+<meta name="description" content="" />
+<link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/sanitize.min.css" integrity="sha256-PK9q560IAAa6WVRRh76LtCaI8pjTJ2z11v0miyNNjrs=" crossorigin>
+<link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/typography.min.css" integrity="sha256-7l/o7C8jubJiy74VsKTidCy1yBkRtiUGbVkYBylBqUg=" crossorigin>
+<link rel="stylesheet preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/styles/github.min.css" crossorigin>
+<style>:root{--highlight-color:#fe9}.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:30px;overflow:hidden}#sidebar > *:last-child{margin-bottom:2cm}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:1em 0 .50em 0}h3{font-size:1.4em;margin:25px 0 10px 0}h4{margin:0;font-size:105%}h1:target,h2:target,h3:target,h4:target,h5:target,h6:target{background:var(--highlight-color);padding:.2em 0}a{color:#058;text-decoration:none;transition:color .3s ease-in-out}a:hover{color:#e82}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900}pre code{background:#f8f8f8;font-size:.8em;line-height:1.4em}code{background:#f2f2f1;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{background:#f8f8f8;border:0;border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0;padding:1ex}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{margin-top:.6em;font-weight:bold}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-weight:bold;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}dt:target .name{background:var(--highlight-color)}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}td{padding:0 .5em}.admonition{padding:.1em .5em;margin-bottom:1em}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
+<style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%;height:100vh;overflow:auto;position:sticky;top:0}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.item .name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul{padding-left:1.5em}.toc > ul > li{margin-top:.5em}}</style>
+<style media="print">@media print{#sidebar h1{page-break-before:always}.source{display:none}}@media print{*{background:transparent !important;color:#000 !important;box-shadow:none !important;text-shadow:none !important}a[href]:after{content:" (" attr(href) ")";font-size:90%}a[href][title]:after{content:none}abbr[title]:after{content:" (" attr(title) ")"}.ir a:after,a[href^="javascript:"]:after,a[href^="#"]:after{content:""}pre,blockquote{border:1px solid #999;page-break-inside:avoid}thead{display:table-header-group}tr,img{page-break-inside:avoid}img{max-width:100% !important}@page{margin:0.5cm}p,h2,h3{orphans:3;widows:3}h1,h2,h3,h4,h5,h6{page-break-after:avoid}}</style>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/highlight.min.js" integrity="sha256-Uv3H6lx7dJmRfRvH8TH6kJD1TSK1aFcwgx+mdg3epi8=" crossorigin></script>
+<script>window.addEventListener('DOMContentLoaded', () => hljs.initHighlighting())</script>
+</head>
+<body>
+<main>
+<article id="content">
+<header>
+<h1 class="title">Module <code>emse-mms.models.classification</code></h1>
+</header>
+<section id="section-intro">
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">import pandas as pd
+from pandas import DataFrame
+from nltk.corpus import stopwords
+from nltk.tokenize import word_tokenize
+from nltk.stem import WordNetLemmatizer
+from nltk.tag import pos_tag
+from nltk.corpus import wordnet as wn
+from sklearn.metrics import accuracy_score
+from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.preprocessing import LabelEncoder
+from typing import Union
+import numpy
+from pandas.core.series import Series
+
+
+class Classify:
+    &#34;&#34;&#34;
+    Predict the class for the given Module dataset based on TF-IDF vectorization and KNN (supervised) clustering algorithm.
+
+    Args:
+        path (str): Path to the training dataset.
+        testPath (str, None): Path to the test dataset.
+        outputPath (str): Path to the output directory.
+        toDownload (bool): Whether to download the nltk corpus or not.
+        verbose (bool): Whether to print the logs or not.
+        visualize (bool): Whether to show EDA visualizations or not.
+    &#34;&#34;&#34;
+
+    def __init__(
+        self,
+        path: str = &#34;input/603_trans_3.tsv&#34;,
+        testPath: Union[str, None] = None,
+        outputPath: str = &#34;output/&#34;,
+        toDownload: bool = False,
+        verbose: bool = False,
+        visualize: bool = False,
+        concat: bool = False,
+        trainFiles: list[str] = [],
+    ) -&gt; None:
+        import logging
+
+        self.logger = logging.getLogger(__name__)
+        self.filePath: str = path
+        self.testPath: str = testPath
+        self.outputPath: str = outputPath
+        self.logPath: str = &#34;logs/classification.log&#34;
+        self.toDownload: bool = toDownload
+        self.concat: bool = concat
+        self.data: Union[DataFrame, None] = None
+        self.trainFiles: list[str] = trainFiles
+        self.testData: Union[DataFrame, None] = None
+        self.verbose: bool = verbose
+        self.viz: bool = visualize
+        self.stop_words = set(stopwords.words(&#34;english&#34;))
+        self.N_CLUSTER: int = 0
+        self.N_TEST_CLUSTER: int = 0
+        self.train_x: Union[Series, None] = None
+        self.train_y: Union[Series, None] = None
+        self.test_x: Union[Series, None] = None
+        self.test_y: Union[Series, None] = None
+        self.train_x_vector: Union[None, numpy.ndarray] = None
+        self.test_x_vector: Union[None, numpy.ndarray] = None
+        self.lemmatizer = WordNetLemmatizer()
+        self.vectorizer = TfidfVectorizer(max_features=10000)
+        self.encoder = LabelEncoder()
+
+        if self.verbose:
+            logging.basicConfig(level=logging.INFO)
+        else:
+            logging.basicConfig(level=logging.DEBUG)
+
+        self.download()
+        self._configure()
+
+    def _configure(self) -&gt; None:
+        &#34;&#34;&#34;
+        Configure the logger and the stop words set
+        &#34;&#34;&#34;
+        self.stop_words.add(&#34;module&#34;)
+        self.stop_words.add(&#34;problem&#34;)
+        self.stop_words.add(&#34;use&#34;)
+        self.stop_words.add(&#34;model&#34;)
+        self.stop_words.add(&#34;solution&#34;)
+        self.stop_words.add(&#34;solve&#34;)
+        self.stop_words.add(&#34;analyze&#34;)
+        self.stop_words.add(&#34;example&#34;)
+        self.stop_words.add(&#34;application&#34;)
+        self.stop_words.add(&#34;computer&#34;)
+        self.stop_words.add(&#34;computers&#34;)
+        self.stop_words.add(&#34;one&#34;)
+        self.stop_words.add(&#34;two&#34;)
+        self.stop_words.add(&#34;three&#34;)
+        self.stop_words.add(&#34;four&#34;)
+        self.stop_words.add(&#34;five&#34;)
+        self.stop_words.add(&#34;six&#34;)
+        self.stop_words.add(&#34;seven&#34;)
+        self.stop_words.add(&#34;eight&#34;)
+        self.stop_words.add(&#34;x&#34;)
+        self.stop_words.add(&#34;c&#34;)
+        self.stop_words.add(&#34;go&#34;)
+        self.stop_words.add(&#34;constraint&#34;)
+        self.stop_words.add(&#34;get&#34;)
+        self.stop_words.add(&#34;ok&#34;)
+        self.stop_words.add(&#34;uh&#34;)
+        self.stop_words.add(&#34;shift&#34;)
+
+    def download(self):
+        &#34;&#34;&#34;
+        Download the required libraries for the classification.
+        &#34;&#34;&#34;
+        import nltk
+
+        if self.toDownload:
+            nltk.download(&#34;stopwords&#34;, quiet=not self.verbose)
+            nltk.download(&#34;wordnet&#34;, quiet=not self.verbose)
+            nltk.download(&#34;omw-1.4&#34;, quiet=not self.verbose)
+            self._log(&#34;Library downloads complete&#34;)
+        else:
+            self._log(&#34;Library downloads skipped&#34;)
+
+    def read(self, sep=&#34;\t&#34;) -&gt; None:
+        &#34;&#34;&#34;
+        Read the data from the file path. The default separator is tab.
+        &#34;&#34;&#34;
+        data = None
+
+        if self.concat:
+            for file in self.trainFiles:
+                data = self._merge_frames(data, pd.read_csv(file, sep=sep))
+        else:
+            data = pd.read_csv(self.filePath, sep=sep)
+
+        self.data = data
+
+        if self.data is None:
+            raise Exception(&#34;Data is empty&#34;)
+
+        if self.testPath is not None:
+            self.testData = pd.read_csv(self.testPath, sep=sep)
+
+        if self.verbose:
+            row, col = self.data.shape
+            self._log(f&#34;Shape of train data read \nRows: {row}, Columns: {col}&#34;)
+            if self.testPath is not None:
+                row, col = self.testData.shape
+                self._log(f&#34;Shape of test data read \nRows: {row}, Columns: {col}&#34;)
+            self._log(&#34;Data read successfully&#34;)
+        else:
+            self._log(&#34;Data read successfully&#34;)
+            if self.testPath is not None:
+                self._log(&#34;Test data read successfully&#34;)
+
+    def _scalar_to_string(self, df: DataFrame, col: str) -&gt; DataFrame:
+        &#34;&#34;&#34;
+        Convert the scalar values for each row of the DataFrame column to a string.
+        &#34;&#34;&#34;
+        lst = list(df[col])
+
+        scalar_to_string = []
+
+        for obj in lst:
+            print(obj)
+            scalar_to_string.append(str(obj))
+
+        df[col] = scalar_to_string
+
+        if self.verbose:
+            self._log(&#34;Scalar values converted to string successfully&#34;)
+            print(df.head())
+        else:
+            self._log(&#34;Scalar values converted to string successfully&#34;)
+
+        return df
+
+    def _merge_frames(self, df1: DataFrame, df2: DataFrame) -&gt; DataFrame:
+        &#34;&#34;&#34;
+        Merge the two DataFrames.
+        &#34;&#34;&#34;
+        df = pd.concat([df1, df2], ignore_index=True)
+
+        if self.verbose:
+            self._log(&#34;DataFrames merged successfully&#34;)
+            print(df.head())
+        else:
+            self._log(&#34;DataFrames merged successfully&#34;)
+
+        return df
+
+    def _merge_columns(
+        self, df: DataFrame, destinationCol: str, originCol: str
+    ) -&gt; DataFrame:
+        &#34;&#34;&#34;
+        Merge the values of the two DataFrame columns.
+        &#34;&#34;&#34;
+        lst1 = list(df[destinationCol])
+        lst2 = list(df[originCol])
+
+        merged = []
+
+        for i in range(len(lst1)):
+            cleaned_transcript = self._clean_transcript(str(lst2[i]))
+            merged.append(lst1[i] + &#34; &#34; + cleaned_transcript)
+
+        df[destinationCol] = merged
+
+        if self.verbose:
+            self._log(&#34;Columns merged successfully&#34;)
+            print(df.head())
+        else:
+            self._log(&#34;Columns merged successfully&#34;)
+
+        return df
+
+    def _clean_transcript(self, input: str) -&gt; DataFrame:
+        &#34;&#34;&#34;
+        Clean the transcript by removing special characters and numbers from text.
+        &#34;&#34;&#34;
+        import re
+        from string import digits
+
+        if input == &#34;nan&#34;:
+            return &#34;&#34;
+
+        else:
+            cleaned = re.sub(
+                &#34;([A-Z][a-z]+)&#34;,
+                r&#34; \1&#34;,
+                re.sub(
+                    &#34;([A-Z]+)&#34;,
+                    r&#34; \1&#34;,
+                    re.sub(
+                        r&#34;[^a-zA-Z0-9]+&#34;,
+                        &#34; &#34;,
+                        input.replace(&#34;\\&#39;&#34;, &#34;&#34;),
+                    ),
+                ),
+            )
+
+            remove_digits = str.maketrans(&#34;&#34;, &#34;&#34;, digits)
+
+            return cleaned.translate(remove_digits)
+
+    def _clean_text(self, input: str) -&gt; str:
+        &#34;&#34;&#34;
+        Clean the text by removing special characters, and digits from the input string.
+        &#34;&#34;&#34;
+        import re
+
+        if input == &#34;nan&#34;:
+            return &#34;&#34;
+        return re.sub(
+            r&#34;[^a-zA-Z]+&#34;,
+            &#34; &#34;,
+            input.replace(&#34;\\&#39;&#34;, &#34;&#34;),
+        )
+
+    def _split_camel_case(self, df: DataFrame, col: str) -&gt; DataFrame:
+        &#34;&#34;&#34;
+        Split the words in the DataFrame column which are in camel case.
+        &#34;&#34;&#34;
+        lst = list(df[col])
+
+        split_words = []
+
+        for obj in lst:
+            split_words.append(self._clean_text(obj).split())
+
+        payload = [&#34; &#34;.join(entry) for entry in split_words]
+
+        df[col] = payload
+        if self.verbose:
+            self._log(&#34;Camel case text split successfully&#34;)
+            print(df.head())
+        else:
+            self._log(&#34;Camel case text split successfully&#34;)
+
+        return df
+
+    def _stemmer(self, df: DataFrame, col: str) -&gt; DataFrame:
+        &#34;&#34;&#34;
+        Stem the words in the DataFrame column.
+        &#34;&#34;&#34;
+        from collections import defaultdict
+
+        data = df.copy()
+
+        tag_map = defaultdict(lambda: wn.NOUN)
+
+        tag_map[&#34;J&#34;] = wn.ADJ
+        tag_map[&#34;V&#34;] = wn.VERB
+        tag_map[&#34;R&#34;] = wn.ADV
+
+        data[&#34;tokens&#34;] = [word_tokenize(entry) for entry in data[col]]
+
+        stemmer = self.lemmatizer
+        for index, entry in enumerate(data[&#34;tokens&#34;]):
+            final_words = []
+            for word, tag in pos_tag(entry):
+                word_final = stemmer.lemmatize(word, tag_map[tag[0]])
+                if word_final not in self.stop_words and word_final.isalpha():
+                    final_words.append(word_final)
+
+            data.loc[index, &#34;target&#34;] = &#34; &#34;.join(final_words)
+
+        return data
+
+    def _preprocess_features(self, col: str, data: DataFrame) -&gt; DataFrame:
+        &#34;&#34;&#34;
+        1. turn entries to lower case
+        2. remove special characters
+        4. remove stop words
+        5. stem words
+        6. tokenize words
+        7. return feature column
+        &#34;&#34;&#34;
+        # create a copy of the data
+        df = data.copy()
+
+        # convert camel case text to separate words
+        df = self._split_camel_case(df, col)
+
+        # for each row of the feature column, turn text to lowercase
+        df[col] = [entry.lower() for entry in df[col]]
+
+        # tokenize entries, stem words and remove stop words
+        df = self._stemmer(df, col)
+
+        return df
+
+    def prepare(self, col: str) -&gt; DataFrame:
+        &#34;&#34;&#34;
+        Prepare the data for the classification.
+        &#34;&#34;&#34;
+        import numpy as np
+
+        if self.testPath is None:
+            df = self._merge_columns(
+                self.data, destinationCol=&#34;features&#34;, originCol=&#34;transcript&#34;
+            )
+            df = self._preprocess_features(col, self.data)
+            df = df.drop(
+                [&#34;features&#34;, &#34;tokens&#34;, &#34;hours&#34;, &#34;prefix&#34;, &#34;transcript&#34;, &#34;number&#34;],
+                axis=1,
+            )
+
+            if self.verbose:
+                self._log(&#34;Data prepared successfully&#34;)
+                print(df.head())
+            else:
+                self._log(&#34;Data prepared successfully&#34;)
+
+            self.data = df
+            self.N_CLUSTER = int(np.sqrt(len(df)))
+            if self.viz:
+                self.generate_count_plot(data=df)
+            self._save_data_frame(df, fileName=&#34;603_clean.csv&#34;)
+
+        else:
+            dfTrain = self._merge_columns(
+                self.data, destinationCol=&#34;features&#34;, originCol=&#34;transcript&#34;
+            )
+            dfTrain = self._preprocess_features(col, self.data)
+            dfTrain = dfTrain.drop(
+                [&#34;features&#34;, &#34;tokens&#34;, &#34;hours&#34;, &#34;prefix&#34;, &#34;transcript&#34;, &#34;number&#34;],
+                axis=1,
+            )
+
+            dfTest = self._merge_columns(
+                self.testData, destinationCol=&#34;features&#34;, originCol=&#34;transcript&#34;
+            )
+            dfTest = self._preprocess_features(col, self.testData)
+            dfTest = dfTest.drop(
+                [&#34;features&#34;, &#34;tokens&#34;, &#34;hours&#34;, &#34;prefix&#34;, &#34;transcript&#34;, &#34;number&#34;],
+                axis=1,
+            )
+
+            if self.verbose:
+                self._log(&#34;Train data prepared successfully&#34;)
+                print(dfTrain.head())
+                self._log(&#34;Test data prepared successfully&#34;)
+                print(dfTest.head())
+            else:
+                self._log(&#34;Data prepared successfully&#34;)
+
+            self.data = dfTrain
+            self.testData = dfTest
+            self.N_CLUSTER = int(np.sqrt(len(dfTrain)))
+            self.N_TEST_CLUSTER = int(np.sqrt(len(dfTest)))
+            if self.viz:
+                self.generate_count_plot(data=dfTrain)
+                self.generate_count_plot(data=dfTest)
+            self._save_data_frame(dfTrain, fileName=&#34;603_clean.csv&#34;)
+            self._save_data_frame(dfTest, fileName=&#34;614_test.csv&#34;)
+
+    def _create_tf_idf(self, train, test) -&gt; tuple:
+        &#34;&#34;&#34;
+        Create the TF-IDF vectorizer.
+        &#34;&#34;&#34;
+        from sklearn.feature_extraction.text import TfidfVectorizer
+
+        self.vectorizer = TfidfVectorizer(
+            analyzer=&#34;word&#34;,
+            max_features=10000,
+            stop_words=list(self.stop_words),
+        )
+
+        tfidf_train = self.vectorizer.fit_transform(train).toarray()
+        tfidf_test = self.vectorizer.transform(test).toarray()
+
+        return (tfidf_train, tfidf_test)
+
+    def _data_transformer(self, size: float = 0.3):
+        &#34;&#34;&#34;
+        Splits, fits, and transforms the data for the classification.
+        &#34;&#34;&#34;
+        from sklearn.model_selection import train_test_split
+
+        if self.testPath is None:
+            df = self._data_encoder(df=self.data, col=&#34;cluster&#34;)
+
+            Train_X, Test_X, Train_Y, Test_Y = train_test_split(
+                df[&#34;target&#34;],
+                df[&#34;cluster&#34;],
+                test_size=size,
+                random_state=42,
+                shuffle=True,
+                stratify=None,
+            )
+
+            Train_X_Tfidf, Test_X_Tfidf = self._create_tf_idf(Train_X, Test_X)
+
+            self.data = df
+            self.train_x = Train_X
+            self.test_x = Test_X
+            self.train_y = Train_Y
+            self.test_y = Test_Y
+            self.train_x_vector = Train_X_Tfidf
+            self.test_x_vector = Test_X_Tfidf
+
+        else:
+            dfTrain = self._data_encoder(df=self.data, col=&#34;cluster&#34;)
+            dfTest = self._data_encoder(df=self.testData, col=&#34;cluster&#34;)
+
+            Train_X_Tfidf, Test_X_Tfidf = self._create_tf_idf(
+                dfTrain[&#34;target&#34;], dfTest[&#34;target&#34;]
+            )
+
+            self.data = dfTrain
+            self.testData = dfTest
+            self.train_x = dfTrain[&#34;target&#34;]
+            self.test_x = dfTest[&#34;target&#34;]
+            self.train_y = dfTrain[&#34;cluster&#34;]
+            self.test_y = dfTest[&#34;cluster&#34;]
+            self.train_x_vector = Train_X_Tfidf
+            self.test_x_vector = Test_X_Tfidf
+
+        if self.verbose:
+            self._log(&#34;Data transformed successfully&#34;)
+            if self.testPath is not None:
+                print(dfTrain.head())
+                print(dfTest.head())
+            else:
+                print(df.head())
+        else:
+            self._log(&#34;Data transformed successfully&#34;)
+
+    def _data_encoder(self, df: DataFrame, col: str = &#34;cluster&#34;) -&gt; DataFrame:
+        &#34;&#34;&#34;
+        Encode the data for the classification.
+        &#34;&#34;&#34;
+
+        df[col] = self.encoder.fit_transform(df[col])
+
+        return df
+
+    def _create_model(self):
+        &#34;&#34;&#34;
+        Create the classification model.
+        &#34;&#34;&#34;
+
+        self._data_transformer()
+
+        self._run_nearest_neighbors(
+            Train_X_Tfidf=self.train_x_vector,
+            Test_X_Tfidf=self.test_x_vector,
+            Train_Y=self.train_y,
+            Test_Y=self.test_y,
+            algo=&#34;brute&#34;,
+            metric=&#34;cosine&#34;,
+            weights=&#34;distance&#34;,
+        )
+
+        self._print_top_words_per_cluster(
+            vectorizer=self.vectorizer, df=self.data, X=self.train_x_vector
+        )
+
+        sim, mask = self._calculate_similarity(
+            X=self.train_x_vector,
+        )
+
+        self.generate_heat_map(
+            arr=sim,
+            mask=mask,
+            fileName=&#34;heatmap_train.png&#34;,
+        )
+
+        self._print_sorted_similarities(sim_arr=sim)
+
+        self._run_pca(X=self.train_x_vector, df=self.data, fileName=&#34;pca_train.png&#34;)
+
+        self._run_naive_bayes(
+            X_vector=self.train_x_vector,
+            X_test_vector=self.test_x_vector,
+            Y_test=self.test_y,
+            Y_train=self.train_y,
+        )
+
+        if self.testPath is not None:
+            self._print_top_words_per_cluster(
+                vectorizer=self.vectorizer,
+                df=self.testData,
+                X=self.test_x_vector,
+                train=False,
+            )
+
+            simTest, maskTest = self._calculate_similarity(
+                X=self.test_x_vector,
+            )
+
+            self.generate_heat_map(
+                arr=simTest,
+                mask=maskTest,
+                fileName=&#34;heatmap_test.png&#34;,
+            )
+
+            self._print_sorted_similarities(sim_arr=simTest)
+
+            self._run_pca(
+                X=self.test_x_vector, df=self.testData, fileName=&#34;pca_test.png&#34;
+            )
+
+        self._log(&#34;Model created successfully&#34;)
+
+    def _print_top_words_per_cluster(
+        self, vectorizer, df: DataFrame, X: list, n=10, train: bool = True
+    ):
+        &#34;&#34;&#34;
+        This function returns the keywords for each centroid of the KNN clustering algorithm.
+
+        Parameters
+        ----------
+        vectorizer : TfidfVectorizer
+            The TF-IDF vectorizer.
+        df : DataFrame
+            The data frame.
+        X : list
+            The list of TF-IDF vectors.
+        n : int, optional
+            The number of keywords to return, by default 10
+        train : bool, optional
+            Whether the data is training or test data, by default True
+        &#34;&#34;&#34;
+        import numpy as np
+
+        data = pd.DataFrame(X).groupby(df[&#34;cluster&#34;]).mean()
+        terms = vectorizer.get_feature_names_out()
+
+        print(&#34;\n&#34;)
+
+        if train:
+            self._log(&#34;Top keywords per cluster in training set:&#34;)
+        else:
+            self._log(&#34;Top keywords per cluster in test set:&#34;)
+
+        for i, r in data.iterrows():
+            self._log(
+                &#34;Cluster {} keywords: {}&#34;.format(
+                    i, &#34;, &#34;.join([terms[t] for t in np.argsort(r)[-n:]])
+                )
+            )
+            self._log(&#34;Mean TF-IDF score -&gt; %0.4f&#34; % np.max(r))
+        print(&#34;\n&#34;)
+
+    def _train_model(self):
+        &#34;&#34;&#34;
+        Train the classification model.
+        &#34;&#34;&#34;
+        pass
+
+    def _evaluate_model(self):
+        &#34;&#34;&#34;
+        Evaluate the classification model.
+        &#34;&#34;&#34;
+        pass
+
+    def _predict(self):
+        &#34;&#34;&#34;
+        Predict the classification model.
+        &#34;&#34;&#34;
+        pass
+
+    def _save_model(self):
+        &#34;&#34;&#34;
+        Save the classification model.
+        &#34;&#34;&#34;
+        pass
+
+    def _run_nearest_neighbors(
+        self,
+        Train_X_Tfidf: numpy.ndarray,
+        Test_X_Tfidf: numpy.ndarray,
+        Train_Y: Series,
+        Test_Y: Series,
+        algo: str,
+        metric: str,
+        weights: str,
+        n_neighbors: int = 5,
+    ):
+        &#34;&#34;&#34;
+        Runs the nearest neighbors algorithm on the input data.
+
+        Args:
+            Train_X_Tfidf (numpy.ndarray): The training data to be used for fitting the model.
+            Test_X_Tfidf (numpy.ndarray): The test data to be used for predicting the model.
+            Train_Y (pandas.Series): The target values for the training data.
+            Test_Y (pandas.Series): The target values for the test data.
+            algo (str): The algorithm to be used for computing the nearest neighbors.
+            metric (str): The distance metric to be used for computing the nearest neighbors.
+            weights (str): The weight function to be used for computing the nearest neighbors.
+            n_neighbors (int): The number of neighbors to be used for computing the nearest neighbors.
+
+        Returns:
+            None
+        &#34;&#34;&#34;
+        from sklearn.neighbors import KNeighborsClassifier
+        from sklearn.metrics import accuracy_score
+        from sklearn.model_selection import cross_val_score
+
+        knn = KNeighborsClassifier(
+            n_neighbors=n_neighbors,
+            weights=weights,
+            algorithm=algo,
+            metric=metric,
+            n_jobs=1,
+            metric_params=None,
+            leaf_size=30,
+            p=2,
+        )
+
+        knn.fit(Train_X_Tfidf, Train_Y)
+
+        predicted = knn.predict(Test_X_Tfidf)
+
+        self._log(&#34;KNN Predictions -&gt; %s&#34; % predicted)
+
+        self.testData[&#34;cluster&#34;] = predicted
+
+        self._save_data_frame(
+            df=self.testData,
+            fileName=&#34;614_pred.csv&#34;,
+        )
+
+        acc = accuracy_score(Test_Y, predicted)
+
+        self._log(&#34;KNN Accuracy -&gt; %0.4f&#34; % (acc * 100))
+        print(&#34;\n&#34;)
+
+        best_cv = 2
+        best_score = 0
+        best_cv_index = 0
+        y = []
+        x = []
+        max_range: int = 10
+
+        if self.testPath is None:
+            max_range = 7
+
+        for i in range(2, max_range):
+            scores = cross_val_score(knn, Train_X_Tfidf, Train_Y, cv=i)
+
+            self._log(
+                &#34;Cross Validation Accuracy: %0.2f (+/- %0.2f)&#34;
+                % (scores.mean(), scores.std() * 2)
+            )
+
+            self._log(&#34;Number of predicted classes -&gt; %s&#34; % len(predicted))
+
+            print(&#34;\n&#34;)
+
+            if scores.mean() &gt; best_score:
+                best_cv = i
+                best_score = scores.mean()
+                best_cv_index = scores
+
+            y.append(scores.mean())
+            x.append(i)
+
+        self._log(
+            &#34;Best Cross Validation Accuracy: %0.2f (+/- %0.2f)&#34;
+            % (best_score, best_cv_index.std() * 2)
+        )
+        self._log(&#34;Best Cross Validation Number of Folds: %s&#34; % best_cv)
+
+        self.generate_cross_validation_plot(x, y)
+
+    def _run_pca(
+        self, X: numpy.ndarray, df: DataFrame, fileName: str = &#34;pca_scatter.png&#34;
+    ):
+        &#34;&#34;&#34;
+        Applies Principal Component Analysis (PCA) to the input data X and generates a scatter plot of the reduced features.
+
+        Args:
+            X (numpy.ndarray): The input data to be reduced.
+            df (pandas.DataFrame): The dataframe containing the data to be plotted.
+
+        Returns:
+            None
+        &#34;&#34;&#34;
+        from sklearn.decomposition import PCA
+
+        pca = PCA(n_components=2, random_state=42)
+
+        red_feat = pca.fit_transform(X)
+
+        x = red_feat[:, 0]
+        y = red_feat[:, 1]
+
+        df[&#34;x&#34;] = x
+        df[&#34;y&#34;] = y
+
+        self.generate_scatter_plot(data=df, fileName=fileName)
+
+        self._log(&#34;PCA run successfully&#34;)
+
+    def _run_naive_bayes(self, X_vector, Y_train, X_test_vector, Y_test):
+        &#34;&#34;&#34;
+        Run the naive bayes classification model.
+        &#34;&#34;&#34;
+        from sklearn.naive_bayes import MultinomialNB
+
+        Naive = MultinomialNB()
+
+        Naive.fit(X_vector, Y_train)
+
+        predictions_NB = Naive.predict(X_test_vector)
+
+        if self.verbose:
+            self._log(&#34;Naive Bayes run successfully&#34;)
+            print(
+                &#34;Naive Bayes Accuracy Score -&gt; &#34;,
+                accuracy_score(predictions_NB, Y_test) * 100,
+            )
+            print(&#34;\n&#34;)
+        else:
+            self._log(&#34;Naive Bayes run successfully&#34;)
+
+    def _run_svm(self, X_train, Y_train, X_test, Y_test):
+        &#34;&#34;&#34;
+        Run the svm classification model.
+        &#34;&#34;&#34;
+        from sklearn import svm
+
+        SVM = svm.SVC(C=1.0, kernel=&#34;poly&#34;, degree=3, gamma=&#34;auto&#34;)
+
+        SVM.fit(X_train, Y_train)
+
+        predictions_SVM = SVM.predict(X_test)
+
+        print(&#34;SVM Accuracy Score -&gt; &#34;, accuracy_score(predictions_SVM, Y_test) * 100)
+
+        if self.verbose:
+            self._log(&#34;SVM run successfully&#34;)
+            print(predictions_SVM)
+        else:
+            self._log(&#34;SVM run successfully&#34;)
+
+    def _run_word_cloud_per_cluster(self, df: DataFrame):
+        &#34;&#34;&#34;
+        Run the word cloud per cluster.
+        &#34;&#34;&#34;
+
+        for i in sorted(df[&#34;cluster&#34;].array.unique()):
+            corpus = &#34; &#34;.join(list(df[df[&#34;cluster&#34;] == i][&#34;target&#34;]))
+            self.generate_word_cloud(corpus=corpus, fileName=&#34;cluster_%s.png&#34; % i)
+
+    def _save_data_frame(self, df: DataFrame, fileName: str):
+        &#34;&#34;&#34;
+        Save the data frame as a CSV file.
+        &#34;&#34;&#34;
+        df.to_csv(str(self.outputPath + fileName), index=False)
+
+    def generate_word_cloud(self, corpus: str, fileName: str = &#34;word_cloud.png&#34;):
+        &#34;&#34;&#34;
+        Generate the word cloud for the data.
+        &#34;&#34;&#34;
+        from wordcloud import WordCloud
+        from matplotlib import pyplot as plt
+
+        wordcloud = WordCloud(
+            max_words=700,
+            background_color=&#34;white&#34;,
+            stopwords=self.stop_words,
+        ).generate(corpus)
+        plt.figure(figsize=(10, 10))
+        plt.axis(&#34;off&#34;)
+        if self.viz:
+            plt.imshow(wordcloud, interpolation=&#34;bilinear&#34;)
+            plt.show()
+        else:
+            # plt.savefig(str(self.outputPath + fileName))
+            wordcloud.to_file(str(self.outputPath + fileName))
+
+    def generate_scatter_plot(
+        self, data: DataFrame, fileName: str = &#34;scatter_plot.png&#34;
+    ):
+        &#34;&#34;&#34;
+        Generate the scatter plot for the data.
+        &#34;&#34;&#34;
+        import seaborn as sns
+        from matplotlib import pyplot as plt
+
+        plt.figure(figsize=(10, 10))
+        sns.scatterplot(data=data, x=&#34;x&#34;, y=&#34;y&#34;, hue=&#34;cluster&#34;, palette=&#34;tab10&#34;)
+        if self.viz:
+            plt.show()
+        else:
+            plt.savefig(str(self.outputPath + fileName))
+
+    def generate_elbow_plot(self, X: numpy.ndarray):
+        &#34;&#34;&#34;
+        Generate the elbow plot for the data that shows the most optimal number of clusters that should be used based on sum of squared distances.
+        &#34;&#34;&#34;
+        import matplotlib.pyplot as plt
+        from sklearn.cluster import KMeans
+
+        Sum_of_squared_distances = []
+        K = range(2, self.N_CLUSTER * 2)
+
+        for k in K:
+            km = KMeans(n_clusters=k, max_iter=200, n_init=10)
+            km = km.fit(X)
+            Sum_of_squared_distances.append(km.inertia_)
+        plt.figure(figsize=(10, 10))
+        plt.plot(K, Sum_of_squared_distances, &#34;bx-&#34;)
+        plt.xlabel(&#34;k&#34;)
+        plt.ylabel(&#34;Sum_of_squared_distances&#34;)
+        plt.title(&#34;Elbow Method For Optimal k&#34;)
+        if self.viz:
+            plt.show()
+        else:
+            plt.savefig(str(self.outputPath + &#34;kmeans_elbow_plot.png&#34;))
+
+    def generate_count_plot(self, data: DataFrame, countCol: str = &#34;cluster&#34;):
+        &#34;&#34;&#34;
+        Generate a bar plot that sums the number of rows that share the same prefix value.
+
+        Args:
+            data (DataFrame): The data to plot.
+            countCol (str, optional): The name of the column to count. Defaults to &#34;cluster&#34;.
+        &#34;&#34;&#34;
+        import seaborn as sns
+        from matplotlib import pyplot as plt
+
+        sns.countplot(x=countCol, data=data)
+        if self.viz:
+            plt.show()
+        else:
+            plt.savefig(str(self.outputPath + &#34;count_plot.png&#34;))
+
+    def generate_cross_validation_plot(self, x: list, y: list):
+        &#34;&#34;&#34;
+        Generate a cross validation plot that shows the accuracy of the model.
+
+        Args:
+            x (list): The list of x values.
+            y (list): The list of y values.
+        &#34;&#34;&#34;
+        import matplotlib.pyplot as plt
+
+        plt.plot(x, y, &#34;bx-&#34;)
+        plt.xlabel(&#34;fold&#34;)
+        plt.ylabel(&#34;Accuracy&#34;)
+        plt.title(&#34;Cross Validation Accuracy over 10 folds&#34;)
+        if self.viz:
+            plt.show()
+        else:
+            plt.savefig(str(self.outputPath + &#34;cross_validation_plot.png&#34;))
+
+    def _calculate_similarity(self, X) -&gt; tuple[numpy.ndarray, list]:
+        &#34;&#34;&#34;
+        Calculate the similarity between the documents.
+
+        Args:
+            X (numpy.ndarray): The array of documents.
+
+        Returns:
+            tuple: The similarity array and the mask to apply to the array.
+        &#34;&#34;&#34;
+        import numpy as np
+        from sklearn.metrics.pairwise import cosine_similarity
+
+        sim_arr = cosine_similarity(X)
+
+        mask = np.triu(np.ones_like(sim_arr, dtype=bool))
+
+        return sim_arr, mask
+
+    def generate_heat_map(
+        self, arr: numpy.ndarray, mask: list, fileName: str = &#34;heat_map.png&#34;
+    ):
+        &#34;&#34;&#34;
+        Generate a heat map that shows the correlation between the documents, using the name column of the data frame as the tick label.
+
+        Args:
+            arr (numpy.ndarray): The similarity array.
+            mask (list): The mask to apply to the array. This is used to remove the diagonal and upper duplicate values.
+        &#34;&#34;&#34;
+        import seaborn as sns
+        from matplotlib import pyplot as plt
+
+        plt.figure(figsize=(25, 15))
+        sns.heatmap(
+            arr,
+            mask=mask,
+            square=False,
+            robust=True,
+            annot=True,
+            cmap=&#34;YlGnBu&#34;,
+            fmt=&#34;.2f&#34;,
+            cbar=False,
+        )
+        if self.viz:
+            plt.show()
+        else:
+            plt.savefig(str(self.outputPath + fileName))
+
+    def _print_sorted_similarities(self, sim_arr, threshold=0) -&gt; DataFrame:
+        &#34;&#34;&#34;
+        Store the similarities between the documents in a data frame that is sorted by the similarity score in descending order.
+        Removing the diagonal values.
+
+        Args:
+            sim_arr (numpy.ndarray): The similarity array.
+            threshold (int, optional): The threshold to filter the similarity scores by. Defaults to 0.
+        &#34;&#34;&#34;
+        import pandas as pd
+
+        df = pd.DataFrame(sim_arr)
+        df = df.stack().reset_index()
+        df.columns = [&#34;Document 1&#34;, &#34;Document 2&#34;, &#34;Similarity Score&#34;]
+        df = df.sort_values(by=[&#34;Similarity Score&#34;], ascending=False)
+        filtered_df = df[df[&#34;Document 1&#34;] != df[&#34;Document 2&#34;]]
+        top = filtered_df[filtered_df[&#34;Similarity Score&#34;] &gt; threshold]
+
+        print(top.head(10))
+
+        return top
+
+    def _log(self, text: str):
+        &#34;&#34;&#34;
+        Append the text to the log file.
+
+        Args:
+            text (str): The text to append to the log file.
+        &#34;&#34;&#34;
+        import time
+
+        t = time.localtime()
+        current_time = time.strftime(&#34;%H:%M:%S&#34;, t)
+
+        if self.verbose:
+            self.logger.info(f&#34;\n[{current_time}]: {text}&#34;)
+        else:
+            self.logger.debug(f&#34;\n[{current_time}]: {text}&#34;)
+
+        with open(self.logPath, &#34;a&#34;) as f:
+            f.write(f&#34;\n[{current_time}]: {text}&#34;)
+
+    def run(self) -&gt; None:
+        &#34;&#34;&#34;
+        Run the classification model.
+        &#34;&#34;&#34;
+        self.read()
+        self.prepare(col=&#34;features&#34;)
+        self._create_model()
+        if self.viz:
+            self._run_word_cloud_per_cluster(df=self.data)
+            if self.testPath is not None:
+                # TODO: Fix test data not having x and y columns
+                # self.generate_scatter_plot(data=self.testData)
+                pass
+        if self.verbose:
+            self._log(&#34;Successfully ran the classification model&#34;)
+
+
+def main():
+    import argparse
+
+    parser = argparse.ArgumentParser(description=&#34;Classification of text&#34;)
+    parser.add_argument(
+        &#34;--path&#34;,
+        &#34;-p&#34;,
+        type=str,
+        help=&#34;Path to the training dataset&#34;,
+    )
+    parser.add_argument(
+        &#34;--test&#34;,
+        &#34;-t&#34;,
+        type=str,
+        help=&#34;Path to the testing dataset&#34;,
+    )
+    parser.add_argument(
+        &#34;--download&#34;,
+        help=&#34;Download the required libraries&#34;,
+        required=True,
+        action=argparse.BooleanOptionalAction,
+    )
+    parser.add_argument(
+        &#34;--verbose&#34;,
+        help=&#34;Print the logs&#34;,
+        required=True,
+        action=argparse.BooleanOptionalAction,
+    )
+    parser.add_argument(
+        &#34;--sep&#34;, &#34;-s&#34;, type=str, default=&#34;\t&#34;, help=&#34;Separator for the data&#34;
+    )
+    parser.add_argument(
+        &#34;--out&#34;,
+        &#34;-o&#34;,
+        type=str,
+        default=&#34;output/&#34;,
+        help=&#34;File name of the output file&#34;,
+    )
+    parser.add_argument(
+        &#34;--viz&#34;,
+        help=&#34;Decide whether to visualize the EDA process and display classification visualization.&#34;,
+        required=True,
+        action=argparse.BooleanOptionalAction,
+    )
+
+    parser.add_argument(
+        &#34;--concat&#34;,
+        help=&#34;Concatenate the training data with the test data&#34;,
+        required=True,
+        action=argparse.BooleanOptionalAction,
+    )
+
+    parser.add_argument(
+        &#34;--trainFiles&#34;,
+        &#34;-tf&#34;,
+        nargs=&#34;+&#34;,
+        help=&#34;List of training files to concatenate&#34;,
+    )
+
+    args = parser.parse_args()
+
+    print(args)
+
+    classify = Classify(
+        path=args.path,
+        toDownload=args.download,
+        verbose=args.verbose,
+        outputPath=args.out,
+        visualize=args.viz,
+        testPath=args.test,
+        concat=args.concat,
+        trainFiles=args.trainFiles,
+    )
+    classify.run()
+
+
+if __name__ == &#34;__main__&#34;:
+    main()</code></pre>
+</details>
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+<h2 class="section-title" id="header-functions">Functions</h2>
+<dl>
+<dt id="emse-mms.models.classification.main"><code class="name flex">
+<span>def <span class="ident">main</span></span>(<span>)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def main():
+    import argparse
+
+    parser = argparse.ArgumentParser(description=&#34;Classification of text&#34;)
+    parser.add_argument(
+        &#34;--path&#34;,
+        &#34;-p&#34;,
+        type=str,
+        help=&#34;Path to the training dataset&#34;,
+    )
+    parser.add_argument(
+        &#34;--test&#34;,
+        &#34;-t&#34;,
+        type=str,
+        help=&#34;Path to the testing dataset&#34;,
+    )
+    parser.add_argument(
+        &#34;--download&#34;,
+        help=&#34;Download the required libraries&#34;,
+        required=True,
+        action=argparse.BooleanOptionalAction,
+    )
+    parser.add_argument(
+        &#34;--verbose&#34;,
+        help=&#34;Print the logs&#34;,
+        required=True,
+        action=argparse.BooleanOptionalAction,
+    )
+    parser.add_argument(
+        &#34;--sep&#34;, &#34;-s&#34;, type=str, default=&#34;\t&#34;, help=&#34;Separator for the data&#34;
+    )
+    parser.add_argument(
+        &#34;--out&#34;,
+        &#34;-o&#34;,
+        type=str,
+        default=&#34;output/&#34;,
+        help=&#34;File name of the output file&#34;,
+    )
+    parser.add_argument(
+        &#34;--viz&#34;,
+        help=&#34;Decide whether to visualize the EDA process and display classification visualization.&#34;,
+        required=True,
+        action=argparse.BooleanOptionalAction,
+    )
+
+    parser.add_argument(
+        &#34;--concat&#34;,
+        help=&#34;Concatenate the training data with the test data&#34;,
+        required=True,
+        action=argparse.BooleanOptionalAction,
+    )
+
+    parser.add_argument(
+        &#34;--trainFiles&#34;,
+        &#34;-tf&#34;,
+        nargs=&#34;+&#34;,
+        help=&#34;List of training files to concatenate&#34;,
+    )
+
+    args = parser.parse_args()
+
+    print(args)
+
+    classify = Classify(
+        path=args.path,
+        toDownload=args.download,
+        verbose=args.verbose,
+        outputPath=args.out,
+        visualize=args.viz,
+        testPath=args.test,
+        concat=args.concat,
+        trainFiles=args.trainFiles,
+    )
+    classify.run()</code></pre>
+</details>
+</dd>
+</dl>
+</section>
+<section>
+<h2 class="section-title" id="header-classes">Classes</h2>
+<dl>
+<dt id="emse-mms.models.classification.Classify"><code class="flex name class">
+<span>class <span class="ident">Classify</span></span>
+<span>(</span><span>path: str = 'input/603_trans_3.tsv', testPath: Optional[str] = None, outputPath: str = 'output/', toDownload: bool = False, verbose: bool = False, visualize: bool = False, concat: bool = False, trainFiles: list[str] = [])</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Predict the class for the given Module dataset based on TF-IDF vectorization and KNN (supervised) clustering algorithm.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>path</code></strong> :&ensp;<code>str</code></dt>
+<dd>Path to the training dataset.</dd>
+<dt><strong><code>testPath</code></strong> :&ensp;<code>str, None</code></dt>
+<dd>Path to the test dataset.</dd>
+<dt><strong><code>outputPath</code></strong> :&ensp;<code>str</code></dt>
+<dd>Path to the output directory.</dd>
+<dt><strong><code>toDownload</code></strong> :&ensp;<code>bool</code></dt>
+<dd>Whether to download the nltk corpus or not.</dd>
+<dt><strong><code>verbose</code></strong> :&ensp;<code>bool</code></dt>
+<dd>Whether to print the logs or not.</dd>
+<dt><strong><code>visualize</code></strong> :&ensp;<code>bool</code></dt>
+<dd>Whether to show EDA visualizations or not.</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class Classify:
+    &#34;&#34;&#34;
+    Predict the class for the given Module dataset based on TF-IDF vectorization and KNN (supervised) clustering algorithm.
+
+    Args:
+        path (str): Path to the training dataset.
+        testPath (str, None): Path to the test dataset.
+        outputPath (str): Path to the output directory.
+        toDownload (bool): Whether to download the nltk corpus or not.
+        verbose (bool): Whether to print the logs or not.
+        visualize (bool): Whether to show EDA visualizations or not.
+    &#34;&#34;&#34;
+
+    def __init__(
+        self,
+        path: str = &#34;input/603_trans_3.tsv&#34;,
+        testPath: Union[str, None] = None,
+        outputPath: str = &#34;output/&#34;,
+        toDownload: bool = False,
+        verbose: bool = False,
+        visualize: bool = False,
+        concat: bool = False,
+        trainFiles: list[str] = [],
+    ) -&gt; None:
+        import logging
+
+        self.logger = logging.getLogger(__name__)
+        self.filePath: str = path
+        self.testPath: str = testPath
+        self.outputPath: str = outputPath
+        self.logPath: str = &#34;logs/classification.log&#34;
+        self.toDownload: bool = toDownload
+        self.concat: bool = concat
+        self.data: Union[DataFrame, None] = None
+        self.trainFiles: list[str] = trainFiles
+        self.testData: Union[DataFrame, None] = None
+        self.verbose: bool = verbose
+        self.viz: bool = visualize
+        self.stop_words = set(stopwords.words(&#34;english&#34;))
+        self.N_CLUSTER: int = 0
+        self.N_TEST_CLUSTER: int = 0
+        self.train_x: Union[Series, None] = None
+        self.train_y: Union[Series, None] = None
+        self.test_x: Union[Series, None] = None
+        self.test_y: Union[Series, None] = None
+        self.train_x_vector: Union[None, numpy.ndarray] = None
+        self.test_x_vector: Union[None, numpy.ndarray] = None
+        self.lemmatizer = WordNetLemmatizer()
+        self.vectorizer = TfidfVectorizer(max_features=10000)
+        self.encoder = LabelEncoder()
+
+        if self.verbose:
+            logging.basicConfig(level=logging.INFO)
+        else:
+            logging.basicConfig(level=logging.DEBUG)
+
+        self.download()
+        self._configure()
+
+    def _configure(self) -&gt; None:
+        &#34;&#34;&#34;
+        Configure the logger and the stop words set
+        &#34;&#34;&#34;
+        self.stop_words.add(&#34;module&#34;)
+        self.stop_words.add(&#34;problem&#34;)
+        self.stop_words.add(&#34;use&#34;)
+        self.stop_words.add(&#34;model&#34;)
+        self.stop_words.add(&#34;solution&#34;)
+        self.stop_words.add(&#34;solve&#34;)
+        self.stop_words.add(&#34;analyze&#34;)
+        self.stop_words.add(&#34;example&#34;)
+        self.stop_words.add(&#34;application&#34;)
+        self.stop_words.add(&#34;computer&#34;)
+        self.stop_words.add(&#34;computers&#34;)
+        self.stop_words.add(&#34;one&#34;)
+        self.stop_words.add(&#34;two&#34;)
+        self.stop_words.add(&#34;three&#34;)
+        self.stop_words.add(&#34;four&#34;)
+        self.stop_words.add(&#34;five&#34;)
+        self.stop_words.add(&#34;six&#34;)
+        self.stop_words.add(&#34;seven&#34;)
+        self.stop_words.add(&#34;eight&#34;)
+        self.stop_words.add(&#34;x&#34;)
+        self.stop_words.add(&#34;c&#34;)
+        self.stop_words.add(&#34;go&#34;)
+        self.stop_words.add(&#34;constraint&#34;)
+        self.stop_words.add(&#34;get&#34;)
+        self.stop_words.add(&#34;ok&#34;)
+        self.stop_words.add(&#34;uh&#34;)
+        self.stop_words.add(&#34;shift&#34;)
+
+    def download(self):
+        &#34;&#34;&#34;
+        Download the required libraries for the classification.
+        &#34;&#34;&#34;
+        import nltk
+
+        if self.toDownload:
+            nltk.download(&#34;stopwords&#34;, quiet=not self.verbose)
+            nltk.download(&#34;wordnet&#34;, quiet=not self.verbose)
+            nltk.download(&#34;omw-1.4&#34;, quiet=not self.verbose)
+            self._log(&#34;Library downloads complete&#34;)
+        else:
+            self._log(&#34;Library downloads skipped&#34;)
+
+    def read(self, sep=&#34;\t&#34;) -&gt; None:
+        &#34;&#34;&#34;
+        Read the data from the file path. The default separator is tab.
+        &#34;&#34;&#34;
+        data = None
+
+        if self.concat:
+            for file in self.trainFiles:
+                data = self._merge_frames(data, pd.read_csv(file, sep=sep))
+        else:
+            data = pd.read_csv(self.filePath, sep=sep)
+
+        self.data = data
+
+        if self.data is None:
+            raise Exception(&#34;Data is empty&#34;)
+
+        if self.testPath is not None:
+            self.testData = pd.read_csv(self.testPath, sep=sep)
+
+        if self.verbose:
+            row, col = self.data.shape
+            self._log(f&#34;Shape of train data read \nRows: {row}, Columns: {col}&#34;)
+            if self.testPath is not None:
+                row, col = self.testData.shape
+                self._log(f&#34;Shape of test data read \nRows: {row}, Columns: {col}&#34;)
+            self._log(&#34;Data read successfully&#34;)
+        else:
+            self._log(&#34;Data read successfully&#34;)
+            if self.testPath is not None:
+                self._log(&#34;Test data read successfully&#34;)
+
+    def _scalar_to_string(self, df: DataFrame, col: str) -&gt; DataFrame:
+        &#34;&#34;&#34;
+        Convert the scalar values for each row of the DataFrame column to a string.
+        &#34;&#34;&#34;
+        lst = list(df[col])
+
+        scalar_to_string = []
+
+        for obj in lst:
+            print(obj)
+            scalar_to_string.append(str(obj))
+
+        df[col] = scalar_to_string
+
+        if self.verbose:
+            self._log(&#34;Scalar values converted to string successfully&#34;)
+            print(df.head())
+        else:
+            self._log(&#34;Scalar values converted to string successfully&#34;)
+
+        return df
+
+    def _merge_frames(self, df1: DataFrame, df2: DataFrame) -&gt; DataFrame:
+        &#34;&#34;&#34;
+        Merge the two DataFrames.
+        &#34;&#34;&#34;
+        df = pd.concat([df1, df2], ignore_index=True)
+
+        if self.verbose:
+            self._log(&#34;DataFrames merged successfully&#34;)
+            print(df.head())
+        else:
+            self._log(&#34;DataFrames merged successfully&#34;)
+
+        return df
+
+    def _merge_columns(
+        self, df: DataFrame, destinationCol: str, originCol: str
+    ) -&gt; DataFrame:
+        &#34;&#34;&#34;
+        Merge the values of the two DataFrame columns.
+        &#34;&#34;&#34;
+        lst1 = list(df[destinationCol])
+        lst2 = list(df[originCol])
+
+        merged = []
+
+        for i in range(len(lst1)):
+            cleaned_transcript = self._clean_transcript(str(lst2[i]))
+            merged.append(lst1[i] + &#34; &#34; + cleaned_transcript)
+
+        df[destinationCol] = merged
+
+        if self.verbose:
+            self._log(&#34;Columns merged successfully&#34;)
+            print(df.head())
+        else:
+            self._log(&#34;Columns merged successfully&#34;)
+
+        return df
+
+    def _clean_transcript(self, input: str) -&gt; DataFrame:
+        &#34;&#34;&#34;
+        Clean the transcript by removing special characters and numbers from text.
+        &#34;&#34;&#34;
+        import re
+        from string import digits
+
+        if input == &#34;nan&#34;:
+            return &#34;&#34;
+
+        else:
+            cleaned = re.sub(
+                &#34;([A-Z][a-z]+)&#34;,
+                r&#34; \1&#34;,
+                re.sub(
+                    &#34;([A-Z]+)&#34;,
+                    r&#34; \1&#34;,
+                    re.sub(
+                        r&#34;[^a-zA-Z0-9]+&#34;,
+                        &#34; &#34;,
+                        input.replace(&#34;\\&#39;&#34;, &#34;&#34;),
+                    ),
+                ),
+            )
+
+            remove_digits = str.maketrans(&#34;&#34;, &#34;&#34;, digits)
+
+            return cleaned.translate(remove_digits)
+
+    def _clean_text(self, input: str) -&gt; str:
+        &#34;&#34;&#34;
+        Clean the text by removing special characters, and digits from the input string.
+        &#34;&#34;&#34;
+        import re
+
+        if input == &#34;nan&#34;:
+            return &#34;&#34;
+        return re.sub(
+            r&#34;[^a-zA-Z]+&#34;,
+            &#34; &#34;,
+            input.replace(&#34;\\&#39;&#34;, &#34;&#34;),
+        )
+
+    def _split_camel_case(self, df: DataFrame, col: str) -&gt; DataFrame:
+        &#34;&#34;&#34;
+        Split the words in the DataFrame column which are in camel case.
+        &#34;&#34;&#34;
+        lst = list(df[col])
+
+        split_words = []
+
+        for obj in lst:
+            split_words.append(self._clean_text(obj).split())
+
+        payload = [&#34; &#34;.join(entry) for entry in split_words]
+
+        df[col] = payload
+        if self.verbose:
+            self._log(&#34;Camel case text split successfully&#34;)
+            print(df.head())
+        else:
+            self._log(&#34;Camel case text split successfully&#34;)
+
+        return df
+
+    def _stemmer(self, df: DataFrame, col: str) -&gt; DataFrame:
+        &#34;&#34;&#34;
+        Stem the words in the DataFrame column.
+        &#34;&#34;&#34;
+        from collections import defaultdict
+
+        data = df.copy()
+
+        tag_map = defaultdict(lambda: wn.NOUN)
+
+        tag_map[&#34;J&#34;] = wn.ADJ
+        tag_map[&#34;V&#34;] = wn.VERB
+        tag_map[&#34;R&#34;] = wn.ADV
+
+        data[&#34;tokens&#34;] = [word_tokenize(entry) for entry in data[col]]
+
+        stemmer = self.lemmatizer
+        for index, entry in enumerate(data[&#34;tokens&#34;]):
+            final_words = []
+            for word, tag in pos_tag(entry):
+                word_final = stemmer.lemmatize(word, tag_map[tag[0]])
+                if word_final not in self.stop_words and word_final.isalpha():
+                    final_words.append(word_final)
+
+            data.loc[index, &#34;target&#34;] = &#34; &#34;.join(final_words)
+
+        return data
+
+    def _preprocess_features(self, col: str, data: DataFrame) -&gt; DataFrame:
+        &#34;&#34;&#34;
+        1. turn entries to lower case
+        2. remove special characters
+        4. remove stop words
+        5. stem words
+        6. tokenize words
+        7. return feature column
+        &#34;&#34;&#34;
+        # create a copy of the data
+        df = data.copy()
+
+        # convert camel case text to separate words
+        df = self._split_camel_case(df, col)
+
+        # for each row of the feature column, turn text to lowercase
+        df[col] = [entry.lower() for entry in df[col]]
+
+        # tokenize entries, stem words and remove stop words
+        df = self._stemmer(df, col)
+
+        return df
+
+    def prepare(self, col: str) -&gt; DataFrame:
+        &#34;&#34;&#34;
+        Prepare the data for the classification.
+        &#34;&#34;&#34;
+        import numpy as np
+
+        if self.testPath is None:
+            df = self._merge_columns(
+                self.data, destinationCol=&#34;features&#34;, originCol=&#34;transcript&#34;
+            )
+            df = self._preprocess_features(col, self.data)
+            df = df.drop(
+                [&#34;features&#34;, &#34;tokens&#34;, &#34;hours&#34;, &#34;prefix&#34;, &#34;transcript&#34;, &#34;number&#34;],
+                axis=1,
+            )
+
+            if self.verbose:
+                self._log(&#34;Data prepared successfully&#34;)
+                print(df.head())
+            else:
+                self._log(&#34;Data prepared successfully&#34;)
+
+            self.data = df
+            self.N_CLUSTER = int(np.sqrt(len(df)))
+            if self.viz:
+                self.generate_count_plot(data=df)
+            self._save_data_frame(df, fileName=&#34;603_clean.csv&#34;)
+
+        else:
+            dfTrain = self._merge_columns(
+                self.data, destinationCol=&#34;features&#34;, originCol=&#34;transcript&#34;
+            )
+            dfTrain = self._preprocess_features(col, self.data)
+            dfTrain = dfTrain.drop(
+                [&#34;features&#34;, &#34;tokens&#34;, &#34;hours&#34;, &#34;prefix&#34;, &#34;transcript&#34;, &#34;number&#34;],
+                axis=1,
+            )
+
+            dfTest = self._merge_columns(
+                self.testData, destinationCol=&#34;features&#34;, originCol=&#34;transcript&#34;
+            )
+            dfTest = self._preprocess_features(col, self.testData)
+            dfTest = dfTest.drop(
+                [&#34;features&#34;, &#34;tokens&#34;, &#34;hours&#34;, &#34;prefix&#34;, &#34;transcript&#34;, &#34;number&#34;],
+                axis=1,
+            )
+
+            if self.verbose:
+                self._log(&#34;Train data prepared successfully&#34;)
+                print(dfTrain.head())
+                self._log(&#34;Test data prepared successfully&#34;)
+                print(dfTest.head())
+            else:
+                self._log(&#34;Data prepared successfully&#34;)
+
+            self.data = dfTrain
+            self.testData = dfTest
+            self.N_CLUSTER = int(np.sqrt(len(dfTrain)))
+            self.N_TEST_CLUSTER = int(np.sqrt(len(dfTest)))
+            if self.viz:
+                self.generate_count_plot(data=dfTrain)
+                self.generate_count_plot(data=dfTest)
+            self._save_data_frame(dfTrain, fileName=&#34;603_clean.csv&#34;)
+            self._save_data_frame(dfTest, fileName=&#34;614_test.csv&#34;)
+
+    def _create_tf_idf(self, train, test) -&gt; tuple:
+        &#34;&#34;&#34;
+        Create the TF-IDF vectorizer.
+        &#34;&#34;&#34;
+        from sklearn.feature_extraction.text import TfidfVectorizer
+
+        self.vectorizer = TfidfVectorizer(
+            analyzer=&#34;word&#34;,
+            max_features=10000,
+            stop_words=list(self.stop_words),
+        )
+
+        tfidf_train = self.vectorizer.fit_transform(train).toarray()
+        tfidf_test = self.vectorizer.transform(test).toarray()
+
+        return (tfidf_train, tfidf_test)
+
+    def _data_transformer(self, size: float = 0.3):
+        &#34;&#34;&#34;
+        Splits, fits, and transforms the data for the classification.
+        &#34;&#34;&#34;
+        from sklearn.model_selection import train_test_split
+
+        if self.testPath is None:
+            df = self._data_encoder(df=self.data, col=&#34;cluster&#34;)
+
+            Train_X, Test_X, Train_Y, Test_Y = train_test_split(
+                df[&#34;target&#34;],
+                df[&#34;cluster&#34;],
+                test_size=size,
+                random_state=42,
+                shuffle=True,
+                stratify=None,
+            )
+
+            Train_X_Tfidf, Test_X_Tfidf = self._create_tf_idf(Train_X, Test_X)
+
+            self.data = df
+            self.train_x = Train_X
+            self.test_x = Test_X
+            self.train_y = Train_Y
+            self.test_y = Test_Y
+            self.train_x_vector = Train_X_Tfidf
+            self.test_x_vector = Test_X_Tfidf
+
+        else:
+            dfTrain = self._data_encoder(df=self.data, col=&#34;cluster&#34;)
+            dfTest = self._data_encoder(df=self.testData, col=&#34;cluster&#34;)
+
+            Train_X_Tfidf, Test_X_Tfidf = self._create_tf_idf(
+                dfTrain[&#34;target&#34;], dfTest[&#34;target&#34;]
+            )
+
+            self.data = dfTrain
+            self.testData = dfTest
+            self.train_x = dfTrain[&#34;target&#34;]
+            self.test_x = dfTest[&#34;target&#34;]
+            self.train_y = dfTrain[&#34;cluster&#34;]
+            self.test_y = dfTest[&#34;cluster&#34;]
+            self.train_x_vector = Train_X_Tfidf
+            self.test_x_vector = Test_X_Tfidf
+
+        if self.verbose:
+            self._log(&#34;Data transformed successfully&#34;)
+            if self.testPath is not None:
+                print(dfTrain.head())
+                print(dfTest.head())
+            else:
+                print(df.head())
+        else:
+            self._log(&#34;Data transformed successfully&#34;)
+
+    def _data_encoder(self, df: DataFrame, col: str = &#34;cluster&#34;) -&gt; DataFrame:
+        &#34;&#34;&#34;
+        Encode the data for the classification.
+        &#34;&#34;&#34;
+
+        df[col] = self.encoder.fit_transform(df[col])
+
+        return df
+
+    def _create_model(self):
+        &#34;&#34;&#34;
+        Create the classification model.
+        &#34;&#34;&#34;
+
+        self._data_transformer()
+
+        self._run_nearest_neighbors(
+            Train_X_Tfidf=self.train_x_vector,
+            Test_X_Tfidf=self.test_x_vector,
+            Train_Y=self.train_y,
+            Test_Y=self.test_y,
+            algo=&#34;brute&#34;,
+            metric=&#34;cosine&#34;,
+            weights=&#34;distance&#34;,
+        )
+
+        self._print_top_words_per_cluster(
+            vectorizer=self.vectorizer, df=self.data, X=self.train_x_vector
+        )
+
+        sim, mask = self._calculate_similarity(
+            X=self.train_x_vector,
+        )
+
+        self.generate_heat_map(
+            arr=sim,
+            mask=mask,
+            fileName=&#34;heatmap_train.png&#34;,
+        )
+
+        self._print_sorted_similarities(sim_arr=sim)
+
+        self._run_pca(X=self.train_x_vector, df=self.data, fileName=&#34;pca_train.png&#34;)
+
+        self._run_naive_bayes(
+            X_vector=self.train_x_vector,
+            X_test_vector=self.test_x_vector,
+            Y_test=self.test_y,
+            Y_train=self.train_y,
+        )
+
+        if self.testPath is not None:
+            self._print_top_words_per_cluster(
+                vectorizer=self.vectorizer,
+                df=self.testData,
+                X=self.test_x_vector,
+                train=False,
+            )
+
+            simTest, maskTest = self._calculate_similarity(
+                X=self.test_x_vector,
+            )
+
+            self.generate_heat_map(
+                arr=simTest,
+                mask=maskTest,
+                fileName=&#34;heatmap_test.png&#34;,
+            )
+
+            self._print_sorted_similarities(sim_arr=simTest)
+
+            self._run_pca(
+                X=self.test_x_vector, df=self.testData, fileName=&#34;pca_test.png&#34;
+            )
+
+        self._log(&#34;Model created successfully&#34;)
+
+    def _print_top_words_per_cluster(
+        self, vectorizer, df: DataFrame, X: list, n=10, train: bool = True
+    ):
+        &#34;&#34;&#34;
+        This function returns the keywords for each centroid of the KNN clustering algorithm.
+
+        Parameters
+        ----------
+        vectorizer : TfidfVectorizer
+            The TF-IDF vectorizer.
+        df : DataFrame
+            The data frame.
+        X : list
+            The list of TF-IDF vectors.
+        n : int, optional
+            The number of keywords to return, by default 10
+        train : bool, optional
+            Whether the data is training or test data, by default True
+        &#34;&#34;&#34;
+        import numpy as np
+
+        data = pd.DataFrame(X).groupby(df[&#34;cluster&#34;]).mean()
+        terms = vectorizer.get_feature_names_out()
+
+        print(&#34;\n&#34;)
+
+        if train:
+            self._log(&#34;Top keywords per cluster in training set:&#34;)
+        else:
+            self._log(&#34;Top keywords per cluster in test set:&#34;)
+
+        for i, r in data.iterrows():
+            self._log(
+                &#34;Cluster {} keywords: {}&#34;.format(
+                    i, &#34;, &#34;.join([terms[t] for t in np.argsort(r)[-n:]])
+                )
+            )
+            self._log(&#34;Mean TF-IDF score -&gt; %0.4f&#34; % np.max(r))
+        print(&#34;\n&#34;)
+
+    def _train_model(self):
+        &#34;&#34;&#34;
+        Train the classification model.
+        &#34;&#34;&#34;
+        pass
+
+    def _evaluate_model(self):
+        &#34;&#34;&#34;
+        Evaluate the classification model.
+        &#34;&#34;&#34;
+        pass
+
+    def _predict(self):
+        &#34;&#34;&#34;
+        Predict the classification model.
+        &#34;&#34;&#34;
+        pass
+
+    def _save_model(self):
+        &#34;&#34;&#34;
+        Save the classification model.
+        &#34;&#34;&#34;
+        pass
+
+    def _run_nearest_neighbors(
+        self,
+        Train_X_Tfidf: numpy.ndarray,
+        Test_X_Tfidf: numpy.ndarray,
+        Train_Y: Series,
+        Test_Y: Series,
+        algo: str,
+        metric: str,
+        weights: str,
+        n_neighbors: int = 5,
+    ):
+        &#34;&#34;&#34;
+        Runs the nearest neighbors algorithm on the input data.
+
+        Args:
+            Train_X_Tfidf (numpy.ndarray): The training data to be used for fitting the model.
+            Test_X_Tfidf (numpy.ndarray): The test data to be used for predicting the model.
+            Train_Y (pandas.Series): The target values for the training data.
+            Test_Y (pandas.Series): The target values for the test data.
+            algo (str): The algorithm to be used for computing the nearest neighbors.
+            metric (str): The distance metric to be used for computing the nearest neighbors.
+            weights (str): The weight function to be used for computing the nearest neighbors.
+            n_neighbors (int): The number of neighbors to be used for computing the nearest neighbors.
+
+        Returns:
+            None
+        &#34;&#34;&#34;
+        from sklearn.neighbors import KNeighborsClassifier
+        from sklearn.metrics import accuracy_score
+        from sklearn.model_selection import cross_val_score
+
+        knn = KNeighborsClassifier(
+            n_neighbors=n_neighbors,
+            weights=weights,
+            algorithm=algo,
+            metric=metric,
+            n_jobs=1,
+            metric_params=None,
+            leaf_size=30,
+            p=2,
+        )
+
+        knn.fit(Train_X_Tfidf, Train_Y)
+
+        predicted = knn.predict(Test_X_Tfidf)
+
+        self._log(&#34;KNN Predictions -&gt; %s&#34; % predicted)
+
+        self.testData[&#34;cluster&#34;] = predicted
+
+        self._save_data_frame(
+            df=self.testData,
+            fileName=&#34;614_pred.csv&#34;,
+        )
+
+        acc = accuracy_score(Test_Y, predicted)
+
+        self._log(&#34;KNN Accuracy -&gt; %0.4f&#34; % (acc * 100))
+        print(&#34;\n&#34;)
+
+        best_cv = 2
+        best_score = 0
+        best_cv_index = 0
+        y = []
+        x = []
+        max_range: int = 10
+
+        if self.testPath is None:
+            max_range = 7
+
+        for i in range(2, max_range):
+            scores = cross_val_score(knn, Train_X_Tfidf, Train_Y, cv=i)
+
+            self._log(
+                &#34;Cross Validation Accuracy: %0.2f (+/- %0.2f)&#34;
+                % (scores.mean(), scores.std() * 2)
+            )
+
+            self._log(&#34;Number of predicted classes -&gt; %s&#34; % len(predicted))
+
+            print(&#34;\n&#34;)
+
+            if scores.mean() &gt; best_score:
+                best_cv = i
+                best_score = scores.mean()
+                best_cv_index = scores
+
+            y.append(scores.mean())
+            x.append(i)
+
+        self._log(
+            &#34;Best Cross Validation Accuracy: %0.2f (+/- %0.2f)&#34;
+            % (best_score, best_cv_index.std() * 2)
+        )
+        self._log(&#34;Best Cross Validation Number of Folds: %s&#34; % best_cv)
+
+        self.generate_cross_validation_plot(x, y)
+
+    def _run_pca(
+        self, X: numpy.ndarray, df: DataFrame, fileName: str = &#34;pca_scatter.png&#34;
+    ):
+        &#34;&#34;&#34;
+        Applies Principal Component Analysis (PCA) to the input data X and generates a scatter plot of the reduced features.
+
+        Args:
+            X (numpy.ndarray): The input data to be reduced.
+            df (pandas.DataFrame): The dataframe containing the data to be plotted.
+
+        Returns:
+            None
+        &#34;&#34;&#34;
+        from sklearn.decomposition import PCA
+
+        pca = PCA(n_components=2, random_state=42)
+
+        red_feat = pca.fit_transform(X)
+
+        x = red_feat[:, 0]
+        y = red_feat[:, 1]
+
+        df[&#34;x&#34;] = x
+        df[&#34;y&#34;] = y
+
+        self.generate_scatter_plot(data=df, fileName=fileName)
+
+        self._log(&#34;PCA run successfully&#34;)
+
+    def _run_naive_bayes(self, X_vector, Y_train, X_test_vector, Y_test):
+        &#34;&#34;&#34;
+        Run the naive bayes classification model.
+        &#34;&#34;&#34;
+        from sklearn.naive_bayes import MultinomialNB
+
+        Naive = MultinomialNB()
+
+        Naive.fit(X_vector, Y_train)
+
+        predictions_NB = Naive.predict(X_test_vector)
+
+        if self.verbose:
+            self._log(&#34;Naive Bayes run successfully&#34;)
+            print(
+                &#34;Naive Bayes Accuracy Score -&gt; &#34;,
+                accuracy_score(predictions_NB, Y_test) * 100,
+            )
+            print(&#34;\n&#34;)
+        else:
+            self._log(&#34;Naive Bayes run successfully&#34;)
+
+    def _run_svm(self, X_train, Y_train, X_test, Y_test):
+        &#34;&#34;&#34;
+        Run the svm classification model.
+        &#34;&#34;&#34;
+        from sklearn import svm
+
+        SVM = svm.SVC(C=1.0, kernel=&#34;poly&#34;, degree=3, gamma=&#34;auto&#34;)
+
+        SVM.fit(X_train, Y_train)
+
+        predictions_SVM = SVM.predict(X_test)
+
+        print(&#34;SVM Accuracy Score -&gt; &#34;, accuracy_score(predictions_SVM, Y_test) * 100)
+
+        if self.verbose:
+            self._log(&#34;SVM run successfully&#34;)
+            print(predictions_SVM)
+        else:
+            self._log(&#34;SVM run successfully&#34;)
+
+    def _run_word_cloud_per_cluster(self, df: DataFrame):
+        &#34;&#34;&#34;
+        Run the word cloud per cluster.
+        &#34;&#34;&#34;
+
+        for i in sorted(df[&#34;cluster&#34;].array.unique()):
+            corpus = &#34; &#34;.join(list(df[df[&#34;cluster&#34;] == i][&#34;target&#34;]))
+            self.generate_word_cloud(corpus=corpus, fileName=&#34;cluster_%s.png&#34; % i)
+
+    def _save_data_frame(self, df: DataFrame, fileName: str):
+        &#34;&#34;&#34;
+        Save the data frame as a CSV file.
+        &#34;&#34;&#34;
+        df.to_csv(str(self.outputPath + fileName), index=False)
+
+    def generate_word_cloud(self, corpus: str, fileName: str = &#34;word_cloud.png&#34;):
+        &#34;&#34;&#34;
+        Generate the word cloud for the data.
+        &#34;&#34;&#34;
+        from wordcloud import WordCloud
+        from matplotlib import pyplot as plt
+
+        wordcloud = WordCloud(
+            max_words=700,
+            background_color=&#34;white&#34;,
+            stopwords=self.stop_words,
+        ).generate(corpus)
+        plt.figure(figsize=(10, 10))
+        plt.axis(&#34;off&#34;)
+        if self.viz:
+            plt.imshow(wordcloud, interpolation=&#34;bilinear&#34;)
+            plt.show()
+        else:
+            # plt.savefig(str(self.outputPath + fileName))
+            wordcloud.to_file(str(self.outputPath + fileName))
+
+    def generate_scatter_plot(
+        self, data: DataFrame, fileName: str = &#34;scatter_plot.png&#34;
+    ):
+        &#34;&#34;&#34;
+        Generate the scatter plot for the data.
+        &#34;&#34;&#34;
+        import seaborn as sns
+        from matplotlib import pyplot as plt
+
+        plt.figure(figsize=(10, 10))
+        sns.scatterplot(data=data, x=&#34;x&#34;, y=&#34;y&#34;, hue=&#34;cluster&#34;, palette=&#34;tab10&#34;)
+        if self.viz:
+            plt.show()
+        else:
+            plt.savefig(str(self.outputPath + fileName))
+
+    def generate_elbow_plot(self, X: numpy.ndarray):
+        &#34;&#34;&#34;
+        Generate the elbow plot for the data that shows the most optimal number of clusters that should be used based on sum of squared distances.
+        &#34;&#34;&#34;
+        import matplotlib.pyplot as plt
+        from sklearn.cluster import KMeans
+
+        Sum_of_squared_distances = []
+        K = range(2, self.N_CLUSTER * 2)
+
+        for k in K:
+            km = KMeans(n_clusters=k, max_iter=200, n_init=10)
+            km = km.fit(X)
+            Sum_of_squared_distances.append(km.inertia_)
+        plt.figure(figsize=(10, 10))
+        plt.plot(K, Sum_of_squared_distances, &#34;bx-&#34;)
+        plt.xlabel(&#34;k&#34;)
+        plt.ylabel(&#34;Sum_of_squared_distances&#34;)
+        plt.title(&#34;Elbow Method For Optimal k&#34;)
+        if self.viz:
+            plt.show()
+        else:
+            plt.savefig(str(self.outputPath + &#34;kmeans_elbow_plot.png&#34;))
+
+    def generate_count_plot(self, data: DataFrame, countCol: str = &#34;cluster&#34;):
+        &#34;&#34;&#34;
+        Generate a bar plot that sums the number of rows that share the same prefix value.
+
+        Args:
+            data (DataFrame): The data to plot.
+            countCol (str, optional): The name of the column to count. Defaults to &#34;cluster&#34;.
+        &#34;&#34;&#34;
+        import seaborn as sns
+        from matplotlib import pyplot as plt
+
+        sns.countplot(x=countCol, data=data)
+        if self.viz:
+            plt.show()
+        else:
+            plt.savefig(str(self.outputPath + &#34;count_plot.png&#34;))
+
+    def generate_cross_validation_plot(self, x: list, y: list):
+        &#34;&#34;&#34;
+        Generate a cross validation plot that shows the accuracy of the model.
+
+        Args:
+            x (list): The list of x values.
+            y (list): The list of y values.
+        &#34;&#34;&#34;
+        import matplotlib.pyplot as plt
+
+        plt.plot(x, y, &#34;bx-&#34;)
+        plt.xlabel(&#34;fold&#34;)
+        plt.ylabel(&#34;Accuracy&#34;)
+        plt.title(&#34;Cross Validation Accuracy over 10 folds&#34;)
+        if self.viz:
+            plt.show()
+        else:
+            plt.savefig(str(self.outputPath + &#34;cross_validation_plot.png&#34;))
+
+    def _calculate_similarity(self, X) -&gt; tuple[numpy.ndarray, list]:
+        &#34;&#34;&#34;
+        Calculate the similarity between the documents.
+
+        Args:
+            X (numpy.ndarray): The array of documents.
+
+        Returns:
+            tuple: The similarity array and the mask to apply to the array.
+        &#34;&#34;&#34;
+        import numpy as np
+        from sklearn.metrics.pairwise import cosine_similarity
+
+        sim_arr = cosine_similarity(X)
+
+        mask = np.triu(np.ones_like(sim_arr, dtype=bool))
+
+        return sim_arr, mask
+
+    def generate_heat_map(
+        self, arr: numpy.ndarray, mask: list, fileName: str = &#34;heat_map.png&#34;
+    ):
+        &#34;&#34;&#34;
+        Generate a heat map that shows the correlation between the documents, using the name column of the data frame as the tick label.
+
+        Args:
+            arr (numpy.ndarray): The similarity array.
+            mask (list): The mask to apply to the array. This is used to remove the diagonal and upper duplicate values.
+        &#34;&#34;&#34;
+        import seaborn as sns
+        from matplotlib import pyplot as plt
+
+        plt.figure(figsize=(25, 15))
+        sns.heatmap(
+            arr,
+            mask=mask,
+            square=False,
+            robust=True,
+            annot=True,
+            cmap=&#34;YlGnBu&#34;,
+            fmt=&#34;.2f&#34;,
+            cbar=False,
+        )
+        if self.viz:
+            plt.show()
+        else:
+            plt.savefig(str(self.outputPath + fileName))
+
+    def _print_sorted_similarities(self, sim_arr, threshold=0) -&gt; DataFrame:
+        &#34;&#34;&#34;
+        Store the similarities between the documents in a data frame that is sorted by the similarity score in descending order.
+        Removing the diagonal values.
+
+        Args:
+            sim_arr (numpy.ndarray): The similarity array.
+            threshold (int, optional): The threshold to filter the similarity scores by. Defaults to 0.
+        &#34;&#34;&#34;
+        import pandas as pd
+
+        df = pd.DataFrame(sim_arr)
+        df = df.stack().reset_index()
+        df.columns = [&#34;Document 1&#34;, &#34;Document 2&#34;, &#34;Similarity Score&#34;]
+        df = df.sort_values(by=[&#34;Similarity Score&#34;], ascending=False)
+        filtered_df = df[df[&#34;Document 1&#34;] != df[&#34;Document 2&#34;]]
+        top = filtered_df[filtered_df[&#34;Similarity Score&#34;] &gt; threshold]
+
+        print(top.head(10))
+
+        return top
+
+    def _log(self, text: str):
+        &#34;&#34;&#34;
+        Append the text to the log file.
+
+        Args:
+            text (str): The text to append to the log file.
+        &#34;&#34;&#34;
+        import time
+
+        t = time.localtime()
+        current_time = time.strftime(&#34;%H:%M:%S&#34;, t)
+
+        if self.verbose:
+            self.logger.info(f&#34;\n[{current_time}]: {text}&#34;)
+        else:
+            self.logger.debug(f&#34;\n[{current_time}]: {text}&#34;)
+
+        with open(self.logPath, &#34;a&#34;) as f:
+            f.write(f&#34;\n[{current_time}]: {text}&#34;)
+
+    def run(self) -&gt; None:
+        &#34;&#34;&#34;
+        Run the classification model.
+        &#34;&#34;&#34;
+        self.read()
+        self.prepare(col=&#34;features&#34;)
+        self._create_model()
+        if self.viz:
+            self._run_word_cloud_per_cluster(df=self.data)
+            if self.testPath is not None:
+                # TODO: Fix test data not having x and y columns
+                # self.generate_scatter_plot(data=self.testData)
+                pass
+        if self.verbose:
+            self._log(&#34;Successfully ran the classification model&#34;)</code></pre>
+</details>
+<h3>Methods</h3>
+<dl>
+<dt id="emse-mms.models.classification.Classify.download"><code class="name flex">
+<span>def <span class="ident">download</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Download the required libraries for the classification.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def download(self):
+    &#34;&#34;&#34;
+    Download the required libraries for the classification.
+    &#34;&#34;&#34;
+    import nltk
+
+    if self.toDownload:
+        nltk.download(&#34;stopwords&#34;, quiet=not self.verbose)
+        nltk.download(&#34;wordnet&#34;, quiet=not self.verbose)
+        nltk.download(&#34;omw-1.4&#34;, quiet=not self.verbose)
+        self._log(&#34;Library downloads complete&#34;)
+    else:
+        self._log(&#34;Library downloads skipped&#34;)</code></pre>
+</details>
+</dd>
+<dt id="emse-mms.models.classification.Classify.generate_count_plot"><code class="name flex">
+<span>def <span class="ident">generate_count_plot</span></span>(<span>self, data: pandas.core.frame.DataFrame, countCol: str = 'cluster')</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Generate a bar plot that sums the number of rows that share the same prefix value.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>data</code></strong> :&ensp;<code>DataFrame</code></dt>
+<dd>The data to plot.</dd>
+<dt><strong><code>countCol</code></strong> :&ensp;<code>str</code>, optional</dt>
+<dd>The name of the column to count. Defaults to "cluster".</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def generate_count_plot(self, data: DataFrame, countCol: str = &#34;cluster&#34;):
+    &#34;&#34;&#34;
+    Generate a bar plot that sums the number of rows that share the same prefix value.
+
+    Args:
+        data (DataFrame): The data to plot.
+        countCol (str, optional): The name of the column to count. Defaults to &#34;cluster&#34;.
+    &#34;&#34;&#34;
+    import seaborn as sns
+    from matplotlib import pyplot as plt
+
+    sns.countplot(x=countCol, data=data)
+    if self.viz:
+        plt.show()
+    else:
+        plt.savefig(str(self.outputPath + &#34;count_plot.png&#34;))</code></pre>
+</details>
+</dd>
+<dt id="emse-mms.models.classification.Classify.generate_cross_validation_plot"><code class="name flex">
+<span>def <span class="ident">generate_cross_validation_plot</span></span>(<span>self, x: list, y: list)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Generate a cross validation plot that shows the accuracy of the model.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>x</code></strong> :&ensp;<code>list</code></dt>
+<dd>The list of x values.</dd>
+<dt><strong><code>y</code></strong> :&ensp;<code>list</code></dt>
+<dd>The list of y values.</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def generate_cross_validation_plot(self, x: list, y: list):
+    &#34;&#34;&#34;
+    Generate a cross validation plot that shows the accuracy of the model.
+
+    Args:
+        x (list): The list of x values.
+        y (list): The list of y values.
+    &#34;&#34;&#34;
+    import matplotlib.pyplot as plt
+
+    plt.plot(x, y, &#34;bx-&#34;)
+    plt.xlabel(&#34;fold&#34;)
+    plt.ylabel(&#34;Accuracy&#34;)
+    plt.title(&#34;Cross Validation Accuracy over 10 folds&#34;)
+    if self.viz:
+        plt.show()
+    else:
+        plt.savefig(str(self.outputPath + &#34;cross_validation_plot.png&#34;))</code></pre>
+</details>
+</dd>
+<dt id="emse-mms.models.classification.Classify.generate_elbow_plot"><code class="name flex">
+<span>def <span class="ident">generate_elbow_plot</span></span>(<span>self, X: numpy.ndarray)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Generate the elbow plot for the data that shows the most optimal number of clusters that should be used based on sum of squared distances.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def generate_elbow_plot(self, X: numpy.ndarray):
+    &#34;&#34;&#34;
+    Generate the elbow plot for the data that shows the most optimal number of clusters that should be used based on sum of squared distances.
+    &#34;&#34;&#34;
+    import matplotlib.pyplot as plt
+    from sklearn.cluster import KMeans
+
+    Sum_of_squared_distances = []
+    K = range(2, self.N_CLUSTER * 2)
+
+    for k in K:
+        km = KMeans(n_clusters=k, max_iter=200, n_init=10)
+        km = km.fit(X)
+        Sum_of_squared_distances.append(km.inertia_)
+    plt.figure(figsize=(10, 10))
+    plt.plot(K, Sum_of_squared_distances, &#34;bx-&#34;)
+    plt.xlabel(&#34;k&#34;)
+    plt.ylabel(&#34;Sum_of_squared_distances&#34;)
+    plt.title(&#34;Elbow Method For Optimal k&#34;)
+    if self.viz:
+        plt.show()
+    else:
+        plt.savefig(str(self.outputPath + &#34;kmeans_elbow_plot.png&#34;))</code></pre>
+</details>
+</dd>
+<dt id="emse-mms.models.classification.Classify.generate_heat_map"><code class="name flex">
+<span>def <span class="ident">generate_heat_map</span></span>(<span>self, arr: numpy.ndarray, mask: list, fileName: str = 'heat_map.png')</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Generate a heat map that shows the correlation between the documents, using the name column of the data frame as the tick label.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>arr</code></strong> :&ensp;<code>numpy.ndarray</code></dt>
+<dd>The similarity array.</dd>
+<dt><strong><code>mask</code></strong> :&ensp;<code>list</code></dt>
+<dd>The mask to apply to the array. This is used to remove the diagonal and upper duplicate values.</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def generate_heat_map(
+    self, arr: numpy.ndarray, mask: list, fileName: str = &#34;heat_map.png&#34;
+):
+    &#34;&#34;&#34;
+    Generate a heat map that shows the correlation between the documents, using the name column of the data frame as the tick label.
+
+    Args:
+        arr (numpy.ndarray): The similarity array.
+        mask (list): The mask to apply to the array. This is used to remove the diagonal and upper duplicate values.
+    &#34;&#34;&#34;
+    import seaborn as sns
+    from matplotlib import pyplot as plt
+
+    plt.figure(figsize=(25, 15))
+    sns.heatmap(
+        arr,
+        mask=mask,
+        square=False,
+        robust=True,
+        annot=True,
+        cmap=&#34;YlGnBu&#34;,
+        fmt=&#34;.2f&#34;,
+        cbar=False,
+    )
+    if self.viz:
+        plt.show()
+    else:
+        plt.savefig(str(self.outputPath + fileName))</code></pre>
+</details>
+</dd>
+<dt id="emse-mms.models.classification.Classify.generate_scatter_plot"><code class="name flex">
+<span>def <span class="ident">generate_scatter_plot</span></span>(<span>self, data: pandas.core.frame.DataFrame, fileName: str = 'scatter_plot.png')</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Generate the scatter plot for the data.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def generate_scatter_plot(
+    self, data: DataFrame, fileName: str = &#34;scatter_plot.png&#34;
+):
+    &#34;&#34;&#34;
+    Generate the scatter plot for the data.
+    &#34;&#34;&#34;
+    import seaborn as sns
+    from matplotlib import pyplot as plt
+
+    plt.figure(figsize=(10, 10))
+    sns.scatterplot(data=data, x=&#34;x&#34;, y=&#34;y&#34;, hue=&#34;cluster&#34;, palette=&#34;tab10&#34;)
+    if self.viz:
+        plt.show()
+    else:
+        plt.savefig(str(self.outputPath + fileName))</code></pre>
+</details>
+</dd>
+<dt id="emse-mms.models.classification.Classify.generate_word_cloud"><code class="name flex">
+<span>def <span class="ident">generate_word_cloud</span></span>(<span>self, corpus: str, fileName: str = 'word_cloud.png')</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Generate the word cloud for the data.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def generate_word_cloud(self, corpus: str, fileName: str = &#34;word_cloud.png&#34;):
+    &#34;&#34;&#34;
+    Generate the word cloud for the data.
+    &#34;&#34;&#34;
+    from wordcloud import WordCloud
+    from matplotlib import pyplot as plt
+
+    wordcloud = WordCloud(
+        max_words=700,
+        background_color=&#34;white&#34;,
+        stopwords=self.stop_words,
+    ).generate(corpus)
+    plt.figure(figsize=(10, 10))
+    plt.axis(&#34;off&#34;)
+    if self.viz:
+        plt.imshow(wordcloud, interpolation=&#34;bilinear&#34;)
+        plt.show()
+    else:
+        # plt.savefig(str(self.outputPath + fileName))
+        wordcloud.to_file(str(self.outputPath + fileName))</code></pre>
+</details>
+</dd>
+<dt id="emse-mms.models.classification.Classify.prepare"><code class="name flex">
+<span>def <span class="ident">prepare</span></span>(<span>self, col: str) ‑> pandas.core.frame.DataFrame</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Prepare the data for the classification.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def prepare(self, col: str) -&gt; DataFrame:
+    &#34;&#34;&#34;
+    Prepare the data for the classification.
+    &#34;&#34;&#34;
+    import numpy as np
+
+    if self.testPath is None:
+        df = self._merge_columns(
+            self.data, destinationCol=&#34;features&#34;, originCol=&#34;transcript&#34;
+        )
+        df = self._preprocess_features(col, self.data)
+        df = df.drop(
+            [&#34;features&#34;, &#34;tokens&#34;, &#34;hours&#34;, &#34;prefix&#34;, &#34;transcript&#34;, &#34;number&#34;],
+            axis=1,
+        )
+
+        if self.verbose:
+            self._log(&#34;Data prepared successfully&#34;)
+            print(df.head())
+        else:
+            self._log(&#34;Data prepared successfully&#34;)
+
+        self.data = df
+        self.N_CLUSTER = int(np.sqrt(len(df)))
+        if self.viz:
+            self.generate_count_plot(data=df)
+        self._save_data_frame(df, fileName=&#34;603_clean.csv&#34;)
+
+    else:
+        dfTrain = self._merge_columns(
+            self.data, destinationCol=&#34;features&#34;, originCol=&#34;transcript&#34;
+        )
+        dfTrain = self._preprocess_features(col, self.data)
+        dfTrain = dfTrain.drop(
+            [&#34;features&#34;, &#34;tokens&#34;, &#34;hours&#34;, &#34;prefix&#34;, &#34;transcript&#34;, &#34;number&#34;],
+            axis=1,
+        )
+
+        dfTest = self._merge_columns(
+            self.testData, destinationCol=&#34;features&#34;, originCol=&#34;transcript&#34;
+        )
+        dfTest = self._preprocess_features(col, self.testData)
+        dfTest = dfTest.drop(
+            [&#34;features&#34;, &#34;tokens&#34;, &#34;hours&#34;, &#34;prefix&#34;, &#34;transcript&#34;, &#34;number&#34;],
+            axis=1,
+        )
+
+        if self.verbose:
+            self._log(&#34;Train data prepared successfully&#34;)
+            print(dfTrain.head())
+            self._log(&#34;Test data prepared successfully&#34;)
+            print(dfTest.head())
+        else:
+            self._log(&#34;Data prepared successfully&#34;)
+
+        self.data = dfTrain
+        self.testData = dfTest
+        self.N_CLUSTER = int(np.sqrt(len(dfTrain)))
+        self.N_TEST_CLUSTER = int(np.sqrt(len(dfTest)))
+        if self.viz:
+            self.generate_count_plot(data=dfTrain)
+            self.generate_count_plot(data=dfTest)
+        self._save_data_frame(dfTrain, fileName=&#34;603_clean.csv&#34;)
+        self._save_data_frame(dfTest, fileName=&#34;614_test.csv&#34;)</code></pre>
+</details>
+</dd>
+<dt id="emse-mms.models.classification.Classify.read"><code class="name flex">
+<span>def <span class="ident">read</span></span>(<span>self, sep='\t') ‑> None</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Read the data from the file path. The default separator is tab.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def read(self, sep=&#34;\t&#34;) -&gt; None:
+    &#34;&#34;&#34;
+    Read the data from the file path. The default separator is tab.
+    &#34;&#34;&#34;
+    data = None
+
+    if self.concat:
+        for file in self.trainFiles:
+            data = self._merge_frames(data, pd.read_csv(file, sep=sep))
+    else:
+        data = pd.read_csv(self.filePath, sep=sep)
+
+    self.data = data
+
+    if self.data is None:
+        raise Exception(&#34;Data is empty&#34;)
+
+    if self.testPath is not None:
+        self.testData = pd.read_csv(self.testPath, sep=sep)
+
+    if self.verbose:
+        row, col = self.data.shape
+        self._log(f&#34;Shape of train data read \nRows: {row}, Columns: {col}&#34;)
+        if self.testPath is not None:
+            row, col = self.testData.shape
+            self._log(f&#34;Shape of test data read \nRows: {row}, Columns: {col}&#34;)
+        self._log(&#34;Data read successfully&#34;)
+    else:
+        self._log(&#34;Data read successfully&#34;)
+        if self.testPath is not None:
+            self._log(&#34;Test data read successfully&#34;)</code></pre>
+</details>
+</dd>
+<dt id="emse-mms.models.classification.Classify.run"><code class="name flex">
+<span>def <span class="ident">run</span></span>(<span>self) ‑> None</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Run the classification model.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def run(self) -&gt; None:
+    &#34;&#34;&#34;
+    Run the classification model.
+    &#34;&#34;&#34;
+    self.read()
+    self.prepare(col=&#34;features&#34;)
+    self._create_model()
+    if self.viz:
+        self._run_word_cloud_per_cluster(df=self.data)
+        if self.testPath is not None:
+            # TODO: Fix test data not having x and y columns
+            # self.generate_scatter_plot(data=self.testData)
+            pass
+    if self.verbose:
+        self._log(&#34;Successfully ran the classification model&#34;)</code></pre>
+</details>
+</dd>
+</dl>
+</dd>
+</dl>
+</section>
+</article>
+<nav id="sidebar">
+<h1>Index</h1>
+<div class="toc">
+<ul></ul>
+</div>
+<ul id="index">
+<li><h3>Super-module</h3>
+<ul>
+<li><code><a title="emse-mms.models" href="index.html">emse-mms.models</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-functions">Functions</a></h3>
+<ul class="">
+<li><code><a title="emse-mms.models.classification.main" href="#emse-mms.models.classification.main">main</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-classes">Classes</a></h3>
+<ul>
+<li>
+<h4><code><a title="emse-mms.models.classification.Classify" href="#emse-mms.models.classification.Classify">Classify</a></code></h4>
+<ul class="">
+<li><code><a title="emse-mms.models.classification.Classify.download" href="#emse-mms.models.classification.Classify.download">download</a></code></li>
+<li><code><a title="emse-mms.models.classification.Classify.generate_count_plot" href="#emse-mms.models.classification.Classify.generate_count_plot">generate_count_plot</a></code></li>
+<li><code><a title="emse-mms.models.classification.Classify.generate_cross_validation_plot" href="#emse-mms.models.classification.Classify.generate_cross_validation_plot">generate_cross_validation_plot</a></code></li>
+<li><code><a title="emse-mms.models.classification.Classify.generate_elbow_plot" href="#emse-mms.models.classification.Classify.generate_elbow_plot">generate_elbow_plot</a></code></li>
+<li><code><a title="emse-mms.models.classification.Classify.generate_heat_map" href="#emse-mms.models.classification.Classify.generate_heat_map">generate_heat_map</a></code></li>
+<li><code><a title="emse-mms.models.classification.Classify.generate_scatter_plot" href="#emse-mms.models.classification.Classify.generate_scatter_plot">generate_scatter_plot</a></code></li>
+<li><code><a title="emse-mms.models.classification.Classify.generate_word_cloud" href="#emse-mms.models.classification.Classify.generate_word_cloud">generate_word_cloud</a></code></li>
+<li><code><a title="emse-mms.models.classification.Classify.prepare" href="#emse-mms.models.classification.Classify.prepare">prepare</a></code></li>
+<li><code><a title="emse-mms.models.classification.Classify.read" href="#emse-mms.models.classification.Classify.read">read</a></code></li>
+<li><code><a title="emse-mms.models.classification.Classify.run" href="#emse-mms.models.classification.Classify.run">run</a></code></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</nav>
+</main>
+<footer id="footer">
+<p>Generated by <a href="https://pdoc3.github.io/pdoc" title="pdoc: Python API documentation generator"><cite>pdoc</cite> 0.10.0</a>.</p>
+</footer>
+</body>
+</html>
