@@ -17,6 +17,12 @@ class Classify:
     """
     Predict the class for the given Module dataset based on TF-IDF vectorization and KNN (supervised) clustering algorithm.
 
+    TODO:
+        - Created JSON formatted output of grouped modules using the Learning Path structure ([modules] -> [collections] -> [sections] -> course)
+        - Map collections to most similar sections
+        - Create complete LP from the grouped modules and the mapped collections
+        - Get all LPs from the database and compare the predicted LP with the actual LPs
+
     Args:
         path (str): Path to the training dataset.
         testPath (str, None): Path to the test dataset.
@@ -24,6 +30,9 @@ class Classify:
         toDownload (bool): Whether to download the nltk corpus or not.
         verbose (bool): Whether to print the logs or not.
         visualize (bool): Whether to show EDA visualizations or not.
+        concat (bool): Whether to concatenate the training files or not.
+        trainFiles (list[str]): List of training files to be concatenated.
+        dryRun (bool): Whether to run the classification model or not.
     """
 
     def __init__(
@@ -36,6 +45,7 @@ class Classify:
         visualize: bool = False,
         concat: bool = False,
         trainFiles: list[str] = [],
+        dryRun: bool = False,
     ) -> None:
         import logging
 
@@ -46,6 +56,7 @@ class Classify:
         self.logPath: str = "logs/classification.log"
         self.toDownload: bool = toDownload
         self.concat: bool = concat
+        self.dryRun: bool = dryRun
         self.data: Union[DataFrame, None] = None
         self.trainFiles: list[str] = trainFiles
         self.testData: Union[DataFrame, None] = None
@@ -68,6 +79,10 @@ class Classify:
             logging.basicConfig(level=logging.INFO)
         else:
             logging.basicConfig(level=logging.DEBUG)
+
+        if self.dryRun is True:
+            self._log("~~~System initialized in dry run mode.~~~")
+            self._log("Skipping model creation, prediction, and evaluation.")
 
         self.download()
         self._configure()
@@ -995,15 +1010,18 @@ class Classify:
         """
         self.read()
         self.prepare(col="features")
-        self._create_model()
-        if self.viz:
-            self._run_word_cloud_per_cluster(df=self.data)
-            if self.testPath is not None:
-                # TODO: Fix test data not having x and y columns
-                # self.generate_scatter_plot(data=self.testData)
-                pass
-        if self.verbose:
-            self._log("Successfully ran the classification model")
+        if self.dryRun is not True:
+            self._create_model()
+            if self.viz:
+                self._run_word_cloud_per_cluster(df=self.data)
+                if self.testPath is not None:
+                    # TODO: Fix test data not having x and y columns
+                    # self.generate_scatter_plot(data=self.testData)
+                    pass
+            if self.verbose:
+                self._log("Successfully ran the classification model")
+        else:
+            self._create_learning_path()
 
 
 def configure_arguments():
@@ -1071,6 +1089,14 @@ def configure_arguments():
         help="List of training files to concatenate",
     )
 
+    parser.add_argument(
+        "--dryRun",
+        "-dr",
+        help="Run the classification model or only read data, and preprocess features",
+        required=True,
+        action=argparse.BooleanOptionalAction,
+    )
+
     args = parser.parse_args()
 
     return args
@@ -1088,6 +1114,7 @@ def main():
         testPath=args.test,
         concat=args.concat,
         trainFiles=args.trainFiles,
+        dryRun=args.dryRun,
     )
     classify.run()
 
