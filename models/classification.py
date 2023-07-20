@@ -173,10 +173,14 @@ class Classify:
         else:
             data = pd.read_csv(self.filePath, sep=sep)
 
+        self._log("DataFrames merged successfully")
+
         self.data = data
 
         if self.data is None:
-            raise Exception("Data is empty")
+            raise Exception(
+                "System failure: Data could not be read and parsed successfully"
+            )
 
         if self.testPath is not None:
             self.testData = pd.read_csv(self.testPath, sep=sep)
@@ -221,12 +225,6 @@ class Classify:
         """
         df = pd.concat([df1, df2], ignore_index=True)
 
-        if self.verbose:
-            self._log("DataFrames merged successfully")
-            print(df.head())
-        else:
-            self._log("DataFrames merged successfully")
-
         return df
 
     def _merge_columns(
@@ -246,11 +244,7 @@ class Classify:
 
         df[destinationCol] = merged
 
-        if self.verbose:
-            self._log("Columns merged successfully")
-            print(df.head())
-        else:
-            self._log("Columns merged successfully")
+        self._log("Columns merged successfully")
 
         return df
 
@@ -311,11 +305,8 @@ class Classify:
         payload = [" ".join(entry) for entry in split_words]
 
         df[col] = payload
-        if self.verbose:
-            self._log("Camel case text split successfully")
-            print(df.head())
-        else:
-            self._log("Camel case text split successfully")
+
+        self._log("Camel case text split successfully")
 
         return df
 
