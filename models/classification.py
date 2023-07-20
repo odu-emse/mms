@@ -1006,6 +1006,40 @@ class Classify:
 
         return top
 
+    def _get_course_data(self) -> None:
+        """
+        Get the course data from the local JSON file and parse it.
+        """
+        import json
+
+        with open("input/courses.json") as f:
+            json.load(f)
+
+    def _create_learning_outcome(self) -> None:
+        """
+        Creates a set number of learning outcomes for each collection (cluster) based on the most covered concepts in the collection.
+        The learning outcomes are used to map the collections to sections based on their similarity.
+        """
+        pass
+
+    def _map_collection_to_section(self) -> None:
+        """ """
+        pass
+
+    def _create_learning_path(self) -> None:
+        """
+        Creates a learning path JSON structure from the predicted classification data. The structure must be as follows:
+        - Course
+            - [Section]
+                - [Collection]
+                    - [Module]
+        In this structure the course and sections are given, and the collections of modules are created by the predicted cluster value.
+        Collections must be mapped to a section that cover the same concepts that are mentioned in the collection.
+        """
+
+        self._get_course_data()
+        self._map_collection_to_section()
+
     def _log(self, text: str):
         """
         Append the text to the log file.
