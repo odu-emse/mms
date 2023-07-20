@@ -339,7 +339,7 @@ class Classify:
             )
             df = self._preprocess_features(col, self.data)
             df = df.drop(
-                ["features", "tokens", "hours", "prefix", "transcript", "number"],
+                ["features", "tokens", "hours", "transcript", "number"],
                 axis=1,
             )
 
@@ -361,7 +361,7 @@ class Classify:
             )
             dfTrain = self._preprocess_features(col, self.data)
             dfTrain = dfTrain.drop(
-                ["features", "tokens", "hours", "prefix", "transcript", "number"],
+                ["features", "tokens", "hours", "transcript", "number"],
                 axis=1,
             )
 
@@ -370,7 +370,7 @@ class Classify:
             )
             dfTest = self._preprocess_features(col, self.testData)
             dfTest = dfTest.drop(
-                ["features", "tokens", "hours", "prefix", "transcript", "number"],
+                ["features", "tokens", "hours", "transcript", "number"],
                 axis=1,
             )
 
@@ -506,7 +506,12 @@ class Classify:
 
         self._print_sorted_similarities(sim_arr=sim)
 
-        self._run_pca(X=self.train_x_vector, df=self.data, fileName="pca_train.png")
+        self._run_pca(
+            X=self.train_x_vector,
+            df=self.data,
+            fileName="pca_train.png",
+            scatter_hue="prefix",
+        )
 
         self._run_naive_bayes(
             X_vector=self.train_x_vector,
@@ -536,7 +541,10 @@ class Classify:
             self._print_sorted_similarities(sim_arr=simTest)
 
             self._run_pca(
-                X=self.test_x_vector, df=self.testData, fileName="pca_test.png"
+                X=self.test_x_vector,
+                df=self.testData,
+                fileName="pca_test.png",
+                scatter_hue="cluster",
             )
 
         self._log("Model created successfully")
@@ -653,12 +661,13 @@ class Classify:
 
         self._log("KNN Predictions -> %s" % predicted)
 
-        self.testData["cluster"] = predicted
+        if self.testPath is not None:
+            self.testData["cluster"] = predicted
 
-        self._save_data_frame(
-            df=self.testData,
-            fileName="614_pred.csv",
-        )
+            self._save_data_frame(
+                df=self.testData,
+                fileName="614_pred.csv",
+            )
 
         acc = accuracy_score(Test_Y, predicted)
 
@@ -704,7 +713,11 @@ class Classify:
         self.generate_cross_validation_plot(x, y)
 
     def _run_pca(
-        self, X: numpy.ndarray, df: DataFrame, fileName: str = "pca_scatter.png"
+        self,
+        X: numpy.ndarray,
+        df: DataFrame,
+        fileName: str = "pca_scatter.png",
+        scatter_hue: str = "cluster",
     ):
         """
         Applies Principal Component Analysis (PCA) to the input data X and generates a scatter plot of the reduced features.
@@ -728,7 +741,7 @@ class Classify:
         df["x"] = x
         df["y"] = y
 
-        self.generate_scatter_plot(data=df, fileName=fileName)
+        self.generate_scatter_plot(data=df, fileName=fileName, hue=scatter_hue)
 
         self._log("PCA run successfully")
 
@@ -811,7 +824,7 @@ class Classify:
             wordcloud.to_file(str(self.outputPath + fileName))
 
     def generate_scatter_plot(
-        self, data: DataFrame, fileName: str = "scatter_plot.png"
+        self, data: DataFrame, fileName: str = "scatter_plot.png", hue: str = "cluster"
     ):
         """
         Generate the scatter plot for the data.
@@ -820,7 +833,7 @@ class Classify:
         from matplotlib import pyplot as plt
 
         plt.figure(figsize=(10, 10))
-        sns.scatterplot(data=data, x="x", y="y", hue="cluster", palette="tab10")
+        sns.scatterplot(data=data, x="x", y="y", hue=hue, palette="tab10")
         if self.viz:
             plt.show()
         else:
