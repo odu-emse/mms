@@ -387,7 +387,7 @@ class Classify:
             self.N_CLUSTER = int(np.sqrt(len(df)))
             if self.viz:
                 self.generate_count_plot(data=df)
-            self._save_data_frame(df, fileName="603_clean.csv")
+            self._save_data_frame(df, fileName="train_sampled.csv")
 
         else:
             dfTrain = self._merge_columns(
@@ -423,8 +423,8 @@ class Classify:
             if self.viz:
                 self.generate_count_plot(data=dfTrain)
                 self.generate_count_plot(data=dfTest)
-            self._save_data_frame(dfTrain, fileName="603_clean.csv")
-            self._save_data_frame(dfTest, fileName="614_test.csv")
+            self._save_data_frame(dfTrain, fileName="train.csv")
+            self._save_data_frame(dfTest, fileName="test.csv")
 
     def _create_tf_idf(self, train, test) -> tuple:
         """
@@ -847,15 +847,18 @@ class Classify:
             max_words=700,
             background_color="white",
             stopwords=self.stop_words,
+            width=1600,
+            height=800,
         ).generate(corpus)
         plt.figure(figsize=(10, 10))
         plt.axis("off")
-        if self.viz:
+        if self.viz is True:
             plt.imshow(wordcloud, interpolation="bilinear")
+            wordcloud.to_file(str(self.outputPath + "wordcloud/" + fileName))
             plt.show()
         else:
-            # plt.savefig(str(self.outputPath + fileName))
-            wordcloud.to_file(str(self.outputPath + fileName))
+            plt.imshow(wordcloud, interpolation="bilinear")
+            wordcloud.to_file(str(self.outputPath + "wordcloud/" + fileName))
 
     def generate_scatter_plot(
         self, data: DataFrame, fileName: str = "scatter_plot.png", hue: str = "cluster"
