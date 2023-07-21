@@ -626,30 +626,6 @@ class Classify:
             self._log("Mean TF-IDF score -> %0.4f" % np.max(r))
         print("\n")
 
-    def _train_model(self):
-        """
-        Train the classification model.
-        """
-        pass
-
-    def _evaluate_model(self):
-        """
-        Evaluate the classification model.
-        """
-        pass
-
-    def _predict(self):
-        """
-        Predict the classification model.
-        """
-        pass
-
-    def _save_model(self):
-        """
-        Save the classification model.
-        """
-        pass
-
     def _run_nearest_neighbors(
         self,
         Train_X_Tfidf: numpy.ndarray,
