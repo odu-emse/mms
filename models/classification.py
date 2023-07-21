@@ -74,6 +74,7 @@ class Classify:
         self.lemmatizer = WordNetLemmatizer()
         self.vectorizer = TfidfVectorizer(max_features=10000)
         self.encoder = LabelEncoder()
+        self.courseData: Union[None, DataFrame] = None
 
         if self.verbose:
             logging.basicConfig(level=logging.INFO)
@@ -103,6 +104,7 @@ class Classify:
         self.stop_words.add("application")
         self.stop_words.add("computer")
         self.stop_words.add("computers")
+        self.stop_words.add("zero")
         self.stop_words.add("one")
         self.stop_words.add("two")
         self.stop_words.add("three")
@@ -111,6 +113,7 @@ class Classify:
         self.stop_words.add("six")
         self.stop_words.add("seven")
         self.stop_words.add("eight")
+        self.stop_words.add("nine")
         self.stop_words.add("x")
         self.stop_words.add("c")
         self.stop_words.add("k")
@@ -1012,19 +1015,77 @@ class Classify:
         """
         import json
 
+        data = None
+
         with open("input/courses.json") as f:
-            json.load(f)
+            data = json.load(f)
+
+        df = pd.DataFrame(
+            data["sections"],
+            columns=["name", "number", "learningObjectives", "collections"],
+        )
+
+        self.courseData = df
 
     def _create_learning_outcome(self) -> None:
         """
-        Creates a set number of learning outcomes for each collection (cluster) based on the most covered concepts in the collection.
-        The learning outcomes are used to map the collections to sections based on their similarity.
+        Creates 10 learning outcomes for each collection (cluster) based on the top keywords in the collection.
         """
-        pass
+        import numpy as np
 
-    def _map_collection_to_section(self) -> None:
-        """ """
-        pass
+        df = pd.DataFrame(self.test_x_vector).groupby(self.testData["cluster"]).mean()
+        terms = self.vectorizer.get_feature_names_out()
+
+        learning_outcomes = dict()
+
+        for i, r in df.iterrows():
+            # for each row in the dataset, get the top 10 keywords
+            # save the keywords as learning outcomes for the collection
+            # send the keywords to the mapper method to map the collection to a section
+            keywords = [terms[t] for t in np.argsort(r)[-10:]]
+            self._log("Cluster {} keywords: {}".format(i, ", ".join(keywords)))
+            learning_outcomes[i] = keywords
+
+        self._map_collection_to_section(lps=learning_outcomes)
+
+    def _map_collection_to_section(self, lps: dict) -> None:
+        """
+        The top keywords of each cluster/collection is compared with the learning objectives of each section.
+        The section with the highest similarity score is chosen as the section that the collection is mapped to.
+        The collection dict is then appended to the collections array for the appropriate section.
+        If a collection is already part of a section, it cannot be mapped to another section,
+        unless it has a higher similarity score with another section.
+        The result should be a dict of sections, each containing a collections array with the appropriate collections.
+        """
+        import numpy as np
+        from sklearn.metrics.pairwise import cosine_similarity
+
+        for i, r in self.courseData.iterrows():
+            # for each row in the course data, get the learning objectives
+            # compare the learning objectives with the keywords of each cluster
+            # save the cluster with the highest similarity score
+            # append the cluster to the collections array of the section
+            learning_objectives = r["learningObjectives"]
+            sim_scores = []
+
+            print(learning_objectives)
+
+            for key, value in lps.items():
+                if learning_objectives == [""]:
+                    sim_scores.append(0)
+                    continue
+                lo_tfidf = self.vectorizer.fit_transform(learning_objectives).toarray()
+                term_tfidf = self.vectorizer.transform([", ".join(value)]).toarray()
+
+                sim_scores.append(
+                    cosine_similarity(
+                        lo_tfidf,
+                        term_tfidf,
+                    )[
+                        0
+                    ][0]
+                )
+            self.courseData.loc[i, "collections"] = np.argmax(sim_scores)
 
     def _create_learning_path(self) -> None:
         """
@@ -1038,7 +1099,7 @@ class Classify:
         """
 
         self._get_course_data()
-        self._map_collection_to_section()
+        self._create_learning_outcome()
 
     def _log(self, text: str):
         """
@@ -1076,6 +1137,7 @@ class Classify:
                     pass
             if self.verbose:
                 self._log("Successfully ran the classification model")
+            self._create_learning_path()
         else:
             self._create_learning_path()
 
