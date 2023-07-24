@@ -1018,11 +1018,29 @@ class Classify:
             # for each row in the dataset, get the top 10 keywords
             # save the keywords as learning outcomes for the collection
             # send the keywords to the mapper method to map the collection to a section
-            keywords = [terms[t] for t in np.argsort(r)[-10:]]
+            keywords = [terms[t] for t in np.argsort(r)[-20:]]
             self._log("Cluster {} keywords: {}".format(i, ", ".join(keywords)))
             learning_outcomes[i] = keywords
 
         self._map_collection_to_section(lps=learning_outcomes)
+
+    def _transform_learning_objectives(self):
+        """
+        Read course data from json, turn data into a dataframe, run tf-idf on learning objectives, and run pca to reduce dimensions.
+        After reduced, plot the marks on a scatterplot.
+        """
+        data = self._scalar_to_string(self.courseData, "learningObjectives")
+
+        data = self._preprocess_features("learningObjectives", data)
+
+        data = data.drop(["learningObjectives", "tokens"], axis=1)
+
+        self.generate_word_cloud(
+            corpus=" ".join(data["target"]),
+            fileName="learning_objectives_cloud.png",
+        )
+
+        self.courseData = data
 
     def _map_collection_to_section(self, lps: dict) -> None:
         """
@@ -1036,32 +1054,20 @@ class Classify:
         import numpy as np
         from sklearn.metrics.pairwise import cosine_similarity
 
-        for i, r in self.courseData.iterrows():
-            # for each row in the course data, get the learning objectives
-            # compare the learning objectives with the keywords of each cluster
-            # save the cluster with the highest similarity score
-            # append the cluster to the collections array of the section
-            learning_objectives = r["learningObjectives"]
-            sim_scores = []
+        df = self.courseData.copy()
 
-            print(learning_objectives)
+        lo_tfidf = self.vectorizer.fit_transform(df["target"]).toarray()
+        term_tfidf = self.vectorizer.transform(
+            ", ".join(v) for k, v in lps.items()
+        ).toarray()
 
-            for key, value in lps.items():
-                if learning_objectives == [""]:
-                    sim_scores.append(0)
-                    continue
-                lo_tfidf = self.vectorizer.fit_transform(learning_objectives).toarray()
-                term_tfidf = self.vectorizer.transform([", ".join(value)]).toarray()
+        sim_scores = cosine_similarity(lo_tfidf, term_tfidf)
 
-                sim_scores.append(
-                    cosine_similarity(
-                        lo_tfidf,
-                        term_tfidf,
-                    )[
-                        0
-                    ][0]
-                )
-            self.courseData.loc[i, "collections"] = np.argmax(sim_scores)
+        self.generate_heat_map(
+            arr=sim_scores,
+            mask=np.triu(np.ones_like(sim_scores, dtype=bool)),
+            fileName="learning_outcomes_heatmap.png",
+        )
 
     def _create_learning_path(self) -> None:
         """
@@ -1075,6 +1081,7 @@ class Classify:
         """
 
         self._get_course_data()
+        self._transform_learning_objectives()
         self._create_learning_outcome()
 
     def _log(self, text: str):
