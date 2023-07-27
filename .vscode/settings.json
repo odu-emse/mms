@@ -8,7 +8,9 @@
   "cSpell.words": [
     "astype",
     "dataframe",
+    "DBSCAN",
     "figsize",
+    "idxmax",
     "imshow",
     "kmeans",
     "lemmatize",
@@ -28,6 +30,9 @@
     "TSNE",
     "vectorizer",
     "wordcloud",
-    "wordnet"
+    "wordnet",
+    "xlabel",
+    "xticks",
+    "ylabel"
   ]
 }

@@ -209,7 +209,6 @@ class Classify:
         scalar_to_string = []
 
         for obj in lst:
-            print(obj)
             scalar_to_string.append(str(obj))
 
         df[col] = scalar_to_string
@@ -849,7 +848,7 @@ class Classify:
         from matplotlib import pyplot as plt
 
         plt.figure(figsize=(10, 10))
-        sns.scatterplot(data=data, x="x", y="y", hue=hue, palette="tab10")
+        sns.scatterplot(data=data, x="x", y="y", hue=hue, palette="tab20")
         if self.viz:
             plt.show()
         else:
@@ -1005,7 +1004,7 @@ class Classify:
 
     def _create_learning_outcome(self) -> None:
         """
-        Creates 10 learning outcomes for each collection (cluster) based on the top keywords in the collection.
+        Creates 20 learning outcomes for each collection (cluster) based on the top keywords in the collection.
         """
         import numpy as np
 
