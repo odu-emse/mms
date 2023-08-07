@@ -5,3 +5,5 @@ __pycache__/
 input/
 .prettierrc
 api.txt
+*.pptx
+*.docx
