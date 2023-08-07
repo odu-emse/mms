@@ -516,6 +516,10 @@ class Classify:
 
         self._data_transformer()
 
+        self.generate_elbow_plot(
+            X=self.train_x_vector,
+        )
+
         self._run_nearest_neighbors(
             Train_X_Tfidf=self.train_x_vector,
             Test_X_Tfidf=self.test_x_vector,
@@ -1112,8 +1116,9 @@ class Classify:
         if self.dryRun is not True:
             self._create_model()
             if self.viz:
-                self._run_word_cloud_per_cluster(df=self.data)
+                # self._run_word_cloud_per_cluster(df=self.data)
                 if self.testPath is not None:
+                    # self._run_word_cloud_per_cluster(df=self.testData)
                     # TODO: Fix test data not having x and y columns
                     # self.generate_scatter_plot(data=self.testData)
                     pass
