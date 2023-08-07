@@ -1,0 +1,22 @@
+\chapter{GPT Cost and Benefit}
+\label{ch:gpt_costbenefit}
+
+We have all heard about OpenAI's GPT at this point from one source or another. While most of the talk has been around Chat GPT, this project mostly used the document embedding capabilities of the GPT model. While swapping out document embedders doesn't sound like it would make a big difference, it has actually proven otherwise. The ability of GPT to be context-aware made it so we don't have to stem words or even remove stop words since we want to preserve the natural patterns and frequencies occurring in the data. The single step that we perform in our preprocessing stages when using this method is to remove special characters and digits and lowercase the content to reduce token usage.
+
+\begin{table}
+  \centering
+  \label{tab:tfidf_outcomes}
+  \begin{tabular}{ | l | r | }
+    \hline
+    \textbf{Model} & \textbf{Price / 1K token} \\
+    \hline
+    Ada v2 & \$0.0001 \\
+    \hline
+    Davinci v3 & \$0.12 \\
+    \hline
+  \end{tabular}
+  \caption{Evaluation of TF-IDF Results}
+\end{table}
+
+
+While the actual cost of the API might look like it could be a little, it could get very pricey if enough documents are inputted. For example, on a single run of application, there were 104 requests made to the ADA model consuming over 400K tokens and nine requests to the DaVinci completion model, which consumed over 3700 tokens. This means that a single application run costs me \$0.45 for completions and approximately \$0.04 for document embedding. Remember that we are still working with a tiny data sample which would not even be considered a valid data science research project.

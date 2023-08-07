@@ -1,0 +1,4 @@
+\chapter{Technical Solution}
+\label{ch:tchnicalsolution}
+
+The project implements an unsupervised learning algorithm (K-Means) that clusters 157 modules using document embedding from two different methods, TF-IDF and GPT-3.5. The text features used for this project were module titles, descriptions, transcripts, and a list of keywords. Due to the difficulty of scraping data relevant to individual learning modules, the number of usable features could be much higher. This should be further investigated in future works, and introduce more features to improve the clustering accuracy and help understand underlying patterns that were not visible before. The number of clusters was calculated using the sample size's square root, a method commonly used in the industry. The results were then evaluated using the Silhouette score, a metric measuring how similar an object is to its cluster compared to other clusters.

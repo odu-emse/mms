@@ -1,0 +1,44 @@
+\chapter{GPT Outcomes}
+\label{ch:gpt_outcomes}
+
+When evaluating the different algorithms to use, the two that are most accurate are the K-Means and Birch algorithms. Since their cluster division logic is entirely different from each other, the most optimal results don't share the number of recommended clusters. For example, the K-Means score with a k of 3 is around 0.075, while increasing k to 9 gave us a score of 0.091. In comparison, when looking at the Birch algorithm, using three as the cluster count resulted in a score of 0.135, but when using 9, the resulting score dropped to 0.086.
+
+\begin{table}
+  \centering
+  \label{tab:gpt_outcomes}
+  \begin{tabular}{ | l | r | }
+    \hline
+    \textbf{Model} & \textbf{Silhouette} \\
+    \hline
+    K-Means (3) & 0.075 \\
+    \hline
+    K-Means (9) & 0.091 \\
+    \hline
+    Birch (3) & 0.135 \\
+    \hline
+    Birch (9) & 0.086 \\
+    \hline
+    DBSCAN & 0.000 \\
+    \hline
+  \end{tabular}
+  \caption{Evaluation of GPT Results}
+\end{table}
+
+As mentioned before, the system implements a Random Forest Classifier for supervised learning testing, resulting in the following scores. For predicting with 3 class labels, the precision, recall, and f1 scores are 0.92, 0.90, and 0.89, respectively. In comparison, when using 9 class labels, the scores dropped significantly with precision, recall, and f1 scores of 0.80, 0.81, and 0.77, respectively. From this, there is a valid reason to consider using supervised learning on this dataset, considering the high score in precision, recall, and f1 scores. 
+
+\begin{table}
+  \centering
+  \label{tab:rf_outcomes}
+  \begin{tabular}{ | l | c | c | r | }
+    \hline
+    \textbf{No. Class labels} & \textbf{Precision} & \textbf{Recall} & \textbf{F1-score} \\
+    \hline
+    Birch (3) & 0.92 & 0.90 & 0.89 \\
+    \hline
+    K-Means (9) & 0.80 & 0.81 & 0.77 \\
+    \hline
+  \end{tabular}
+  \caption{Evaluation of GPT Results using Random Forest Classifier}
+\end{table}
+
+
