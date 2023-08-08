@@ -1,0 +1,244 @@
+
+Name: knn 
+Score: 0.875 
+Best Params: {'knn__algorithm': 'ball_tree', 'knn__leaf_size': 15, 'knn__n_neighbors': 4, 'knn__weights': 'distance'} 
+              precision    recall  f1-score   support
+
+           1       0.00      0.00      0.00         1
+           2       1.00      1.00      1.00         1
+           3       0.50      1.00      0.67         1
+           4       1.00      1.00      1.00         2
+           5       1.00      1.00      1.00         1
+           6       1.00      1.00      1.00         2
+           7       1.00      1.00      1.00         1
+           8       1.00      1.00      1.00         2
+           9       0.50      1.00      0.67         1
+          10       1.00      0.50      0.67         2
+          26       1.00      1.00      1.00         1
+          43       1.00      1.00      1.00         1
+
+    accuracy                           0.88        16
+   macro avg       0.83      0.88      0.83        16
+weighted avg       0.88      0.88      0.85        16
+
+
+
+Name: ada 
+Score: 0.5625 
+Best Params: {'ada__algorithm': 'SAMME.R', 'ada__learning_rate': 0.2, 'ada__n_estimators': 80} 
+              precision    recall  f1-score   support
+
+           1       1.00      1.00      1.00         1
+           2       1.00      1.00      1.00         1
+           3       0.00      0.00      0.00         1
+           4       0.67      1.00      0.80         2
+           5       1.00      1.00      1.00         1
+           6       1.00      0.50      0.67         2
+           7       0.00      0.00      0.00         1
+           8       0.00      0.00      0.00         2
+           9       0.33      1.00      0.50         1
+          10       0.50      0.50      0.50         2
+          26       0.00      0.00      0.00         1
+          30       0.00      0.00      0.00         0
+          43       1.00      1.00      1.00         1
+
+    accuracy                           0.56        16
+   macro avg       0.50      0.54      0.50        16
+weighted avg       0.54      0.56      0.53        16
+
+
+
+Name: boost 
+Score: 0.8125 
+Best Params: {'boost__criterion': 'friedman_mse', 'boost__learning_rate': 0.1, 'boost__loss': 'log_loss', 'boost__max_features': 'sqrt', 'boost__n_estimators': 90} 
+              precision    recall  f1-score   support
+
+           1       0.00      0.00      0.00         1
+           2       1.00      1.00      1.00         1
+           3       0.50      1.00      0.67         1
+           4       0.50      0.50      0.50         2
+           5       1.00      1.00      1.00         1
+           6       1.00      1.00      1.00         2
+           7       1.00      1.00      1.00         1
+           8       1.00      1.00      1.00         2
+           9       0.50      1.00      0.67         1
+          10       1.00      0.50      0.67         2
+          26       1.00      1.00      1.00         1
+          43       1.00      1.00      1.00         1
+
+    accuracy                           0.81        16
+   macro avg       0.79      0.83      0.79        16
+weighted avg       0.81      0.81      0.79        16
+
+
+
+Name: linear 
+Score: 0.9375 
+Best Params: {'linear__shrinkage': 'auto', 'linear__solver': 'lsqr'} 
+              precision    recall  f1-score   support
+
+           1       1.00      1.00      1.00         1
+           2       1.00      1.00      1.00         1
+           3       1.00      1.00      1.00         1
+           4       1.00      1.00      1.00         2
+           5       1.00      1.00      1.00         1
+           6       1.00      1.00      1.00         2
+           7       1.00      1.00      1.00         1
+           8       1.00      1.00      1.00         2
+           9       0.50      1.00      0.67         1
+          10       1.00      0.50      0.67         2
+          26       1.00      1.00      1.00         1
+          43       1.00      1.00      1.00         1
+
+    accuracy                           0.94        16
+   macro avg       0.96      0.96      0.94        16
+weighted avg       0.97      0.94      0.94        16
+
+
+
+Name: svm 
+Score: 0.625 
+Best Params: {'svm__C': 1.0, 'svm__degree': 4, 'svm__gamma': 'scale', 'svm__kernel': 'poly', 'svm__probability': True} 
+              precision    recall  f1-score   support
+
+           1       0.00      0.00      0.00         1
+           2       0.00      0.00      0.00         1
+           3       0.00      0.00      0.00         1
+           4       0.33      1.00      0.50         2
+           5       1.00      1.00      1.00         1
+           6       1.00      1.00      1.00         2
+           7       0.00      0.00      0.00         1
+           8       0.67      1.00      0.80         2
+           9       0.50      1.00      0.67         1
+          10       1.00      0.50      0.67         2
+          26       1.00      1.00      1.00         1
+          43       0.00      0.00      0.00         1
+
+    accuracy                           0.62        16
+   macro avg       0.46      0.54      0.47        16
+weighted avg       0.53      0.62      0.54        16
+
+
+
+Name: logistic 
+Score: 0.875 
+Best Params: {'logistic__C': 0.1, 'logistic__penalty': None, 'logistic__solver': 'newton-cholesky'} 
+              precision    recall  f1-score   support
+
+           1       1.00      1.00      1.00         1
+           2       1.00      1.00      1.00         1
+           3       1.00      1.00      1.00         1
+           4       1.00      1.00      1.00         2
+           5       1.00      1.00      1.00         1
+           6       1.00      1.00      1.00         2
+           7       1.00      1.00      1.00         1
+           8       1.00      1.00      1.00         2
+           9       0.50      1.00      0.67         1
+          10       1.00      0.50      0.67         2
+          26       0.00      0.00      0.00         1
+          27       0.00      0.00      0.00         0
+          43       1.00      1.00      1.00         1
+
+    accuracy                           0.88        16
+   macro avg       0.81      0.81      0.79        16
+weighted avg       0.91      0.88      0.88        16
+
+
+
+Name: decision 
+Score: 0.25 
+Best Params: {'decision__criterion': 'log_loss', 'decision__max_features': 'log2', 'decision__splitter': 'random'} 
+              precision    recall  f1-score   support
+
+           1       0.00      0.00      0.00         1
+           2       0.00      0.00      0.00         1
+           3       0.50      1.00      0.67         1
+           4       0.00      0.00      0.00         2
+           5       0.50      1.00      0.67         1
+           6       0.33      0.50      0.40         2
+           7       1.00      1.00      1.00         1
+           8       0.00      0.00      0.00         2
+           9       0.00      0.00      0.00         1
+          10       0.00      0.00      0.00         2
+          26       0.00      0.00      0.00         1
+          30       0.00      0.00      0.00         0
+          43       0.00      0.00      0.00         1
+
+    accuracy                           0.25        16
+   macro avg       0.18      0.27      0.21        16
+weighted avg       0.17      0.25      0.20        16
+
+
+
+Name: random 
+Score: 0.8125 
+Best Params: {'random__criterion': 'gini', 'random__max_features': 'sqrt', 'random__n_estimators': 50} 
+              precision    recall  f1-score   support
+
+           1       0.00      0.00      0.00         1
+           2       1.00      1.00      1.00         1
+           3       1.00      1.00      1.00         1
+           4       1.00      1.00      1.00         2
+           5       1.00      1.00      1.00         1
+           6       0.67      1.00      0.80         2
+           7       1.00      1.00      1.00         1
+           8       1.00      1.00      1.00         2
+           9       0.50      1.00      0.67         1
+          10       1.00      0.50      0.67         2
+          26       0.00      0.00      0.00         1
+          27       0.00      0.00      0.00         0
+          43       1.00      1.00      1.00         1
+
+    accuracy                           0.81        16
+   macro avg       0.71      0.73      0.70        16
+weighted avg       0.80      0.81      0.79        16
+
+
+
+Name: ridge 
+Score: 0.9375 
+Best Params: {'ridge__alpha': 0.1, 'ridge__solver': 'auto'} 
+              precision    recall  f1-score   support
+
+           1       1.00      1.00      1.00         1
+           2       1.00      1.00      1.00         1
+           3       1.00      1.00      1.00         1
+           4       1.00      1.00      1.00         2
+           5       1.00      1.00      1.00         1
+           6       1.00      1.00      1.00         2
+           7       1.00      1.00      1.00         1
+           8       1.00      1.00      1.00         2
+           9       0.50      1.00      0.67         1
+          10       1.00      0.50      0.67         2
+          26       1.00      1.00      1.00         1
+          43       1.00      1.00      1.00         1
+
+    accuracy                           0.94        16
+   macro avg       0.96      0.96      0.94        16
+weighted avg       0.97      0.94      0.94        16
+
+
+
+Name: lasso 
+Score: 0.125 
+Best Params: {'lasso__C': 0.30000000000000004, 'lasso__penalty': 'l1', 'lasso__solver': 'saga'} 
+              precision    recall  f1-score   support
+
+           1       0.00      0.00      0.00         1
+           2       0.00      0.00      0.00         1
+           3       0.00      0.00      0.00         1
+           4       0.00      0.00      0.00         2
+           5       0.00      0.00      0.00         1
+           6       0.00      0.00      0.00         2
+           7       0.00      0.00      0.00         1
+           8       0.12      1.00      0.22         2
+           9       0.00      0.00      0.00         1
+          10       0.00      0.00      0.00         2
+          26       0.00      0.00      0.00         1
+          43       0.00      0.00      0.00         1
+
+    accuracy                           0.12        16
+   macro avg       0.01      0.08      0.02        16
+weighted avg       0.02      0.12      0.03        16
+
+
