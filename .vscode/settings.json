@@ -12,6 +12,7 @@
     "figsize",
     "idxmax",
     "imshow",
+    "keras",
     "kmeans",
     "lemmatize",
     "Lemmatizer",
