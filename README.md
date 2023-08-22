@@ -10,12 +10,12 @@ State of the art API that utilizes Machine Learning models to generate personali
 
 ## Embedding using GPT-3.5
 
-Can be found in the `gpt.ipynb` file. _You must create and add your OpenAI API key to the `api.txt` file before you can successfully run the notebook._
+Can be found in the [`gpt.ipynb`](https://github.com/odu-emse/mms/blob/dev/gpt.ipynb) file. _You must create and add your OpenAI API key to the `api.txt` file before you can successfully run the notebook._
 
 ## Embedding using TF-IDF vectorization
 
-Can be found in the `cluster.ipynb` and the `models/classification.py` files.
+Can be found in the [`cluster.ipynb`](https://github.com/odu-emse/mms/blob/dev/cluster.ipynb) and the [`models/classification.py`](https://github.com/odu-emse/mms/blob/dev/models/classification.py) files.
 
 ## Embedding using count vectorization
 
-Can be found in the `models/meta.py` file.
+Can be found in the [`models/meta.py`](https://github.com/odu-emse/mms/blob/dev/models/meta.py) file.
