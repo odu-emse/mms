@@ -19,3 +19,23 @@ Can be found in the [`cluster.ipynb`](https://github.com/odu-emse/mms/blob/dev/c
 ## Embedding using count vectorization
 
 Can be found in the [`models/meta.py`](https://github.com/odu-emse/mms/blob/dev/models/meta.py) file.
+
+# Classification
+
+## Supervised
+
+The entire pipeline of supervised classification models can be found in the [`supervised.ipynb`](https://github.com/odu-emse/mms/blob/dev/supervised.ipynb) file.
+
+## Unsupervised
+
+To find unsupervised classification implementations, refer to the [`classification.ipynb`](https://github.com/odu-emse/mms/blob/dev/classification.ipynb) and the [`cluster.ipynb`](https://github.com/odu-emse/mms/blob/dev/cluster.ipynb) files.
+
+# Utilities
+
+## `seed.py`
+
+The [`utils/seed.py`](https://github.com/odu-emse/mms/blob/dev/utils/seed.py) file contains the code that was used to seed the database with the initial data. It is not necessary to run this file as the database is already seeded. This file requires additional configuration of the _client_ application to work properly.
+
+## `fetch.py`
+
+The [`utils/fetch.py`](https://github.com/odu-emse/mms/blob/dev/utils/fetch.py) file contains the code that was used to retrieve the data from the managed database and store it in a local file. It is not necessary to run this file as the database is already seeded. This file requires additional configuration of the _client_ application to work properly.
