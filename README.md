@@ -1,100 +1,61 @@
-
 # Module Management System
 
 _Engineering Management & Systems Engineering - ODU_
 
+State of the art API that utilizes Machine Learning models to generate personalized degree paths for each student based on their respective experiences and learning styles.
 
-State of the art API that utilizes Machine Learning models to generate personalized degree paths for each student based on their respective exeperiences and learning styles.
+> Throughout this document we refer to one of the supplementary services as _"client"_. To avoid confusion, treat the client service as a separate application that interacts with this API. The _"client"_ application both consumes and calls this API to present students with a user friendly way of seeing their calculated degree.
 
-> Throughout this document we refer to one of the supplementary services as *"client"*. To avoid confusion, treat the client service as a seperate application that interacts with this API. The *"client"* application both consumes and calls this API to present students with a user friendly way of seeing their calculated degree.
-## Environment Variables
+# Embedders
 
-To run this project, you will need to add the following environment variables to your .env file. To run the application in isolation, you only have to define the four variables below. 
+## GPT-3.5
 
-`DATABASE_URL` _mongodb+srv://<admin>:<password>@<atlas-path>.mongodb.net/<database>_
+Can be found in the [`gpt.ipynb`](https://github.com/odu-emse/mms/blob/dev/gpt.ipynb) file. _You must create and add your OpenAI API key to the `api.txt` file before you can successfully run the notebook._
 
-The URI that Prisma is going to use to access your databse. Currently only MongoDB is supported but it can be either a managed cluster by Mongo Atlas, or a self hosted service. 
+## TF-IDF
 
-`DIRECT_URL` _prisma://aws-us-east-1.prisma-data.com/?api_key=<API-KEY>_
+Can be found in the [`cluster.ipynb`](https://github.com/odu-emse/mms/blob/dev/cluster.ipynb) and the [`models/classification.py`](https://github.com/odu-emse/mms/blob/dev/models/classification.py) files.
 
-The URI that Prisma provides you after creating a connection pool using their [Data Browser](https://www.prisma.io/docs/data-platform/data-browser).
+## Count Vectorizer
 
-`REDIS_BASE_URL`
+Can be found in the [`models/meta.py`](https://github.com/odu-emse/mms/blob/dev/models/meta.py) file.
 
-The name of the Docker container that is running the Redis instance. If all configurations are left as is, this value in most cases will be **mms_redis**.
+## Collection
 
-`API_URL`
+There is a collection of embedders that are implmented and compared within a single notebook. The notebook can be found in the [`embedders.ipynb`](https://github.com/odu-emse/mms/blob/dev/embedders.ipynb) file.
 
-The name of the Docker container that is running the client instance. If all configurations are left as is, this value in most cases will be **client**.
+### BERT
 
----
+The BERT section of the `embedders.ipynb` file is an implementation of the BERT (Bidirectional Encoder Representations from Transformers) model from the TensorFlow library. This embedder generates vector representations of words and sentences, which can be used for a variety of natural language processing tasks, including language translation and sentiment analysis. The BERT model is a pre-trained deep learning model that uses a transformer-based architecture to generate high-quality embeddings. The model can be fine-tuned on a specific task by adding a task-specific layer on top of the pre-trained BERT model. The BERT model has been shown to outperform other word and sentence embedding models on a variety of natural language processing tasks.
 
-The varibles below are used by the client part of the API to and are not neccessary to run the application in isolation. If they are filled out, Docker will import the .env file from the root of your directory to build and launch the API client.
+### Sent2Vec
 
+The Sent2Vec section of the `embedders.ipynb` file is an implementation of a sentence embedding model that generates vector representations of sentences. This embedder is based on the skip-thoughts model and uses an encoder-decoder architecture to generate sentence embeddings. The encoder is a multi-layer bidirectional LSTM network that reads the input sentence and generates a fixed-length vector representation of the sentence. The decoder is another LSTM network that takes the sentence embedding as input and generates the surrounding sentences. The Sent2Vec model has been shown to outperform other sentence embedding models on a variety of natural language processing tasks, including sentiment analysis and text classification.
 
-`GOOGLE_REFRESH_TOKEN`
+### Doc2Vec
 
-`GOOGLE_SECRET`
+The Doc2Vec section of the `embedders.ipynb` file is an implementation of the Doc2Vec model from the Gensim library. This embedder generates vector representations of documents, which can be used for a variety of natural language processing tasks, including document classification and information retrieval. The Doc2Vec model is an extension of the Word2Vec model, which generates vector representations of words. The Doc2Vec model adds an additional vector representation for each document, which is learned during the training process. The Doc2Vec model has been shown to outperform other document embedding models on a variety of natural language processing tasks.
 
-`jwtSecret`
+### Word2Vec
 
-`jwtExpire`
+The Word2Vec section of the `embedders.ipynb` file is an implementation of the Word2Vec model from the Gensim library. This embedder generates vector representations of words, which can be used for a variety of natural language processing tasks, including language translation and sentiment analysis. The Word2Vec model is a neural network-based model that learns vector representations of words by predicting the context in which they appear. The model can be trained on a large corpus of text data to generate high-quality word embeddings. The Word2Vec model has been shown to outperform other word embedding models on a variety of natural language processing tasks.
 
-`PORT`
+# Classification
 
-`DB_USER`
+## Supervised
 
-`DB_PASSWORD`
+The entire pipeline of supervised classification models can be found in the [`supervised.ipynb`](https://github.com/odu-emse/mms/blob/dev/supervised.ipynb) file.
 
-## Installation
+## Unsupervised
 
-Building the image using Docker compose and the contexts defined in the Dockerfile.
+To find unsupervised classification implementations, refer to the [`classification.ipynb`](https://github.com/odu-emse/mms/blob/dev/classification.ipynb) and the [`cluster.ipynb`](https://github.com/odu-emse/mms/blob/dev/cluster.ipynb) files.
 
-```bash
-docker-compose build .
-```
+# Utilities
 
-Launching the application and it's related services
+## `seed.py`
 
-```bash
-docker-compose up -d
-```
-    
-## API Reference
+The [`utils/seed.py`](https://github.com/odu-emse/mms/blob/dev/utils/seed.py) file contains the code that was used to seed the database with the initial data. It is not necessary to run this file as the database is already seeded. This file requires additional configuration of the _client_ application to work properly.
 
-#### Get module recommendations for a user
+## `fetch.py`
 
-```http
-GET /recommend/${userID}
-```
-
-| Parameter | Type     | Description                |
-| :-------- | :------- | :------------------------- |
-| `userID` | `string` | **Required**. The user's document ID |
-
-
-## Roadmap
-
-Recommending learning modules using differnt methods is our main goal with this project. Outlined below are all the methods that we are currently working on, or planning to implement before our initial launch. 
-
-- Recommend modules based on public reviews
-
-- Recommend modules based on keyword similary between the learner and module objectives
-
-- Recommend modules based on learner profile similary 
-
-- Recommend modules based on the student's learning preferences
-
-- Recommend modules based on the learner's prior professional experiences
-
-- Combining recommendations and drawing the most viable path for the student's degree
-
-
-## Tech Stack
-
-**Client:** GraphQL, TypeScript
-
-**API:** Python, FastAPI, Prisma
-
-**Server:** MongoDB, Redis
-
+The [`utils/fetch.py`](https://github.com/odu-emse/mms/blob/dev/utils/fetch.py) file contains the code that was used to retrieve the data from the managed database and store it in a local file. It is not necessary to run this file as the database is already seeded. This file requires additional configuration of the _client_ application to work properly.

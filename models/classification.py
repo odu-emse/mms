@@ -17,6 +17,12 @@ class Classify:
     """
     Predict the class for the given Module dataset based on TF-IDF vectorization and KNN (supervised) clustering algorithm.
 
+    TODO:
+        - Created JSON formatted output of grouped modules using the Learning Path structure ([modules] -> [collections] -> [sections] -> course)
+        - Map collections to most similar sections
+        - Create complete LP from the grouped modules and the mapped collections
+        - Get all LPs from the database and compare the predicted LP with the actual LPs
+
     Args:
         path (str): Path to the training dataset.
         testPath (str, None): Path to the test dataset.
@@ -24,6 +30,9 @@ class Classify:
         toDownload (bool): Whether to download the nltk corpus or not.
         verbose (bool): Whether to print the logs or not.
         visualize (bool): Whether to show EDA visualizations or not.
+        concat (bool): Whether to concatenate the training files or not.
+        trainFiles (list[str]): List of training files to be concatenated.
+        dryRun (bool): Whether to run the classification model or not.
     """
 
     def __init__(
@@ -36,6 +45,7 @@ class Classify:
         visualize: bool = False,
         concat: bool = False,
         trainFiles: list[str] = [],
+        dryRun: bool = False,
     ) -> None:
         import logging
 
@@ -46,6 +56,7 @@ class Classify:
         self.logPath: str = "logs/classification.log"
         self.toDownload: bool = toDownload
         self.concat: bool = concat
+        self.dryRun: bool = dryRun
         self.data: Union[DataFrame, None] = None
         self.trainFiles: list[str] = trainFiles
         self.testData: Union[DataFrame, None] = None
@@ -63,11 +74,16 @@ class Classify:
         self.lemmatizer = WordNetLemmatizer()
         self.vectorizer = TfidfVectorizer(max_features=10000)
         self.encoder = LabelEncoder()
+        self.courseData: Union[None, DataFrame] = None
 
         if self.verbose:
             logging.basicConfig(level=logging.INFO)
         else:
             logging.basicConfig(level=logging.DEBUG)
+
+        if self.dryRun is True:
+            self._log("~~~System initialized in dry run mode.~~~")
+            self._log("Skipping model creation, prediction, and evaluation.")
 
         self.download()
         self._configure()
@@ -77,6 +93,7 @@ class Classify:
         Configure the logger and the stop words set
         """
         self.stop_words.add("module")
+        self.stop_words.add("course")
         self.stop_words.add("problem")
         self.stop_words.add("use")
         self.stop_words.add("model")
@@ -87,6 +104,7 @@ class Classify:
         self.stop_words.add("application")
         self.stop_words.add("computer")
         self.stop_words.add("computers")
+        self.stop_words.add("zero")
         self.stop_words.add("one")
         self.stop_words.add("two")
         self.stop_words.add("three")
@@ -95,14 +113,42 @@ class Classify:
         self.stop_words.add("six")
         self.stop_words.add("seven")
         self.stop_words.add("eight")
+        self.stop_words.add("nine")
         self.stop_words.add("x")
         self.stop_words.add("c")
+        self.stop_words.add("k")
+        self.stop_words.add("l")
+        self.stop_words.add("b")
         self.stop_words.add("go")
         self.stop_words.add("constraint")
         self.stop_words.add("get")
         self.stop_words.add("ok")
         self.stop_words.add("uh")
         self.stop_words.add("shift")
+        self.stop_words.add("see")
+        self.stop_words.add("give")
+        self.stop_words.add("take")
+        self.stop_words.add("right")
+        self.stop_words.add("know")
+        self.stop_words.add("want")
+        self.stop_words.add("may")
+        self.stop_words.add("way")
+        self.stop_words.add("say")
+        self.stop_words.add("let")
+        self.stop_words.add("thing")
+        self.stop_words.add("look")
+        self.stop_words.add("need")
+        self.stop_words.add("would")
+        self.stop_words.add("try")
+        self.stop_words.add("back")
+        self.stop_words.add("also")
+        self.stop_words.add("must")
+        self.stop_words.add("okay")
+        self.stop_words.add("talk")
+        self.stop_words.add("well")
+        self.stop_words.add("like")
+        self.stop_words.add("basically")
+        self.stop_words.add("maybe")
 
     def download(self):
         """
@@ -130,10 +176,14 @@ class Classify:
         else:
             data = pd.read_csv(self.filePath, sep=sep)
 
+        self._log("DataFrames merged successfully")
+
         self.data = data
 
         if self.data is None:
-            raise Exception("Data is empty")
+            raise Exception(
+                "System failure: Data could not be read and parsed successfully"
+            )
 
         if self.testPath is not None:
             self.testData = pd.read_csv(self.testPath, sep=sep)
@@ -159,7 +209,6 @@ class Classify:
         scalar_to_string = []
 
         for obj in lst:
-            print(obj)
             scalar_to_string.append(str(obj))
 
         df[col] = scalar_to_string
@@ -177,12 +226,6 @@ class Classify:
         Merge the two DataFrames.
         """
         df = pd.concat([df1, df2], ignore_index=True)
-
-        if self.verbose:
-            self._log("DataFrames merged successfully")
-            print(df.head())
-        else:
-            self._log("DataFrames merged successfully")
 
         return df
 
@@ -203,11 +246,7 @@ class Classify:
 
         df[destinationCol] = merged
 
-        if self.verbose:
-            self._log("Columns merged successfully")
-            print(df.head())
-        else:
-            self._log("Columns merged successfully")
+        self._log("Columns merged successfully")
 
         return df
 
@@ -268,11 +307,8 @@ class Classify:
         payload = [" ".join(entry) for entry in split_words]
 
         df[col] = payload
-        if self.verbose:
-            self._log("Camel case text split successfully")
-            print(df.head())
-        else:
-            self._log("Camel case text split successfully")
+
+        self._log("Camel case text split successfully")
 
         return df
 
@@ -339,7 +375,7 @@ class Classify:
             )
             df = self._preprocess_features(col, self.data)
             df = df.drop(
-                ["features", "tokens", "hours", "prefix", "transcript", "number"],
+                ["features", "tokens", "hours", "transcript", "number"],
                 axis=1,
             )
 
@@ -353,7 +389,7 @@ class Classify:
             self.N_CLUSTER = int(np.sqrt(len(df)))
             if self.viz:
                 self.generate_count_plot(data=df)
-            self._save_data_frame(df, fileName="603_clean.csv")
+            self._save_data_frame(df, fileName="train_sampled.csv")
 
         else:
             dfTrain = self._merge_columns(
@@ -361,7 +397,7 @@ class Classify:
             )
             dfTrain = self._preprocess_features(col, self.data)
             dfTrain = dfTrain.drop(
-                ["features", "tokens", "hours", "prefix", "transcript", "number"],
+                ["features", "tokens", "hours", "transcript", "number"],
                 axis=1,
             )
 
@@ -370,7 +406,7 @@ class Classify:
             )
             dfTest = self._preprocess_features(col, self.testData)
             dfTest = dfTest.drop(
-                ["features", "tokens", "hours", "prefix", "transcript", "number"],
+                ["features", "tokens", "hours", "transcript", "number"],
                 axis=1,
             )
 
@@ -389,8 +425,8 @@ class Classify:
             if self.viz:
                 self.generate_count_plot(data=dfTrain)
                 self.generate_count_plot(data=dfTest)
-            self._save_data_frame(dfTrain, fileName="603_clean.csv")
-            self._save_data_frame(dfTest, fileName="614_test.csv")
+            self._save_data_frame(dfTrain, fileName="train.csv")
+            self._save_data_frame(dfTest, fileName="test.csv")
 
     def _create_tf_idf(self, train, test) -> tuple:
         """
@@ -480,6 +516,10 @@ class Classify:
 
         self._data_transformer()
 
+        self.generate_elbow_plot(
+            X=self.train_x_vector,
+        )
+
         self._run_nearest_neighbors(
             Train_X_Tfidf=self.train_x_vector,
             Test_X_Tfidf=self.test_x_vector,
@@ -506,7 +546,12 @@ class Classify:
 
         self._print_sorted_similarities(sim_arr=sim)
 
-        self._run_pca(X=self.train_x_vector, df=self.data, fileName="pca_train.png")
+        self._run_pca(
+            X=self.train_x_vector,
+            df=self.data,
+            fileName="pca_train.png",
+            scatter_hue="prefix",
+        )
 
         self._run_naive_bayes(
             X_vector=self.train_x_vector,
@@ -536,7 +581,10 @@ class Classify:
             self._print_sorted_similarities(sim_arr=simTest)
 
             self._run_pca(
-                X=self.test_x_vector, df=self.testData, fileName="pca_test.png"
+                X=self.test_x_vector,
+                df=self.testData,
+                fileName="pca_test.png",
+                scatter_hue="cluster",
             )
 
         self._log("Model created successfully")
@@ -580,30 +628,6 @@ class Classify:
             )
             self._log("Mean TF-IDF score -> %0.4f" % np.max(r))
         print("\n")
-
-    def _train_model(self):
-        """
-        Train the classification model.
-        """
-        pass
-
-    def _evaluate_model(self):
-        """
-        Evaluate the classification model.
-        """
-        pass
-
-    def _predict(self):
-        """
-        Predict the classification model.
-        """
-        pass
-
-    def _save_model(self):
-        """
-        Save the classification model.
-        """
-        pass
 
     def _run_nearest_neighbors(
         self,
@@ -653,12 +677,13 @@ class Classify:
 
         self._log("KNN Predictions -> %s" % predicted)
 
-        self.testData["cluster"] = predicted
+        if self.testPath is not None:
+            self.testData["cluster"] = predicted
 
-        self._save_data_frame(
-            df=self.testData,
-            fileName="614_pred.csv",
-        )
+            self._save_data_frame(
+                df=self.testData,
+                fileName="614_pred.csv",
+            )
 
         acc = accuracy_score(Test_Y, predicted)
 
@@ -704,7 +729,11 @@ class Classify:
         self.generate_cross_validation_plot(x, y)
 
     def _run_pca(
-        self, X: numpy.ndarray, df: DataFrame, fileName: str = "pca_scatter.png"
+        self,
+        X: numpy.ndarray,
+        df: DataFrame,
+        fileName: str = "pca_scatter.png",
+        scatter_hue: str = "cluster",
     ):
         """
         Applies Principal Component Analysis (PCA) to the input data X and generates a scatter plot of the reduced features.
@@ -728,7 +757,7 @@ class Classify:
         df["x"] = x
         df["y"] = y
 
-        self.generate_scatter_plot(data=df, fileName=fileName)
+        self.generate_scatter_plot(data=df, fileName=fileName, hue=scatter_hue)
 
         self._log("PCA run successfully")
 
@@ -800,18 +829,21 @@ class Classify:
             max_words=700,
             background_color="white",
             stopwords=self.stop_words,
+            width=1600,
+            height=800,
         ).generate(corpus)
         plt.figure(figsize=(10, 10))
         plt.axis("off")
-        if self.viz:
+        if self.viz is True:
             plt.imshow(wordcloud, interpolation="bilinear")
+            wordcloud.to_file(str(self.outputPath + "wordcloud/" + fileName))
             plt.show()
         else:
-            # plt.savefig(str(self.outputPath + fileName))
-            wordcloud.to_file(str(self.outputPath + fileName))
+            plt.imshow(wordcloud, interpolation="bilinear")
+            wordcloud.to_file(str(self.outputPath + "wordcloud/" + fileName))
 
     def generate_scatter_plot(
-        self, data: DataFrame, fileName: str = "scatter_plot.png"
+        self, data: DataFrame, fileName: str = "scatter_plot.png", hue: str = "cluster"
     ):
         """
         Generate the scatter plot for the data.
@@ -820,7 +852,7 @@ class Classify:
         from matplotlib import pyplot as plt
 
         plt.figure(figsize=(10, 10))
-        sns.scatterplot(data=data, x="x", y="y", hue="cluster", palette="tab10")
+        sns.scatterplot(data=data, x="x", y="y", hue=hue, palette="tab20")
         if self.viz:
             plt.show()
         else:
@@ -956,6 +988,105 @@ class Classify:
 
         return top
 
+    def _get_course_data(self) -> None:
+        """
+        Get the course data from the local JSON file and parse it.
+        """
+        import json
+
+        data = None
+
+        with open("input/courses.json") as f:
+            data = json.load(f)
+
+        df = pd.DataFrame(
+            data["sections"],
+            columns=["name", "number", "learningObjectives", "collections"],
+        )
+
+        self.courseData = df
+
+    def _create_learning_outcome(self) -> None:
+        """
+        Creates 20 learning outcomes for each collection (cluster) based on the top keywords in the collection.
+        """
+        import numpy as np
+
+        df = pd.DataFrame(self.test_x_vector).groupby(self.testData["cluster"]).mean()
+        terms = self.vectorizer.get_feature_names_out()
+
+        learning_outcomes = dict()
+
+        for i, r in df.iterrows():
+            # for each row in the dataset, get the top 10 keywords
+            # save the keywords as learning outcomes for the collection
+            # send the keywords to the mapper method to map the collection to a section
+            keywords = [terms[t] for t in np.argsort(r)[-20:]]
+            self._log("Cluster {} keywords: {}".format(i, ", ".join(keywords)))
+            learning_outcomes[i] = keywords
+
+        self._map_collection_to_section(lps=learning_outcomes)
+
+    def _transform_learning_objectives(self):
+        """
+        Read course data from json, turn data into a dataframe, run tf-idf on learning objectives, and run pca to reduce dimensions.
+        After reduced, plot the marks on a scatterplot.
+        """
+        data = self._scalar_to_string(self.courseData, "learningObjectives")
+
+        data = self._preprocess_features("learningObjectives", data)
+
+        data = data.drop(["learningObjectives", "tokens"], axis=1)
+
+        self.generate_word_cloud(
+            corpus=" ".join(data["target"]),
+            fileName="learning_objectives_cloud.png",
+        )
+
+        self.courseData = data
+
+    def _map_collection_to_section(self, lps: dict) -> None:
+        """
+        The top keywords of each cluster/collection is compared with the learning objectives of each section.
+        The section with the highest similarity score is chosen as the section that the collection is mapped to.
+        The collection dict is then appended to the collections array for the appropriate section.
+        If a collection is already part of a section, it cannot be mapped to another section,
+        unless it has a higher similarity score with another section.
+        The result should be a dict of sections, each containing a collections array with the appropriate collections.
+        """
+        import numpy as np
+        from sklearn.metrics.pairwise import cosine_similarity
+
+        df = self.courseData.copy()
+
+        lo_tfidf = self.vectorizer.fit_transform(df["target"]).toarray()
+        term_tfidf = self.vectorizer.transform(
+            ", ".join(v) for k, v in lps.items()
+        ).toarray()
+
+        sim_scores = cosine_similarity(lo_tfidf, term_tfidf)
+
+        self.generate_heat_map(
+            arr=sim_scores,
+            mask=np.triu(np.ones_like(sim_scores, dtype=bool)),
+            fileName="learning_outcomes_heatmap.png",
+        )
+
+    def _create_learning_path(self) -> None:
+        """
+        Creates a learning path JSON structure from the predicted classification data. The structure must be as follows:
+        - Course
+            - [Section]
+                - [Collection]
+                    - [Module]
+        In this structure the course and sections are given, and the collections of modules are created by the predicted cluster value.
+        Collections must be mapped to a section that cover the same concepts that are mentioned in the collection.
+        """
+
+        self._get_course_data()
+        self._transform_learning_objectives()
+        self._create_learning_outcome()
+
     def _log(self, text: str):
         """
         Append the text to the log file.
@@ -982,18 +1113,29 @@ class Classify:
         """
         self.read()
         self.prepare(col="features")
-        self._create_model()
-        if self.viz:
-            self._run_word_cloud_per_cluster(df=self.data)
-            if self.testPath is not None:
-                # TODO: Fix test data not having x and y columns
-                # self.generate_scatter_plot(data=self.testData)
-                pass
-        if self.verbose:
-            self._log("Successfully ran the classification model")
+        if self.dryRun is not True:
+            self._create_model()
+            if self.viz:
+                # self._run_word_cloud_per_cluster(df=self.data)
+                if self.testPath is not None:
+                    # self._run_word_cloud_per_cluster(df=self.testData)
+                    # TODO: Fix test data not having x and y columns
+                    # self.generate_scatter_plot(data=self.testData)
+                    pass
+            if self.verbose:
+                self._log("Successfully ran the classification model")
+            self._create_learning_path()
+        else:
+            self._create_learning_path()
 
 
-def main():
+def configure_arguments():
+    """
+    Configure the command-line arguments for the classification model.
+
+    Returns:
+        argparse.Namespace: The parsed command-line arguments.
+    """
     import argparse
 
     parser = argparse.ArgumentParser(description="Classification of text")
@@ -1052,9 +1194,21 @@ def main():
         help="List of training files to concatenate",
     )
 
+    parser.add_argument(
+        "--dryRun",
+        "-dr",
+        help="Run the classification model or only read data, and preprocess features",
+        required=True,
+        action=argparse.BooleanOptionalAction,
+    )
+
     args = parser.parse_args()
 
-    print(args)
+    return args
+
+
+def main():
+    args = configure_arguments()
 
     classify = Classify(
         path=args.path,
@@ -1065,6 +1219,7 @@ def main():
         testPath=args.test,
         concat=args.concat,
         trainFiles=args.trainFiles,
+        dryRun=args.dryRun,
     )
     classify.run()
 

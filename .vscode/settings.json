@@ -1,24 +1,26 @@
 {
   "[python]": {
-    "editor.defaultFormatter": "ms-python.black-formatter",
+    "editor.defaultFormatter": "ms-python.black-formatter"
   },
-  "python.linting.flake8Args": [
-  "--max-line-length=150"
-  ],
-  "flake8.interpreter": [
-    "venv/bin/python3"
-  ],
+  "python.linting.flake8Args": ["--max-line-length=150"],
+  "flake8.interpreter": ["venv/bin/python3"],
   "python.formatting.provider": "none",
   "cSpell.words": [
+    "astype",
     "dataframe",
+    "DBSCAN",
     "figsize",
+    "idxmax",
     "imshow",
+    "keras",
+    "kmeans",
     "lemmatize",
     "Lemmatizer",
     "matplotlib",
     "Multinomial",
     "ndarray",
     "nltk",
+    "openai",
     "pyplot",
     "savefig",
     "scatterplot",
@@ -26,8 +28,12 @@
     "stopwords",
     "Tfidf",
     "toarray",
+    "TSNE",
     "vectorizer",
     "wordcloud",
-    "wordnet"
+    "wordnet",
+    "xlabel",
+    "xticks",
+    "ylabel"
   ]
 }

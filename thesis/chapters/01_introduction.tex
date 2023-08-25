@@ -1,0 +1,14 @@
+\chapter{Introduction}
+\label{ch:introduction}
+
+The Module Clustering System (MCS) \footnote{\url{https://github.com/odu-emse/mms}} is a collection of machine learning algorithms working in a pre-defined pipeline that facilitates the creation of personalized learning paths for students via its integration into the more extensive Module Management System, which is responsible for perfecting learning paths based on the individual experiences that each student has gone through. Once the MCS is fed module data such as name, description, keywords, transcripts, etc., the model will output the grouping of modules (referred to as Collections) most similar to each other and recommended to be taken sequentially. The created clusters are greatly influenced by the original grouping of modules, which is used as the system's ground truth. With the groupings completed, the system assigns a list of learning outcomes to each Collection which are then used to map the clusters to larger Sections with their own learning objectives. Finally, the presented output is the student's draft learning path which includes several Modules, Collections, and Sections needed to satisfy a single course. The draft path is fed into the Module Management System, which uses reinforcement learning to create the most optimal path for the student based on a multitude of static and dynamic attributes. The entire system is designed to communicate over HTTP as it is meant to integrate into the Glance Platform. \cite{gh:glance}
+
+% \todo[Counting frogs (Fig.~\ref{fig:frog}) has been traditionally done in the Web Science and Digital Libraries Research Lab (WS-DL)\footnote{\url{https://ws-dl.cs.odu.edu/}} to keep track of the days left until the next JCDL\footnote{\url{http://www.jcdl.org/}} submission deadline.
+% Table~\ref{tab:frogsleft} illustrates how the frogs are counted.]
+
+% \begin{figure}
+%   \centering
+%   \includegraphics{frog}
+%   \caption{The Mighty Frog}
+%   \label{fig:frog}
+% \end{figure}
